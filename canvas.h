@@ -1,3 +1,6 @@
+#ifndef CANVAS_H
+#define CANVAS_H
+
 #define MAX_LINE_WIDTH 70
 #define MAX_COMPONENTS MAX_LINE_WIDTH / 4
 
@@ -14,3 +17,5 @@ Color canvas_get(Canvas, int, int);
 void canvas_set(Canvas *, int, int, Color);
 void canvas_print(Canvas);
 void canvas_free(Canvas *);
+
+#endif /* CANVAS_H */

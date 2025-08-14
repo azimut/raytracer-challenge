@@ -1,3 +1,6 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 #include "./tuple.h"
 #include <stdlib.h>
 
@@ -13,3 +16,5 @@ Mat4 m4_mul(Mat4, Mat4);
 Tuple m4_tmul(Mat4, Tuple);
 Mat4 m4_transpose(Mat4);
 Mat4 m4_invert(Mat4);
+
+#endif /* MATRIX_H */
