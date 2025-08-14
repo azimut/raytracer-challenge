@@ -15,6 +15,7 @@ bool m4_equal(Mat4, Mat4);
 Mat4 m4_mul(Mat4, Mat4);
 Tuple m4_tmul(Mat4, Tuple);
 Mat4 m4_transpose(Mat4);
-Mat4 m4_invert(Mat4);
+Mat4 m4_inverse(Mat4);
+void m4_print(Mat4);
 
 #endif /* MATRIX_H */
