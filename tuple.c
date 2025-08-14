@@ -2,8 +2,8 @@
 #include "./util.h"
 #include <math.h>
 
+Tuple tuple(float x, float y, float z, float w) { return (Tuple){x, y, z, w}; }
 Tuple point(float x, float y, float z) { return (Tuple){x, y, z, 1}; }
-
 Tuple vector(float x, float y, float z) { return (Tuple){x, y, z, 0}; }
 
 bool tuple_equal(Tuple a, Tuple b) {
