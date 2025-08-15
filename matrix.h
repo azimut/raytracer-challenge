@@ -8,6 +8,8 @@ typedef struct Mat4 {
   float m[4][4];
 } Mat4;
 
+Mat4 m4(float, float, float, float, float, float, float, float, float, float,
+        float, float, float, float, float, float);
 Mat4 m4_identity();
 float m4_get(Mat4, size_t, size_t);
 Mat4 m4_set(Mat4, size_t, size_t, float);
