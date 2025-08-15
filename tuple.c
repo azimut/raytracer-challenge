@@ -43,7 +43,7 @@ Tuple tuple_cross_product(Tuple a, Tuple b) {
                 a.x * b.y - a.y * b.x);
 }
 
-int main(void) {
+int main3(void) {
   assert(tuple_equal(tuple_add(tuple(3, -2, 5, 1), tuple(-2, 3, 1, 0)),
                      tuple(1, 1, 6, 1)));
   assert(tuple_equal(tuple_sub(point(3, 2, 1), point(5, 6, 7)),

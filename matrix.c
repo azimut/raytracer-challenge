@@ -197,7 +197,7 @@ static void m2_print(Mat2 m2) {
     printf("%.2f %.2f\n", m2.m[row][0], m2.m[row][1]);
 }
 
-int main(void) {
+int main2(void) {
   assert(m4_equal(m4_identity(), m4_identity()));
   assert(m3_equal(m4_submatrix(m4_identity(), 0, 0), m3_identity()));
   assert(m3_equal(m4_submatrix(m4_identity(), 3, 3), m3_identity()));
