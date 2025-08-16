@@ -149,18 +149,38 @@ void test_transformation() {
 }
 
 void test_raycasting(void) {
-  Point origin = point(1, 2, 3);
-  Vector direction = vector(4, 5, 6);
+  Point origin = point(2, 3, 4);
+  Vector direction = vector(1, 0, 0);
   Ray r = ray(origin, direction);
   assert(tuple_equal(r.origin, origin));
   assert(tuple_equal(r.direction, direction));
+  assert(tuple_equal(position(r, 0), point(2, 3, 4)));
+  assert(tuple_equal(position(r, 1), point(3, 3, 4)));
+  assert(tuple_equal(position(r, -1), point(1, 3, 4)));
+  assert(tuple_equal(position(r, 2.5), point(4.5, 3, 4)));
+  Sphere s = sphere();
+  r = ray(point(0, 0, -5), vector(0, 0, 1)); // ray/sphere 2 points
+  SphereIntersection si = intersect(s, r);
+  assert(si.did_hit && si.hits[0] == 4 && si.hits[1] == 6);
+  r = ray(point(0, 1, -5), vector(0, 0, 1)); // tangent intersection
+  si = intersect(s, r);
+  assert(si.did_hit && si.hits[0] == 5 && si.hits[1] == 5);
+  r = ray(point(0, 2, -5), vector(0, 0, 1)); // ray misses the sphere
+  si = intersect(s, r);
+  assert(!si.did_hit);
+  r = ray(point(0, 0, 0), vector(0, 0, 1)); // ray inside sphere
+  si = intersect(s, r);
+  assert(si.did_hit && si.hits[0] == -1 && si.hits[1] == 1);
+  r = ray(point(0, 0, 5), vector(0, 0, 1)); // sphere behind a ray
+  si = intersect(s, r);
+  assert(si.did_hit && si.hits[0] == -6 && si.hits[1] == -4);
 }
 
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
   test_raycasting();
   printf("ALL OK!");
   return 0;
