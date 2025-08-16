@@ -3,5 +3,6 @@
                               command-cwd dape-command-cwd
                               command "gdb"
                               command-args ("--interpreter=dap")
+                              compile "make test DEBUG=1"
                               :request "launch"
                               :program "test/unit"))))))
