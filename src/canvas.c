@@ -36,9 +36,3 @@ void canvas_print(Canvas canvas) {
 }
 
 void canvas_free(Canvas *canvas) { free(canvas->grid); }
-
-int main(void) {
-  Canvas c = canvas(10, 10);
-  canvas_print(c);
-  return 0;
-}

@@ -6,6 +6,8 @@
 typedef struct Tuple {
   float x, y, z, w;
 } Tuple;
+typedef Tuple Point;
+typedef Tuple Vector;
 
 Tuple tuple(float, float, float, float);
 Tuple point(float, float, float);

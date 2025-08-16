@@ -8,3 +8,4 @@ My source code, written in C.
 - Chapter 2: `canvas.h` and `color.h`
 - Chapter 3: `matrix.h`
 - Chapter 4: `transformation.h`
+- Chapter 5: `raycasting.h`
