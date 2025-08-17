@@ -11,6 +11,7 @@ typedef struct Ray {
 } Ray;
 typedef struct Sphere {
   int id;
+  Mat4 transformation;
 } Sphere;
 typedef struct Intersection {
   float t;
@@ -31,5 +32,6 @@ void free_intersections(Intersections);
 Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);
 Ray transform(Ray, Mat4);
+void set_transform(Sphere *, Mat4);
 
 #endif /* RAYCASTING_H */
