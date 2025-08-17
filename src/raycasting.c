@@ -17,19 +17,26 @@ Sphere sphere() {
   return (Sphere){id};
 }
 
-SphereIntersection intersect(Sphere sphere, Ray ray) {
-  SphereIntersection si;
-  si.did_hit = false;
-  si.hits[0] = si.hits[1] = FLT_MAX;
+Intersections intersect(Sphere sphere, Ray ray) {
+  Intersections si;
+  si.count = 0;
   Point sphere_to_ray = tuple_sub(ray.origin, point(0, 0, 0));
   float a = tuple_dot_product(ray.direction, ray.direction);
   float b = 2 * tuple_dot_product(ray.direction, sphere_to_ray);
   float c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
   float discriminant = b * b - 4 * a * c;
   if (discriminant >= 0) {
-    si.did_hit = true;
-    si.hits[0] = (-b - sqrtf(discriminant)) / (2 * a);
-    si.hits[1] = (-b + sqrtf(discriminant)) / (2 * a);
+    si.count = 2;
+    si.hits = malloc(sizeof(struct Intersection) * si.count);
+    si.hits[0] = (Intersection){.t = (-b - sqrtf(discriminant)) / (2 * a),
+                                .object = sphere};
+    si.hits[1] = (Intersection){.t = (-b + sqrtf(discriminant)) / (2 * a),
+                                .object = sphere};
   }
   return si;
+}
+
+void free_intersections(Intersections is) {
+  if (is.count > 0)
+    free(is.hits);
 }

@@ -10,5 +10,5 @@ endif
 
 .PHONY: test test/unit
 test: test/unit; ./test/unit
-test/unit: test/unit.c $(SRC) $(HDR)
+test/unit: test/unit.c
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
