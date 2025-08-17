@@ -24,7 +24,9 @@ Ray ray(Point, Tuple);
 Point position(Ray, float);
 Sphere sphere();
 Intersection intersection(float, Sphere);
+Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
 void free_intersections(Intersections);
+Intersection *hit(Intersections);
 
 #endif /* RAYCASTING_H */

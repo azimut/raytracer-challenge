@@ -3,7 +3,7 @@ LDFLAGS := -lm
 SRC     := $(wildcard src/*.c)
 HDR     := $(wildcard src/*.h)
 ifdef DEBUG
-	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic -g3 -Og
+	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic -ggdb3 -O0
 else
 	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic
 endif

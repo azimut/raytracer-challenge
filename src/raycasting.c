@@ -1,7 +1,10 @@
 #include "./raycasting.h"
 #include "./tuple.h"
+#include <assert.h>
 #include <float.h>
 #include <math.h>
+#include <stdarg.h>
+#include <stddef.h>
 
 int global_id = 0;
 
@@ -17,26 +20,42 @@ Sphere sphere() {
   return (Sphere){id};
 }
 
+Intersection intersection(float t, Sphere object) {
+  return (Intersection){t, object};
+}
+
+Intersections intersections(Sphere object, int count, ...) {
+  assert(count > 0);
+  va_list ap;
+  Intersections result;
+  result.hits = malloc(sizeof(struct Intersection) * count);
+  result.count = count;
+  va_start(ap, count);
+  for (int i = 0; i < count; ++i) {
+    result.hits[i].t = (float)va_arg(ap, double); // due automatic promotion
+    result.hits[i].object = object;
+  }
+  va_end(ap);
+  return result;
+};
+
 Intersections intersect(Sphere sphere, Ray ray) {
-  Intersections si;
-  si.count = 0;
   Point sphere_to_ray = tuple_sub(ray.origin, point(0, 0, 0));
   float a = tuple_dot_product(ray.direction, ray.direction);
   float b = 2 * tuple_dot_product(ray.direction, sphere_to_ray);
   float c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
   float discriminant = b * b - 4 * a * c;
   if (discriminant >= 0) {
-    si.count = 2;
-    si.hits = malloc(sizeof(struct Intersection) * si.count);
-    si.hits[0] = (Intersection){.t = (-b - sqrtf(discriminant)) / (2 * a),
-                                .object = sphere};
-    si.hits[1] = (Intersection){.t = (-b + sqrtf(discriminant)) / (2 * a),
-                                .object = sphere};
+    float i1 = (-b - sqrtf(discriminant)) / (2 * a);
+    float i2 = (-b + sqrtf(discriminant)) / (2 * a);
+    return intersections(sphere, 2, i1, i2);
   }
-  return si;
+  return (Intersections){.count = 0, .hits = NULL};
 }
 
 void free_intersections(Intersections is) {
   if (is.count > 0)
     free(is.hits);
 }
+
+/* Intersection *hit(Intersections is) {} */
