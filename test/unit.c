@@ -160,20 +160,24 @@ void test_raycasting(void) {
   assert(tuple_equal(position(r, 2.5), point(4.5, 3, 4)));
   Sphere s = sphere();
   r = ray(point(0, 0, -5), vector(0, 0, 1)); // ray/sphere 2 points
-  SphereIntersection si = intersect(s, r);
-  assert(si.did_hit && si.hits[0] == 4 && si.hits[1] == 6);
+  Intersections si = intersect(s, r);
+  assert(si.count == 2 && si.hits[0].t == 4 && si.hits[1].t == 6);
   r = ray(point(0, 1, -5), vector(0, 0, 1)); // tangent intersection
+  free_intersections(si);
   si = intersect(s, r);
-  assert(si.did_hit && si.hits[0] == 5 && si.hits[1] == 5);
+  assert(si.count == 2 && si.hits[0].t == 5 && si.hits[1].t == 5);
   r = ray(point(0, 2, -5), vector(0, 0, 1)); // ray misses the sphere
+  free_intersections(si);
   si = intersect(s, r);
-  assert(!si.did_hit);
+  assert(si.count == 0);
   r = ray(point(0, 0, 0), vector(0, 0, 1)); // ray inside sphere
+  free_intersections(si);
   si = intersect(s, r);
-  assert(si.did_hit && si.hits[0] == -1 && si.hits[1] == 1);
+  assert(si.count == 2 && si.hits[0].t == -1 && si.hits[1].t == 1);
   r = ray(point(0, 0, 5), vector(0, 0, 1)); // sphere behind a ray
+  free_intersections(si);
   si = intersect(s, r);
-  assert(si.did_hit && si.hits[0] == -6 && si.hits[1] == -4);
+  assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
 }
 
 int main(void) {
