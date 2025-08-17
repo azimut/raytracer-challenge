@@ -201,6 +201,16 @@ void test_raycasting(void) {
   assert(m4_equal(s.transformation, m4_identity()));
   set_transform(&s, translation(2, 3, 4));
   assert(m4_equal(s.transformation, translation(2, 3, 4)));
+  // transform() on intersect()
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  set_transform(&s, scaling(2, 2, 2));
+  is = intersect(s, r);
+  assert(is.count == 2);
+  assert(near(is.hits[0].t, 3));
+  assert(near(is.hits[1].t, 7));
+  set_transform(&s, translation(5, 0, 0));
+  is = intersect(s, r);
+  assert(is.count == 0);
 }
 
 int main(void) {

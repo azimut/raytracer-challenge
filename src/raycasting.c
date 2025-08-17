@@ -41,9 +41,10 @@ Intersections intersections(Sphere object, int count, ...) {
 }
 
 Intersections intersect(Sphere sphere, Ray ray) {
-  Point sphere_to_ray = tuple_sub(ray.origin, point(0, 0, 0));
-  float a = tuple_dot_product(ray.direction, ray.direction);
-  float b = 2 * tuple_dot_product(ray.direction, sphere_to_ray);
+  Ray tRay = transform(ray, m4_inverse(sphere.transformation));
+  Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
+  float a = tuple_dot_product(tRay.direction, tRay.direction);
+  float b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
   float c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
   float discriminant = b * b - 4 * a * c;
   if (discriminant >= 0) {
