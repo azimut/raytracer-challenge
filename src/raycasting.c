@@ -24,6 +24,7 @@ Intersection intersection(float t, Sphere object) {
   return (Intersection){t, object};
 }
 
+// NOTE: if called with literals, use "1.0" notation, NOT bare "1"
 Intersections intersections(Sphere object, int count, ...) {
   assert(count > 0);
   va_list ap;
@@ -58,4 +59,20 @@ void free_intersections(Intersections is) {
     free(is.hits);
 }
 
-/* Intersection *hit(Intersections is) {} */
+bool intersection_equal(Intersection i1, Intersection i2) {
+  return (i1.object.id == i2.object.id) && (i1.t == i2.t);
+}
+
+Intersection *hit(Intersections is) {
+  if (is.count == 0)
+    return NULL;
+  size_t idx;
+  float current = FLT_MAX;
+  for (size_t i = 0; i < is.count; ++i) {
+    if (is.hits[i].t < current) {
+      current = is.hits[i].t;
+      idx = i;
+    }
+  }
+  return &is.hits[idx];
+}
