@@ -28,5 +28,6 @@ Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
 void free_intersections(Intersections);
 Intersection *hit(Intersections);
+bool intersection_equal(Intersection, Intersection);
 
 #endif /* RAYCASTING_H */

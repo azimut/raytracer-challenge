@@ -178,6 +178,15 @@ void test_raycasting(void) {
   free_intersections(si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
+  // hit()
+  Intersections is = intersections(s, 2, 1.0, 2.0); // all positive
+  assert(hit(is) == &is.hits[0]);
+  is = intersections(s, 2, -1.0, 1.0); // some are negative
+  assert(hit(is) == &is.hits[1]);
+  is = intersections(s, 2, -2.0, -1.0); // all are negative
+  assert(hit(is) == NULL);
+  is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
+  assert(hit(is) == &is.hits[3]);
 }
 
 int main(void) {
