@@ -9,8 +9,8 @@ int main(void) {
   float wall_size = 7;
   size_t canvas_pixels = 300;
   Canvas c = canvas(canvas_pixels, canvas_pixels);
-  float pixel_size = wall_size / canvas_pixels;
-  float half = wall_size / 2;
+  float pixel_size = wall_size / canvas_pixels; // 0.02333
+  float half = wall_size / 2;                   // 3.5
   Sphere s = sphere();
   set_transform(&s, scaling(1, 0.5, 1));
   Color black = (Color){0, 0, 0};

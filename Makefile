@@ -8,9 +8,9 @@ else
 	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic
 endif
 
-.PHONY: test test/unit
+.PHONY: test
 test: test/unit; ./test/unit
-test/unit: test/unit.c
+test/unit: test/unit.c $(SRC) $(HDR)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
 media/5raysphere.jpg: media/5raysphere.ppm ; convert $< $@
