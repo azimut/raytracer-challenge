@@ -1,6 +1,7 @@
 #ifndef RAYCASTING_H
 #define RAYCASTING_H
 
+#include "./matrix.h"
 #include "./tuple.h"
 #include <stdlib.h>
 
@@ -29,5 +30,6 @@ Intersections intersect(Sphere, Ray);
 void free_intersections(Intersections);
 Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);
+Ray transform(Ray, Mat4);
 
 #endif /* RAYCASTING_H */

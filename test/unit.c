@@ -187,6 +187,16 @@ void test_raycasting(void) {
   assert(hit(is) == NULL);
   is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
   assert(hit(is) == &is.hits[3]);
+  // transform()
+  r = ray(point(1, 2, 3), vector(0, 1, 0));
+  Mat4 m4 = translation(3, 4, 5);
+  Ray new_ray = transform(r, m4);
+  assert(tuple_equal(new_ray.direction, vector(0, 1, 0)));
+  assert(tuple_equal(new_ray.origin, point(4, 6, 8)));
+  m4 = scaling(2, 3, 4);
+  new_ray = transform(r, m4);
+  assert(tuple_equal(new_ray.origin, point(2, 6, 12)));
+  assert(tuple_equal(new_ray.direction, vector(0, 3, 0)));
 }
 
 int main(void) {
