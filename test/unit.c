@@ -197,6 +197,10 @@ void test_raycasting(void) {
   new_ray = transform(r, m4);
   assert(tuple_equal(new_ray.origin, point(2, 6, 12)));
   assert(tuple_equal(new_ray.direction, vector(0, 3, 0)));
+  // set_transform
+  assert(m4_equal(s.transformation, m4_identity()));
+  set_transform(&s, translation(2, 3, 4));
+  assert(m4_equal(s.transformation, translation(2, 3, 4)));
 }
 
 int main(void) {

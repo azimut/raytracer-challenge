@@ -17,7 +17,7 @@ Point position(Ray r, float t) {
 Sphere sphere() {
   global_id++;
   int id = global_id;
-  return (Sphere){id};
+  return (Sphere){.id = id, .transformation = m4_identity()};
 }
 
 Intersection intersection(float t, Sphere object) {
@@ -80,4 +80,8 @@ Ray transform(Ray ray, Mat4 m4) {
       .origin = m4_tmul(m4, ray.origin),
       .direction = m4_tmul(m4, ray.direction),
   };
+}
+
+void set_transform(Sphere *sphere, Mat4 transformation) {
+  sphere->transformation = transformation;
 }
