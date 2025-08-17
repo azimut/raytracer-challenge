@@ -40,7 +40,8 @@ void test_tuple() {
 }
 
 void test_canvas() {
-  Canvas c = canvas(2, 2);
+  size_t canvas_pixels = 3;
+  Canvas c = canvas(canvas_pixels, canvas_pixels);
   canvas_print(c);
   canvas_free(&c);
 }
@@ -214,10 +215,10 @@ void test_raycasting(void) {
 }
 
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
   test_raycasting();
   printf("ALL OK!");
   return 0;

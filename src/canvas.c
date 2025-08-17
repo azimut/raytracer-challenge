@@ -26,11 +26,13 @@ void canvas_print(Canvas canvas) {
   printf("P3\n");
   printf("%lu %lu\n", canvas.height, canvas.width);
   printf("255\n");
-  for (size_t row = 0; row < canvas.width; ++row) {
-    for (size_t col = 0; col < canvas.height; ++col) {
+  for (size_t row = 0; row < canvas.height; ++row) {
+    for (size_t col = 0; col < canvas.width; ++col) {
       Color current = canvas_get(canvas, row, col);
-      printf("%d %d %d\n", pixel(current.red), pixel(current.green),
-             pixel(current.blue));
+      unsigned char r = pixel(current.red);
+      unsigned char g = pixel(current.green);
+      unsigned char b = pixel(current.blue);
+      printf("%d %d %d\n", r, g, b);
     }
   }
 }
