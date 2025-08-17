@@ -64,15 +64,15 @@ bool intersection_equal(Intersection i1, Intersection i2) {
 }
 
 Intersection *hit(Intersections is) {
-  if (is.count == 0)
-    return NULL;
   size_t idx;
   float current = FLT_MAX;
   for (size_t i = 0; i < is.count; ++i) {
-    if (is.hits[i].t < current) {
+    if (is.hits[i].t > 0 && is.hits[i].t < current) {
       current = is.hits[i].t;
       idx = i;
     }
   }
-  return &is.hits[idx];
+  return (current == FLT_MAX) ? NULL : &is.hits[idx];
+}
+
 }
