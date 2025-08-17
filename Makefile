@@ -12,3 +12,8 @@ endif
 test: test/unit; ./test/unit
 test/unit: test/unit.c
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+
+media/5raysphere.jpg: media/5raysphere.ppm ; convert $< $@
+media/5raysphere.ppm: test/5raysphere      ; $< > $@
+test/5raysphere: test/5raysphere.c
+	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
