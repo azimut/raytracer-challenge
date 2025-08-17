@@ -38,7 +38,7 @@ Intersections intersections(Sphere object, int count, ...) {
   }
   va_end(ap);
   return result;
-};
+}
 
 Intersections intersect(Sphere sphere, Ray ray) {
   Point sphere_to_ray = tuple_sub(ray.origin, point(0, 0, 0));
@@ -75,4 +75,9 @@ Intersection *hit(Intersections is) {
   return (current == FLT_MAX) ? NULL : &is.hits[idx];
 }
 
+Ray transform(Ray ray, Mat4 m4) {
+  return (Ray){
+      .origin = m4_tmul(m4, ray.origin),
+      .direction = m4_tmul(m4, ray.direction),
+  };
 }
