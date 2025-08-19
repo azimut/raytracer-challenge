@@ -13,6 +13,9 @@ Tuple tuple(float, float, float, float);
 Tuple point(float, float, float);
 Tuple vector(float, float, float);
 
+bool is_point(Tuple);
+bool is_vector(Tuple);
+
 bool tuple_equal(Tuple, Tuple);
 Tuple tuple_add(Tuple, Tuple);
 Tuple tuple_sub(Tuple, Tuple);

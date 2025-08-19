@@ -2,6 +2,8 @@
 #define RAYCASTING_H
 
 #include "./matrix.h"
+#include "./shading.h"
+#include "./shapes.h"
 #include "./tuple.h"
 #include <stdlib.h>
 
@@ -9,10 +11,6 @@ typedef struct Ray {
   Point origin;
   Vector direction;
 } Ray;
-typedef struct Sphere {
-  int id;
-  Mat4 transformation;
-} Sphere;
 typedef struct Intersection {
   float t;
   Sphere object;
@@ -24,7 +22,7 @@ typedef struct Intersections {
 
 Ray ray(Point, Tuple);
 Point position(Ray, float);
-Sphere sphere();
+void set_material(Sphere *, MaterialPhong);
 Intersection intersection(float, Sphere);
 Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
