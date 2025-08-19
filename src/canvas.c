@@ -19,7 +19,7 @@ void canvas_set(Canvas *canvas, int row, int col, Color value) {
 }
 
 static unsigned char pixel(float channel) {
-  return fmin(fmax(channel, 0.0), 1.0) * 255;
+  return fmin(fmax(channel, 0.0f), 1.0f) * 255;
 }
 
 void canvas_print(Canvas canvas) {
