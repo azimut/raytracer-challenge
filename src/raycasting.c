@@ -1,4 +1,5 @@
 #include "./raycasting.h"
+#include "./shading.h"
 #include "./tuple.h"
 #include <assert.h>
 #include <float.h>
@@ -6,18 +7,10 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-int global_id = 0;
-
 Ray ray(Point origin, Tuple direction) { return (Ray){origin, direction}; }
 
 Point position(Ray r, float t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
-}
-
-Sphere sphere() {
-  global_id++;
-  int id = global_id;
-  return (Sphere){.id = id, .transformation = m4_identity()};
 }
 
 Intersection intersection(float t, Sphere object) {
@@ -85,4 +78,8 @@ Ray transform(Ray ray, Mat4 m4) {
 
 void set_transform(Sphere *sphere, Mat4 transformation) {
   sphere->transformation = transformation;
+}
+
+void set_material(Sphere *sphere, MaterialPhong material) {
+  sphere->material = material;
 }

@@ -6,6 +6,9 @@ Tuple tuple(float x, float y, float z, float w) { return (Tuple){x, y, z, w}; }
 Tuple point(float x, float y, float z) { return (Tuple){x, y, z, 1}; }
 Tuple vector(float x, float y, float z) { return (Tuple){x, y, z, 0}; }
 
+bool is_point(Tuple t) { return t.w == 1; };
+bool is_vector(Tuple t) { return t.w == 0; };
+
 bool tuple_equal(Tuple a, Tuple b) {
   return near(a.x, b.x) && near(a.y, b.y) && near(a.z, b.z);
 }

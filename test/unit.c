@@ -1,6 +1,7 @@
 #include "../src/canvas.h"
 #include "../src/matrix.h"
 #include "../src/raycasting.h"
+#include "../src/shading.h"
 #include "../src/transformation.h"
 #include "../src/util.h"
 #include <assert.h>
@@ -214,12 +215,63 @@ void test_raycasting(void) {
   assert(is.count == 0);
 }
 
+void test_shading(void) {
+  Sphere s = sphere();
+  assert(tuple_equal(vector(1, 0, 0), normal_at(s, point(1, 0, 0))));
+  assert(tuple_equal(vector(0, 1, 0), normal_at(s, point(0, 1, 0))));
+  assert(tuple_equal(vector(0, 0, 1), normal_at(s, point(0, 0, 1))));
+  Vector nv = normal_at(s, point(sqrtf(3) / 3, sqrtf(3) / 3, sqrtf(3) / 3));
+  assert(tuple_equal(vector(sqrtf(3) / 3, sqrtf(3) / 3, sqrtf(3) / 3), nv));
+  assert(tuple_equal(nv, tuple_normalize(nv)));
+  s = sphere();
+  set_transform(&s, translation(0, 1, 0));
+  assert(tuple_equal(normal_at(s, point(0, 1.70711, -0.70711)),
+                     vector(0, 0.70711, -0.70711)));
+  s = sphere();
+  set_transform(&s, m4_mul(scaling(1, 0.5, 1), rotation_z(M_PI / 5)));
+  assert(tuple_equal(normal_at(s, point(0, sqrtf(2) / 2, -sqrtf(2) / 2)),
+                     vector(0, 0.97014, -0.24254)));
+  // reflection()
+  assert(
+      tuple_equal(reflect(vector(1, -1, 0), vector(0, 1, 0)), vector(1, 1, 0)));
+  assert(tuple_equal(
+      reflect(vector(0, -1, 0), vector(sqrtf(2) / 2, sqrtf(2) / 2, 0)),
+      vector(1, 0, 0)));
+  // lighting()
+  MaterialPhong m = material();
+  Point position = point(0, 0, 0);
+  Vector eye = vector(0, 0, -1);
+  Vector normal = vector(0, 0, -1);
+  PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  Color result = lighting(m, position, light, eye, normal);
+  assert(color_equal(result, color(1.9, 1.9, 1.9)));
+
+  eye = vector(0, sqrtf(2) / 2, -sqrtf(2) / 2);
+  result = lighting(m, position, light, eye, normal);
+  assert(color_equal(result, color(1, 1, 1)));
+
+  eye = vector(0, 0, -1);
+  light = pointlight(point(0, 10, -10), color(1, 1, 1));
+  result = lighting(m, position, light, eye, normal);
+  assert(color_equal(result, color(0.7364, 0.7364, 0.7364)));
+
+  eye = vector(0, -sqrtf(2) / 2, -sqrtf(2) / 2);
+  result = lighting(m, position, light, eye, normal);
+  assert(color_equal(result, color(1.6364, 1.6364, 1.6364)));
+
+  eye = vector(0, 0, -1);
+  light = pointlight(point(0, 0, 10), color(1, 1, 1));
+  result = lighting(m, position, light, eye, normal);
+  assert(color_equal(result, color(0.1, 0.1, 0.1)));
+}
+
 int main(void) {
   test_tuple();
   test_canvas();
   test_matrix();
   test_transformation();
   test_raycasting();
+  test_shading();
   printf("ALL OK!");
   return 0;
 }
