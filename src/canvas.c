@@ -5,7 +5,7 @@
 #include <string.h>
 
 Canvas canvas(size_t width, size_t height) {
-  Color *grid = malloc(width * height * sizeof(Color));
+  Color *grid = calloc(width * height, sizeof(Color));
   memset(grid, 0, width * height * sizeof(Color));
   return (Canvas){grid, width, height};
 }
@@ -26,15 +26,26 @@ void canvas_print(Canvas canvas) {
   printf("P3\n");
   printf("%lu %lu\n", canvas.height, canvas.width);
   printf("255\n");
+  const size_t max_width = 5; // 72 = 4*3*6 // 4chars 3channels 6pixels
+  size_t width = 0;
   for (size_t row = 0; row < canvas.height; ++row) {
     for (size_t col = 0; col < canvas.width; ++col) {
       Color current = canvas_get(canvas, row, col);
       unsigned char r = pixel(current.red);
       unsigned char g = pixel(current.green);
       unsigned char b = pixel(current.blue);
-      printf("%d %d %d\n", r, g, b);
+      printf("%3d %3d %3d", r, g, b);
+      if (++width > max_width) {
+        printf("\n");
+        width = 0;
+      } else {
+        printf(" ");
+      }
     }
   }
 }
 
-void canvas_free(Canvas *canvas) { free(canvas->grid); }
+void canvas_free(Canvas *canvas) {
+  free(canvas->grid);
+  canvas->grid = NULL;
+}

@@ -1,9 +1,6 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#define MAX_LINE_WIDTH 70
-#define MAX_COMPONENTS MAX_LINE_WIDTH / 4
-
 #include "./color.h"
 #include <stdlib.h>
 

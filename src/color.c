@@ -14,6 +14,9 @@ Color color_mul(Color a, Color b) {
 Color color_smul(Color a, float by) {
   return color(a.blue * by, a.green * by, a.blue * by);
 }
+Color color_sdiv(Color a, float by) {
+  return color(a.blue / by, a.green / by, a.blue / by);
+}
 bool color_equal(Color a, Color b) {
   return near(a.red, b.red) && near(a.green, b.green) && near(a.blue, b.blue);
 }
