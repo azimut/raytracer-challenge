@@ -355,6 +355,34 @@ void test_world(void) {
   assert(m4_equal(mat4, m4(-0.50709, 0.50709, 0.67612, -2.36643, 0.76772,
                            0.60609, 0.12122, -2.82843, -0.35857, 0.59761,
                            -0.71714, 0, 0, 0, 0, 1)));
+  // camera()
+  Camera cam = camera(160, 120, M_PI_2);
+  assert(m4_equal(cam.transform, m4_identity()));
+  cam = camera(200, 125, M_PI_2);
+  assert(near(cam.pixel_size, 0.01)); // horizontal canvas
+  cam = camera(125, 200, M_PI_2);
+  assert(near(cam.pixel_size, 0.01)); // vertical canvas
+  // ray_for_pixel()
+  cam = camera(201, 101, M_PI_2);
+  r = ray_for_pixel(cam, 100, 50);
+  assert(tuple_equal(r.origin, point(0, 0, 0))); // center of canvas
+  assert(tuple_equal(r.direction, vector(0, 0, -1)));
+  cam = camera(201, 101, M_PI_2);
+  r = ray_for_pixel(cam, 0, 0);
+  assert(tuple_equal(r.origin, point(0, 0, 0))); // corner of canvas
+  assert(tuple_equal(r.direction, vector(0.66519, 0.33259, -0.66851)));
+  cam = camera(201, 101, M_PI_2);
+  cam.transform = m4_mul(rotation_y(M_PI_4), translation(0, -2, 5));
+  r = ray_for_pixel(cam, 100, 50);
+  assert(tuple_equal(r.origin, point(0, 2, -5)));
+  assert(tuple_equal(r.direction, vector(sqrtf(2) / 2, 0, -sqrtf(2) / 2)));
+  // render()
+  w = world_default();
+  cam = camera(11, 11, M_PI_2);
+  cam.transform =
+      view_transform(point(0, 0, -5), point(0, 0, 0), vector(0, 1, 0));
+  Canvas image = render(cam, w);
+  assert(color_equal(canvas_get(image, 5, 5), color(0.38066, 0.47583, 0.2855)));
 }
 
 int main(void) {
