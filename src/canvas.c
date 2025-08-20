@@ -6,7 +6,6 @@
 
 Canvas canvas(size_t width, size_t height) {
   Color *grid = calloc(width * height, sizeof(Color));
-  memset(grid, 0, width * height * sizeof(Color));
   return (Canvas){grid, width, height};
 }
 
