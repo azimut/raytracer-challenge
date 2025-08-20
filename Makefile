@@ -7,7 +7,7 @@ ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 endif
 ifdef SANITIZE
-	CFLAGS += -fsanitize=address -fno-omit-frame-pointer
+	CFLAGS += -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer
 endif
 
 .PHONY: test
@@ -23,4 +23,9 @@ test/5raysphere: test/5raysphere.c $(SRC)
 media/6shading.jpg: media/6shading.ppm ; convert $< $@
 media/6shading.ppm: test/6shading      ; $< > $@
 test/6shading: test/6shading.c $(SRC)
+	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+
+media/7world.jpg: media/7world.ppm ; convert $< $@
+media/7world.ppm: test/7world      ; $< > $@
+test/7world: test/7world.c $(SRC)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
