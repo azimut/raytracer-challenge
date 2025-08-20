@@ -14,5 +14,6 @@ Intersections world_intersect(World, Ray);
 void world_enter(World *, Sphere);
 World world_default(void);
 void world_free(World *);
+Color shade_hit(World, Computations);
 
 #endif /* WORLD_H */

@@ -98,11 +98,18 @@ void intersections_sort(Intersections *is) {
 }
 
 Computations prepare_computations(Intersection ii, Ray r) {
-  return (Computations){
+  Computations comp = {
       .eye = tuple_neg(r.direction),
       .point = position(r, ii.t),
       .normal = normal_at(ii.object, position(r, ii.t)),
       .object = ii.object,
       .t = ii.t,
   };
+  if (tuple_dot_product(comp.normal, comp.eye) < 0) {
+    comp.is_inside = true;
+    comp.normal = tuple_neg(comp.normal);
+  } else {
+    comp.is_inside = false;
+  }
+  return comp;
 }
