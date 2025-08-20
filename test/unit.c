@@ -4,6 +4,7 @@
 #include "../src/shading.h"
 #include "../src/transformation.h"
 #include "../src/util.h"
+#include "../src/world.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -263,6 +264,18 @@ void test_shading(void) {
   light = pointlight(point(0, 0, 10), color(1, 1, 1));
   result = lighting(m, position, light, eye, normal);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
+}
+
+void test_world(void) {
+  World w = world_default();
+  Ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+  Intersections is = world_intersect(w, r);
+  assert(is.count == 4);
+  assert(is.hits[0].t == 4.0);
+  assert(is.hits[1].t == 4.5);
+  assert(is.hits[2].t == 5.5);
+  assert(is.hits[3].t == 6.0);
+  free_intersections(is);
 }
 
 int main(void) {
