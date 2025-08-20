@@ -14,5 +14,6 @@ Color color_mul(Color, Color);
 Color color_smul(Color, float);
 Color color_sdiv(Color, float);
 bool color_equal(Color, Color);
+void color_print(Color);
 
 #endif /* COLOR_H */
