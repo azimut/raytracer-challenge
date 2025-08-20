@@ -21,11 +21,9 @@ World world_default(void) {
   w.light = pointlight(point(-10, 10, -10), color(1, 1, 1));
 
   Sphere s1 = sphere();
-  MaterialPhong m1 = material();
-  m1.color = color(0.8, 1.0, 0.6);
-  m1.diffuse = 0.7;
-  m1.specular = 0.2;
-  set_material(&s1, m1);
+  s1.material.color = color(0.8, 1.0, 0.6);
+  s1.material.diffuse = 0.7;
+  s1.material.specular = 0.2;
   world_enter(&w, s1);
 
   Sphere s2 = sphere();
@@ -68,4 +66,9 @@ Intersections world_intersect(World world, Ray ray) {
   }
   intersections_sort(&is);
   return is;
+}
+
+Color shade_hit(World world, Computations comp) {
+  return lighting(comp.object.material, comp.point, world.light, comp.eye,
+                  comp.normal);
 }

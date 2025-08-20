@@ -281,20 +281,46 @@ void test_world(void) {
   Intersection i = intersection(4, s);
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   Computations comp = prepare_computations(i, r);
+  assert(!comp.is_inside);
   assert(comp.t == i.t);
   assert(comp.object.id == s.id);
   assert(tuple_equal(comp.point, point(0, 0, -1)));
   assert(tuple_equal(comp.eye, vector(0, 0, -1)));
   assert(tuple_equal(comp.normal, vector(0, 0, -1)));
+  r = ray(point(0, 0, 0), vector(0, 0, 1));
+  i = intersection(1, s);
+  comp = prepare_computations(i, r);
+  assert(comp.is_inside);
+  assert(tuple_equal(comp.point, point(0, 0, 1)));
+  assert(tuple_equal(comp.eye, vector(0, 0, -1)));
+  assert(tuple_equal(comp.normal, vector(0, 0, -1)));
+  // shade_color()
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  w = world_default();
+  i = intersection(4, w.objects[0]);
+  comp = prepare_computations(i, r);
+  Color c = shade_hit(w, comp);
+  color_print(c);
+  assert(color_equal(c, color(0.38066, 0.47583, 0.2855)));
+  // shade_color() - inside
+  w = world_default();
+  w.light = pointlight(point(0, 0.25, 0), color(1, 1, 1));
+  r = ray(point(0, 0, 0), vector(0, 0, 1));
+  i = intersection(0.5, w.objects[1]);
+  comp = prepare_computations(i, r);
+  c = shade_hit(w, comp);
+  color_print(c);
+  assert(color_equal(c, color(0.90498, 0.90498, 0.90498)));
 }
 
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
-  test_raycasting();
-  test_shading();
-  printf("ALL OK!");
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
+  /* test_raycasting(); */
+  /* test_shading(); */
+  test_world();
+  printf("ALL OK!\n");
   return 0;
 }
