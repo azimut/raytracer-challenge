@@ -323,6 +323,25 @@ void test_world(void) {
   c = shade_hit(w, comp);
   color_print(c);
   assert(color_equal(c, color(0.90498, 0.90498, 0.90498)));
+  world_free(&w);
+  // color_at()
+  w = world_default();
+  r = ray(point(0, 0, -5), vector(0, 1, 0));
+  c = color_at(w, r);
+  assert(color_equal(c, color(0, 0, 0))); // misses
+  world_free(&w);
+  w = world_default();
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  c = color_at(w, r);
+  assert(color_equal(c, color(0.38066, 0.47583, 0.2855))); // hits
+  world_free(&w);
+  w = world_default();
+  w.objects[0].material.ambient = 1;
+  w.objects[1].material.ambient = 1;
+  r = ray(point(0, 0, 0.75), vector(0, 0, -1));
+  c = color_at(w, r);
+  assert(color_equal(c, w.objects[1].material.color)); // behind the ray
+  world_free(&w);
 }
 
 int main(void) {
