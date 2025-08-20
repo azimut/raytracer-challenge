@@ -83,3 +83,16 @@ void set_transform(Sphere *sphere, Mat4 transformation) {
 void set_material(Sphere *sphere, MaterialPhong material) {
   sphere->material = material;
 }
+
+void intersections_sort(Intersections *is) {
+  for (size_t i = 0; i < is->count - 1; ++i) {
+    for (size_t j = i + 1; j < is->count; ++j) {
+      if (is->hits[i].t > is->hits[j].t) {
+        Intersection in;
+        in = is->hits[i];
+        is->hits[i] = is->hits[j];
+        is->hits[j] = in;
+      }
+    }
+  }
+}
