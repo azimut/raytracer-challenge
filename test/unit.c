@@ -276,6 +276,16 @@ void test_world(void) {
   assert(is.hits[2].t == 5.5);
   assert(is.hits[3].t == 6.0);
   free_intersections(is);
+  // prepare_computations()
+  Sphere s = sphere();
+  Intersection i = intersection(4, s);
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  Computations comp = prepare_computations(i, r);
+  assert(comp.t == i.t);
+  assert(comp.object.id == s.id);
+  assert(tuple_equal(comp.point, point(0, 0, -1)));
+  assert(tuple_equal(comp.eye, vector(0, 0, -1)));
+  assert(tuple_equal(comp.normal, vector(0, 0, -1)));
 }
 
 int main(void) {
