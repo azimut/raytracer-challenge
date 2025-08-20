@@ -29,7 +29,7 @@ Color lighting(MaterialPhong material, Point point, PointLight light,
   Color ambient = color_smul(effective_color, material.ambient);
   Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
   float light_dot_normal = tuple_dot_product(dir_light, normal);
-  Color diffuse = {0, 0, 0}, specular = {0, 0, 0}, black = {0, 0, 0};
+  Color diffuse = {0, 0, 0}, specular = {0, 0, 0};
   if (light_dot_normal >= 0) {
     diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
     Vector reflection = reflect(tuple_neg(dir_light), normal);
