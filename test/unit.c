@@ -181,15 +181,20 @@ void test_raycasting(void) {
   free_intersections(si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
+  free_intersections(si);
   // hit()
   Intersections is = intersections(s, 2, 1.0, 2.0); // all positive
   assert(hit(is) == &is.hits[0]);
+  free_intersections(is);
   is = intersections(s, 2, -1.0, 1.0); // some are negative
   assert(hit(is) == &is.hits[1]);
+  free_intersections(is);
   is = intersections(s, 2, -2.0, -1.0); // all are negative
   assert(hit(is) == NULL);
+  free_intersections(is);
   is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
   assert(hit(is) == &is.hits[3]);
+  free_intersections(is);
   // transform()
   r = ray(point(1, 2, 3), vector(0, 1, 0));
   Mat4 m4 = translation(3, 4, 5);
@@ -212,6 +217,7 @@ void test_raycasting(void) {
   assert(near(is.hits[0].t, 3));
   assert(near(is.hits[1].t, 7));
   set_transform(&s, translation(5, 0, 0));
+  free_intersections(is);
   is = intersect(s, r);
   assert(is.count == 0);
 }
@@ -267,15 +273,20 @@ void test_shading(void) {
 }
 
 void test_world(void) {
-  World w = world_default();
+  World w = {0};
   Ray r = ray(point(0, 0, -5), vector(0, 0, 1));
-  Intersections is = world_intersect(w, r);
+  Intersections is = {0};
+  Color c = {0};
+  w = world_default();
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  is = world_intersect(w, r);
   assert(is.count == 4);
   assert(is.hits[0].t == 4.0);
   assert(is.hits[1].t == 4.5);
   assert(is.hits[2].t == 5.5);
   assert(is.hits[3].t == 6.0);
   free_intersections(is);
+  world_free(&w);
   // prepare_computations()
   Sphere s = sphere();
   Intersection i = intersection(4, s);
@@ -299,9 +310,10 @@ void test_world(void) {
   w = world_default();
   i = intersection(4, w.objects[0]);
   comp = prepare_computations(i, r);
-  Color c = shade_hit(w, comp);
+  c = shade_hit(w, comp);
   color_print(c);
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855)));
+  world_free(&w);
   // shade_color() - inside
   w = world_default();
   w.light = pointlight(point(0, 0.25, 0), color(1, 1, 1));
