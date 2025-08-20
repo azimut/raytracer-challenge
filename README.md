@@ -10,4 +10,4 @@ My source code, written in C.
 - Chapter 4: `transformation.h`
 - Chapter 5: `raycasting.h`, `shapes.h`
 - Chapter 6: `shading.h`, `material.h`
-- Chapter 7: `world.h`
+- Chapter 7: `world.h`, `camera.h`
