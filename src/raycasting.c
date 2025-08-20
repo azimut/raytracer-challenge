@@ -96,3 +96,13 @@ void intersections_sort(Intersections *is) {
     }
   }
 }
+
+Computations prepare_computations(Intersection ii, Ray r) {
+  return (Computations){
+      .eye = tuple_neg(r.direction),
+      .point = position(r, ii.t),
+      .normal = normal_at(ii.object, position(r, ii.t)),
+      .object = ii.object,
+      .t = ii.t,
+  };
+}

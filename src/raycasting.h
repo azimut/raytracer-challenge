@@ -19,6 +19,14 @@ typedef struct Intersections {
   size_t count;
   Intersection *hits;
 } Intersections;
+typedef struct Computations {
+  Sphere object;
+  Point point;
+  Vector eye;
+  Vector normal;
+  bool is_inside;
+  float t;
+} Computations;
 
 Ray ray(Point, Tuple);
 Point position(Ray, float);
@@ -32,5 +40,6 @@ Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);
 Ray transform(Ray, Mat4);
 void set_transform(Sphere *, Mat4);
+Computations prepare_computations(Intersection, Ray);
 
 #endif /* RAYCASTING_H */

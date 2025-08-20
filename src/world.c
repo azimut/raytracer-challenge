@@ -9,6 +9,9 @@ void world_enter(World *world, Sphere s) {
   } else {
     world->objects = calloc(1, sizeof(Sphere));
   }
+  if (world->objects == NULL) {
+    perror("alloc in world_enter()");
+  }
   world->objects[world->count] = s;
   world->count++;
 }
