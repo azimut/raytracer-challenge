@@ -1,3 +1,4 @@
+#include "../src/camera.h"
 #include "../src/canvas.h"
 #include "../src/matrix.h"
 #include "../src/raycasting.h"
@@ -273,6 +274,7 @@ void test_shading(void) {
 }
 
 void test_world(void) {
+  Mat4 mat4;
   World w = {0};
   Ray r = ray(point(0, 0, -5), vector(0, 0, 1));
   Intersections is = {0};
@@ -342,6 +344,17 @@ void test_world(void) {
   c = color_at(w, r);
   assert(color_equal(c, w.objects[1].material.color)); // behind the ray
   world_free(&w);
+  // view_transform()
+  mat4 = view_transform(point(0, 0, 0), point(0, 0, -1), vector(0, 1, 0));
+  assert(m4_equal(mat4, m4_identity())); // default orientation
+  mat4 = view_transform(point(0, 0, 0), point(0, 0, 1), vector(0, 1, 0));
+  assert(m4_equal(mat4, scaling(-1, 1, -1))); // positive z == mirror
+  mat4 = view_transform(point(0, 0, 8), point(0, 0, 0), vector(0, 1, 0));
+  assert(m4_equal(mat4, translation(0, 0, -8))); // proff: the world moves
+  mat4 = view_transform(point(1, 3, 2), point(4, -2, 8), vector(1, 1, 0));
+  assert(m4_equal(mat4, m4(-0.50709, 0.50709, 0.67612, -2.36643, 0.76772,
+                           0.60609, 0.12122, -2.82843, -0.35857, 0.59761,
+                           -0.71714, 0, 0, 0, 0, 1)));
 }
 
 int main(void) {
