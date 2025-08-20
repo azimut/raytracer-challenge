@@ -26,21 +26,22 @@ Color lighting(MaterialPhong material, Point point, PointLight light,
                Vector eye, Vector normal) {
   assert(is_point(point) && is_vector(eye) && is_vector(normal));
   Color effective_color = color_mul(material.color, light.intensity);
-  Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
   Color ambient = color_smul(effective_color, material.ambient);
+  Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
   float light_dot_normal = tuple_dot_product(dir_light, normal);
-  Color diffuse = {0}, specular = {0}, black = {0};
+  Color diffuse = {0, 0, 0}, specular = {0, 0, 0}, black = {0, 0, 0};
   if (light_dot_normal >= 0) {
-    diffuse = color_smul(color_smul(effective_color, material.diffuse),
-                         light_dot_normal);
+    diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
     Vector reflection = reflect(tuple_neg(dir_light), normal);
     float reflect_dot_eye = tuple_dot_product(reflection, eye);
     if (reflect_dot_eye > 0) {
       float factor = powf(reflect_dot_eye, material.shininess);
-      specular =
-          color_smul(color_smul(light.intensity, material.specular), factor);
+      specular = color_smul(light.intensity, material.specular * factor);
     }
   }
+  /* color_print(ambient); */
+  /* color_print(diffuse); */
+  /* color_print(specular); */
   return color_add(color_add(ambient, diffuse), specular);
   //  return color_add(ambient, diffuse);
   /* return specular; */
