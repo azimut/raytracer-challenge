@@ -15,5 +15,6 @@ void world_enter(World *, Sphere);
 World world_default(void);
 void world_free(World *);
 Color shade_hit(World, Computations);
+Color color_at(World, Ray);
 
 #endif /* WORLD_H */

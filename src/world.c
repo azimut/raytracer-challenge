@@ -72,3 +72,15 @@ Color shade_hit(World world, Computations comp) {
   return lighting(comp.object.material, comp.point, world.light, comp.eye,
                   comp.normal);
 }
+
+Color color_at(World world, Ray ray) {
+  Intersections is = world_intersect(world, ray);
+  Intersection *i = hit(is);
+  Color color = (Color){0, 0, 0};
+  if (i) {
+    Computations comp = prepare_computations(*i, ray);
+    color = shade_hit(world, comp);
+  }
+  free_intersections(is);
+  return color;
+}
