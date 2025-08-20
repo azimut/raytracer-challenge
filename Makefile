@@ -2,10 +2,12 @@ CC      := gcc
 LDFLAGS := -lm
 SRC     := $(wildcard src/*.c)
 HDR     := $(wildcard src/*.h)
+CFLAGS  := -Wall -Wextra -std=gnu99 -pedantic
 ifdef DEBUG
-	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic -ggdb3 -O0
-else
-	CFLAGS := -Wall -Wextra -std=gnu99 -pedantic
+	CFLAGS += -ggdb3 -O0
+endif
+ifdef SANITIZE
+	CFLAGS += -fsanitize=address -fno-omit-frame-pointer
 endif
 
 .PHONY: test
