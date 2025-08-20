@@ -85,6 +85,8 @@ void set_material(Sphere *sphere, MaterialPhong material) {
 }
 
 void intersections_sort(Intersections *is) {
+  if (!is->count)
+    return;
   for (size_t i = 0; i < is->count - 1; ++i) {
     for (size_t j = i + 1; j < is->count; ++j) {
       if (is->hits[i].t > is->hits[j].t) {
