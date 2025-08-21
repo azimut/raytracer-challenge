@@ -42,10 +42,10 @@ int main(void) {
         canvas_set(&c, row, col,
                    lighting(s.material, obj_pos, light, eye, normal, false));
       }
-      free_intersections(is);
+      free_intersections(&is);
     }
   }
-  canvas_print(c);
+  canvas_save(c, "media/6shading.ppm");
   canvas_free(&c);
   return 0;
 }

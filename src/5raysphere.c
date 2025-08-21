@@ -29,10 +29,10 @@ int main(void) {
       Intersection *i = hit(is);
       // if intersect canvas red
       canvas_set(&c, row, col, i ? red : black);
-      free_intersections(is);
+      free_intersections(&is);
     }
   }
-  canvas_print(c);
+  canvas_save(c, "media/5raysphere.ppm");
   canvas_free(&c);
   return 0;
 }

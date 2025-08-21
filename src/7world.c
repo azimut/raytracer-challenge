@@ -67,6 +67,8 @@ int main(void) {
   world_enter(&w, left);
 
   Canvas canvas = render(cam, w);
-  canvas_print(canvas);
+  canvas_save(canvas, "media/7world.ppm");
+  canvas_free(&canvas);
+  world_free(&w);
   return 0;
 }
