@@ -426,13 +426,13 @@ void test_shadow(void) {
 }
 
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
-  /* test_raycasting(); */
-  /* test_shading(); */
-  /* test_world(); */
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
+  test_raycasting();
+  test_shading();
+  test_world();
   test_shadow();
   printf("ALL OK!\n");
   return 0;

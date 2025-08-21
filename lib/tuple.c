@@ -2,9 +2,11 @@
 #include "./util.h"
 #include <math.h>
 
-Tuple tuple(float x, float y, float z, float w) { return (Tuple){x, y, z, w}; }
-Tuple point(float x, float y, float z) { return (Tuple){x, y, z, 1}; }
-Tuple vector(float x, float y, float z) { return (Tuple){x, y, z, 0}; }
+Tuple tuple(double x, double y, double z, double w) {
+  return (Tuple){x, y, z, w};
+}
+Tuple point(double x, double y, double z) { return (Tuple){x, y, z, 1}; }
+Tuple vector(double x, double y, double z) { return (Tuple){x, y, z, 0}; }
 
 bool is_point(Tuple t) { return t.w == 1; }
 bool is_vector(Tuple t) { return t.w == 0; }
@@ -22,21 +24,23 @@ Tuple tuple_sub(Tuple a, Tuple b) {
 
 Tuple tuple_neg(Tuple a) { return (Tuple){-a.x, -a.y, -a.z, a.w}; }
 
-Tuple tuple_smul(Tuple a, float by) {
+Tuple tuple_smul(Tuple a, double by) {
   return vector(a.x * by, a.y * by, a.z * by);
 }
-Tuple tuple_sdiv(Tuple a, float by) {
+Tuple tuple_sdiv(Tuple a, double by) {
   return vector(a.x / by, a.y / by, a.z / by);
 }
 
-float tuple_length(Tuple a) { return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z); }
+double tuple_length(Tuple a) {
+  return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z);
+}
 
 Tuple tuple_normalize(Tuple a) {
-  float length = tuple_length(a);
+  double length = tuple_length(a);
   return vector(a.x / length, a.y / length, a.z / length);
 }
 
-float tuple_dot_product(Tuple a, Tuple b) {
+double tuple_dot_product(Tuple a, Tuple b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 

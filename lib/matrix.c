@@ -3,14 +3,16 @@
 #include "./util.h"
 #include <stdio.h>
 
-Mat2 m2(float a, float b, float c, float d) { return (Mat2){{{a, b}, {c, d}}}; }
-Mat3 m3(float a, float b, float c, float d, float e, float f, float g, float h,
-        float i) {
+Mat2 m2(double a, double b, double c, double d) {
+  return (Mat2){{{a, b}, {c, d}}};
+}
+Mat3 m3(double a, double b, double c, double d, double e, double f, double g,
+        double h, double i) {
   return (Mat3){{{a, b, c}, {d, e, f}, {g, h, i}}};
 }
-Mat4 m4(float a, float b, float c, float d, float e, float f, float g, float h,
-        float i, float j, float k, float l, float m, float n, float o,
-        float p) {
+Mat4 m4(double a, double b, double c, double d, double e, double f, double g,
+        double h, double i, double j, double k, double l, double m, double n,
+        double o, double p) {
   return (Mat4){{{a, b, c, d}, {e, f, g, h}, {i, j, k, l}, {m, n, o, p}}};
 }
 
@@ -20,9 +22,9 @@ Mat4 m4_identity() {
 Mat3 m3_identity() { return (Mat3){{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}; }
 Mat2 m2_identity() { return (Mat2){{{1, 0}, {0, 1}}}; }
 
-float m4_get(Mat4 m4, size_t row, size_t col) { return m4.m[row][col]; }
+double m4_get(Mat4 m4, size_t row, size_t col) { return m4.m[row][col]; }
 
-Mat4 m4_set(Mat4 m4, size_t row, size_t col, float val) {
+Mat4 m4_set(Mat4 m4, size_t row, size_t col, double val) {
   m4.m[row][col] = val;
   return m4;
 }
@@ -69,7 +71,7 @@ Tuple m4_tmul(Mat4 m, Tuple t) {
   };
 }
 
-static Mat4 m4_sdiv(Mat4 m, float by) {
+static Mat4 m4_sdiv(Mat4 m, double by) {
   Mat4 result;
   for (size_t row = 0; row < 4; row++) {
     for (size_t col = 0; col < 4; col++) {
@@ -88,7 +90,7 @@ Mat4 m4_transpose(Mat4 m) {
 
 // Inversion - START
 
-static float m2_determinant(Mat2 m2) {
+static double m2_determinant(Mat2 m2) {
   return (m2.m[0][0] * m2.m[1][1]) - (m2.m[0][1] * m2.m[1][0]);
 }
 
@@ -129,30 +131,30 @@ Mat3 m4_submatrix(Mat4 m4, size_t skip_row, size_t skip_col) {
   return result;
 }
 
-static float m3_minor(Mat3 m, size_t row, size_t col) {
+static double m3_minor(Mat3 m, size_t row, size_t col) {
   return m2_determinant(m3_submatrix(m, row, col));
 }
-static float m3_cofactor(Mat3 m3, size_t row, size_t col) {
-  float minor = m3_minor(m3, row, col);
+static double m3_cofactor(Mat3 m3, size_t row, size_t col) {
+  double minor = m3_minor(m3, row, col);
   return ((row + col) % 2 == 0) ? minor : -minor;
 }
-static float m3_determinant(Mat3 m3) {
-  float result = 0;
+static double m3_determinant(Mat3 m3) {
+  double result = 0;
   for (size_t col = 0; col < 3; col++) {
     result += m3.m[0][col] * m3_cofactor(m3, 0, col);
   }
   return result;
 }
 
-static float m4_minor(Mat4 m4, size_t row, size_t col) {
+static double m4_minor(Mat4 m4, size_t row, size_t col) {
   return m3_determinant(m4_submatrix(m4, row, col));
 }
-static float m4_cofactor(Mat4 m4, size_t row, size_t col) {
-  float minor = m4_minor(m4, row, col);
+static double m4_cofactor(Mat4 m4, size_t row, size_t col) {
+  double minor = m4_minor(m4, row, col);
   return ((row + col) % 2 == 0) ? minor : -minor;
 }
-static float m4_determinant(Mat4 m4) {
-  float result = 0;
+static double m4_determinant(Mat4 m4) {
+  double result = 0;
   for (size_t col = 0; col < 4; col++) {
     result += m4.m[0][col] * m4_cofactor(m4, 0, col);
   }
@@ -162,7 +164,7 @@ static float m4_determinant(Mat4 m4) {
 /* static bool m4_is_invertible(Mat4 m4) { return m4_determinant(m4) != 0; } */
 
 Mat4 m4_inverse(Mat4 m) {
-  float determinant = m4_determinant(m);
+  double determinant = m4_determinant(m);
   Mat4 result;
   for (size_t row = 0; row < 4; row++) {
     for (size_t col = 0; col < 4; col++) {

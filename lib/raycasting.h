@@ -12,7 +12,7 @@ typedef struct Ray {
   Vector direction;
 } Ray;
 typedef struct Intersection {
-  float t;
+  double t;
   Sphere object;
 } Intersection;
 typedef struct Intersections {
@@ -25,13 +25,13 @@ typedef struct Computations {
   Vector eye;
   Vector normal;
   bool is_inside;
-  float t;
+  double t;
 } Computations;
 
 Ray ray(Point, Tuple);
-Point position(Ray, float);
+Point position(Ray, double);
 void set_material(Sphere *, MaterialPhong);
-Intersection intersection(float, Sphere);
+Intersection intersection(double, Sphere);
 Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
 void free_intersections(Intersections);
