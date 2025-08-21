@@ -8,7 +8,10 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-Ray ray(Point origin, Tuple direction) { return (Ray){origin, direction}; }
+Ray ray(Point origin, Vector direction) {
+  assert(is_point(origin) && is_vector(direction));
+  return (Ray){origin, direction};
+}
 
 Point position(Ray r, double t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
@@ -49,9 +52,11 @@ Intersections intersect(Sphere sphere, Ray ray) {
   return (Intersections){.count = 0, .hits = NULL};
 }
 
-void free_intersections(Intersections is) {
-  if (is.count > 0)
-    free(is.hits);
+void free_intersections(Intersections *is) {
+  if (!is->hits)
+    return;
+  free(is->hits);
+  is->hits = NULL;
 }
 
 bool intersection_equal(Intersection i1, Intersection i2) {
