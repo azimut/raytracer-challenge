@@ -21,10 +21,10 @@ static unsigned char pixel(float channel) {
   return fmin(fmax(channel, 0.0f), 1.0f) * 255;
 }
 
-void canvas_print(Canvas canvas) {
-  printf("P3\n");
-  printf("%lu %lu\n", canvas.height, canvas.width);
-  printf("255\n");
+static void canvas_stream(Canvas canvas, FILE *fp) {
+  fprintf(fp, "P3\n");
+  fprintf(fp, "%lu %lu\n", canvas.height, canvas.width);
+  fprintf(fp, "255\n");
   const size_t max_width = 5; // 72 = 4*3*6 // 4chars 3channels 6pixels
   size_t width = 0;
   for (size_t row = 0; row < canvas.height; ++row) {
@@ -33,15 +33,23 @@ void canvas_print(Canvas canvas) {
       unsigned char r = pixel(current.red);
       unsigned char g = pixel(current.green);
       unsigned char b = pixel(current.blue);
-      printf("%3d %3d %3d", r, g, b);
+      fprintf(fp, "%3d %3d %3d", r, g, b);
       if (++width > max_width) {
-        printf("\n");
+        fprintf(fp, "\n");
         width = 0;
       } else {
-        printf(" ");
+        fprintf(fp, " ");
       }
     }
   }
+}
+
+void canvas_print(Canvas canvas) { canvas_stream(canvas, stdout); }
+
+void canvas_save(Canvas canvas, char *filepath) {
+  FILE *fp = fopen(filepath, "w");
+  canvas_stream(canvas, fp);
+  fclose(fp);
 }
 
 void canvas_free(Canvas *canvas) {
