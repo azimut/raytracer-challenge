@@ -1,7 +1,7 @@
 CC      := gcc
 LDFLAGS := -lm
-SRC     := $(wildcard src/*.c)
-HDR     := $(wildcard src/*.h)
+SRC     := $(wildcard lib/*.c)
+HDR     := $(wildcard lib/*.h)
 CFLAGS  := -Wall -Wextra -std=gnu99 -pedantic
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
@@ -11,21 +11,15 @@ ifdef SANITIZE
 endif
 
 .PHONY: test
-test: test/unit; ./test/unit
-test/unit: test/unit.c $(SRC) $(HDR)
+test: build/unit; ./build/unit
+build/unit: test/unit.c $(SRC) $(HDR)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
-media/5raysphere.jpg: media/5raysphere.ppm ; convert $< $@
-media/5raysphere.ppm: test/5raysphere      ; $< > $@
-test/5raysphere: test/5raysphere.c $(SRC)
-	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+media/%.jpg: media/%.ppm ; convert $< $@
+media/%.ppm: build/%     ; $< > $@
 
-media/6shading.jpg: media/6shading.ppm ; convert $< $@
-media/6shading.ppm: test/6shading      ; $< > $@
-test/6shading: test/6shading.c $(SRC)
-	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
-
-media/7world.jpg: media/7world.ppm ; convert $< $@
-media/7world.ppm: test/7world      ; $< > $@
-test/7world: test/7world.c $(SRC)
+build/5raysphere:
+build/6shading:
+build/7world:
+build/%: src/%.c $(SRC)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)

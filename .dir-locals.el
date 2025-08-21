@@ -3,14 +3,14 @@
                               command-cwd dape-command-cwd
                               command "gdb"
                               command-args ("--interpreter=dap")
-                              compile "make -B test/unit DEBUG=1"
+                              compile "make -B build/unit DEBUG=1"
                               :request "launch"
-                              :program "test/unit")
-                             (gdb-test-5raysphere
+                              :program "build/unit")
+                             (gdb-5raysphere
                               modes (c-mode)
                               command-cwd dape-command-cwd
                               command "gdb"
                               command-args ("--interpreter=dap")
-                              compile "make -B test/5raysphere DEBUG=1"
+                              compile "make -B build/5raysphere DEBUG=1"
                               :request "launch"
-                              :program "test/5raysphere"))))))
+                              :program "build/5raysphere"))))))
