@@ -28,13 +28,13 @@ typedef struct Computations {
   double t;
 } Computations;
 
-Ray ray(Point, Tuple);
+Ray ray(Point, Vector);
 Point position(Ray, double);
 void set_material(Sphere *, MaterialPhong);
 Intersection intersection(double, Sphere);
 Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
-void free_intersections(Intersections);
+void free_intersections(Intersections *);
 void intersections_sort(Intersections *);
 Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);

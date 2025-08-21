@@ -167,35 +167,35 @@ void test_raycasting(void) {
   Intersections si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == 4 && si.hits[1].t == 6);
   r = ray(point(0, 1, -5), vector(0, 0, 1)); // tangent intersection
-  free_intersections(si);
+  free_intersections(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == 5 && si.hits[1].t == 5);
   r = ray(point(0, 2, -5), vector(0, 0, 1)); // ray misses the sphere
-  free_intersections(si);
+  free_intersections(&si);
   si = intersect(s, r);
   assert(si.count == 0);
   r = ray(point(0, 0, 0), vector(0, 0, 1)); // ray inside sphere
-  free_intersections(si);
+  free_intersections(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -1 && si.hits[1].t == 1);
   r = ray(point(0, 0, 5), vector(0, 0, 1)); // sphere behind a ray
-  free_intersections(si);
+  free_intersections(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
-  free_intersections(si);
+  free_intersections(&si);
   // hit()
   Intersections is = intersections(s, 2, 1.0, 2.0); // all positive
   assert(hit(is) == &is.hits[0]);
-  free_intersections(is);
+  free_intersections(&is);
   is = intersections(s, 2, -1.0, 1.0); // some are negative
   assert(hit(is) == &is.hits[1]);
-  free_intersections(is);
+  free_intersections(&is);
   is = intersections(s, 2, -2.0, -1.0); // all are negative
   assert(hit(is) == NULL);
-  free_intersections(is);
+  free_intersections(&is);
   is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
   assert(hit(is) == &is.hits[3]);
-  free_intersections(is);
+  free_intersections(&is);
   // transform()
   r = ray(point(1, 2, 3), vector(0, 1, 0));
   Mat4 m4 = translation(3, 4, 5);
@@ -218,7 +218,7 @@ void test_raycasting(void) {
   assert(near(is.hits[0].t, 3));
   assert(near(is.hits[1].t, 7));
   set_transform(&s, translation(5, 0, 0));
-  free_intersections(is);
+  free_intersections(&is);
   is = intersect(s, r);
   assert(is.count == 0);
 }
@@ -287,7 +287,7 @@ void test_world(void) {
   assert(is.hits[1].t == 4.5);
   assert(is.hits[2].t == 5.5);
   assert(is.hits[3].t == 6.0);
-  free_intersections(is);
+  free_intersections(&is);
   world_free(&w);
   // prepare_computations()
   Sphere s = sphere();
@@ -383,6 +383,8 @@ void test_world(void) {
       view_transform(point(0, 0, -5), point(0, 0, 0), vector(0, 1, 0));
   Canvas image = render(cam, w);
   assert(color_equal(canvas_get(image, 5, 5), color(0.38066, 0.47583, 0.2855)));
+  world_free(&w);
+  canvas_free(&image);
 }
 
 void test_shadow(void) {
@@ -403,6 +405,7 @@ void test_shadow(void) {
   assert(is_shadowed(w, point(10, -10, 10)));   // nothing hit, behind sphere
   assert(!is_shadowed(w, point(-20, 20, -20))); // nothing hit, sides apart
   assert(!is_shadowed(w, point(-2, 2, -2)));    // nothing hit, in between
+  world_free(&w);
   // shade_hit() given a shadow
   w = world_default();
   w.light = pointlight(point(0, 0, -10), color(1, 1, 1));
@@ -423,6 +426,7 @@ void test_shadow(void) {
   comp = prepare_computations(i, r);
   assert(comp.over_point.z < -EPSILON / 2);
   assert(comp.point.z > comp.over_point.z);
+  world_free(&w);
 }
 
 int main(void) {
