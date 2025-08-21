@@ -10,8 +10,8 @@ typedef struct Canvas {
 } Canvas;
 
 Canvas canvas(size_t, size_t);
-Color canvas_get(Canvas, int, int);
-void canvas_set(Canvas *, int, int, Color);
+Color canvas_get(Canvas, size_t, size_t);
+void canvas_set(Canvas *, size_t, size_t, Color);
 void canvas_print(Canvas);
 void canvas_free(Canvas *);
 void canvas_save(Canvas, char *);
