@@ -21,7 +21,7 @@ typedef struct Intersections {
 } Intersections;
 typedef struct Computations {
   Sphere object;
-  Point point;
+  Point point, over_point;
   Vector eye;
   Vector normal;
   bool is_inside;

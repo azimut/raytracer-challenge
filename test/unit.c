@@ -251,25 +251,25 @@ void test_shading(void) {
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
   PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
-  Color result = lighting(m, position, light, eye, normal);
+  Color result = lighting(m, position, light, eye, normal, false);
   assert(color_equal(result, color(1.9, 1.9, 1.9)));
 
   eye = vector(0, sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, position, light, eye, normal);
+  result = lighting(m, position, light, eye, normal, false);
   assert(color_equal(result, color(1, 1, 1)));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 10, -10), color(1, 1, 1));
-  result = lighting(m, position, light, eye, normal);
+  result = lighting(m, position, light, eye, normal, false);
   assert(color_equal(result, color(0.7364, 0.7364, 0.7364)));
 
   eye = vector(0, -sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, position, light, eye, normal);
+  result = lighting(m, position, light, eye, normal, false);
   assert(color_equal(result, color(1.6364, 1.6364, 1.6364)));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 0, 10), color(1, 1, 1));
-  result = lighting(m, position, light, eye, normal);
+  result = lighting(m, position, light, eye, normal, false);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
 }
 
@@ -385,6 +385,46 @@ void test_world(void) {
   assert(color_equal(canvas_get(image, 5, 5), color(0.38066, 0.47583, 0.2855)));
 }
 
+void test_shadow(void) {
+  // lighting/in_shadow
+  Vector eye = vector(0, 0, -1);
+  Vector normal = vector(0, 0, -1);
+  PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  bool in_shadow = true;
+  MaterialPhong m = material();
+  Point position = point(0, 0, 0);
+  Color result = lighting(m, position, light, eye, normal, in_shadow);
+  assert(color_equal(result, color(0.1, 0.1, 0.1)));
+  // is_shadowed()
+  World w = world_default();
+  Point p = point(0, 10, 0);
+  assert(!is_shadowed(w, p));
+  assert(!is_shadowed(w, point(0, 10, 0)));     // nothing hit
+  assert(is_shadowed(w, point(10, -10, 10)));   // nothing hit, behind sphere
+  assert(!is_shadowed(w, point(-20, 20, -20))); // nothing hit, sides apart
+  assert(!is_shadowed(w, point(-2, 2, -2)));    // nothing hit, in between
+  // shade_hit() given a shadow
+  w = world_default();
+  w.light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  Sphere s1 = sphere(), s2 = sphere();
+  set_transform(&s2, translation(0, 0, 10));
+  world_enter(&w, s1);
+  world_enter(&w, s2);
+  Ray r = ray(point(0, 0, 5), vector(0, 0, 1));
+  Intersection i = intersection(4, s2);
+  Computations comp = prepare_computations(i, r);
+  Color c = shade_hit(w, comp);
+  assert(color_equal(c, color(0.1, 0.1, 0.1)));
+  // a hit should offset the point
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  s1 = sphere();
+  set_transform(&s1, translation(0, 0, 1));
+  i = intersection(5, s1);
+  comp = prepare_computations(i, r);
+  assert(comp.over_point.z < -EPSILON / 2);
+  assert(comp.point.z > comp.over_point.z);
+}
+
 int main(void) {
   /* test_tuple(); */
   /* test_canvas(); */
@@ -392,7 +432,8 @@ int main(void) {
   /* test_transformation(); */
   /* test_raycasting(); */
   /* test_shading(); */
-  test_world();
+  /* test_world(); */
+  test_shadow();
   printf("ALL OK!\n");
   return 0;
 }

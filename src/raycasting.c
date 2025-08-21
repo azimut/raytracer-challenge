@@ -1,6 +1,7 @@
 #include "./raycasting.h"
 #include "./shading.h"
 #include "./tuple.h"
+#include "./util.h"
 #include <assert.h>
 #include <float.h>
 #include <math.h>
@@ -113,5 +114,6 @@ Computations prepare_computations(Intersection ii, Ray r) {
   } else {
     comp.is_inside = false;
   }
+  comp.over_point = tuple_add(comp.point, tuple_smul(comp.normal, EPSILON));
   return comp;
 }

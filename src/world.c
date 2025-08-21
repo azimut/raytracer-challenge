@@ -69,8 +69,8 @@ Intersections world_intersect(World world, Ray ray) {
 }
 
 Color shade_hit(World world, Computations comp) {
-  return lighting(comp.object.material, comp.point, world.light, comp.eye,
-                  comp.normal);
+  return lighting(comp.object.material, comp.over_point, world.light, comp.eye,
+                  comp.normal, is_shadowed(world, comp.over_point));
 }
 
 Color color_at(World world, Ray ray) {
@@ -83,4 +83,18 @@ Color color_at(World world, Ray ray) {
   }
   free_intersections(is);
   return color;
+}
+
+bool is_shadowed(World w, Point p) {
+  Vector shadow_vector = tuple_sub(w.light.position, p);
+  float distance = tuple_length(shadow_vector);
+  Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
+  Intersections is = world_intersect(w, shadow_ray);
+  Intersection *h = hit(is);
+  bool shadowed = false;
+  if (h && h->t < distance) {
+    shadowed = true;
+  }
+  free_intersections(is);
+  return shadowed;
 }
