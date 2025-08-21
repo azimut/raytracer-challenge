@@ -23,7 +23,7 @@ static unsigned char pixel(float channel) {
 
 static void canvas_stream(Canvas canvas, FILE *fp) {
   fprintf(fp, "P3\n");
-  fprintf(fp, "%lu %lu\n", canvas.height, canvas.width);
+  fprintf(fp, "%lu %lu\n", canvas.width, canvas.height);
   fprintf(fp, "255\n");
   const size_t max_width = 5; // 72 = 4*3*6 // 4chars 3channels 6pixels
   size_t width = 0;
