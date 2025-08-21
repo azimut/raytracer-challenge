@@ -61,7 +61,7 @@ Canvas render(Camera cam, World world) {
   for (size_t row = 0; row < cam.vsize; ++row) {
     for (size_t col = 0; col < cam.hsize; ++col) {
       ray = ray_for_pixel(cam, col, row);
-      canvas_set(&c, col, row, color_at(world, ray));
+      canvas_set(&c, row, col, color_at(world, ray));
     }
   }
   return c;
