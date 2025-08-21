@@ -4,17 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-Canvas canvas(size_t width, size_t height) {
-  Color *grid = calloc(width * height, sizeof(Color));
-  return (Canvas){grid, width, height};
+Canvas canvas(size_t w, size_t h) {
+  Color *grid = calloc(w * h, sizeof(Color));
+  return (Canvas){.grid = grid, .width = w, .height = h};
 }
 
-Color canvas_get(Canvas canvas, int row, int col) {
-  return canvas.grid[col + row * canvas.height];
+Color canvas_get(Canvas canvas, size_t row, size_t col) {
+  return canvas.grid[col + (row * canvas.width)];
 }
 
-void canvas_set(Canvas *canvas, int row, int col, Color value) {
-  canvas->grid[col + row * canvas->height] = value;
+void canvas_set(Canvas *canvas, size_t row, size_t col, Color value) {
+  canvas->grid[col + (row * canvas->width)] = value;
 }
 
 static unsigned char pixel(float channel) {
