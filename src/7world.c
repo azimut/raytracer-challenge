@@ -1,12 +1,12 @@
-#include "../src/camera.h"
-#include "../src/canvas.h"
-#include "../src/color.h"
-#include "../src/material.h"
-#include "../src/raycasting.h"
-#include "../src/shading.h"
-#include "../src/transformation.h"
-#include "../src/tuple.h"
-#include "../src/world.h"
+#include "../lib/camera.h"
+#include "../lib/canvas.h"
+#include "../lib/color.h"
+#include "../lib/material.h"
+#include "../lib/raycasting.h"
+#include "../lib/shading.h"
+#include "../lib/transformation.h"
+#include "../lib/tuple.h"
+#include "../lib/world.h"
 #include <math.h>
 
 int main(void) {
