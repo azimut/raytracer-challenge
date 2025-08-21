@@ -10,11 +10,11 @@
 
 Ray ray(Point origin, Tuple direction) { return (Ray){origin, direction}; }
 
-Point position(Ray r, float t) {
+Point position(Ray r, double t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
 }
 
-Intersection intersection(float t, Sphere object) {
+Intersection intersection(double t, Sphere object) {
   return (Intersection){t, object};
 }
 
@@ -27,7 +27,7 @@ Intersections intersections(Sphere object, int count, ...) {
   result.count = count;
   va_start(ap, count);
   for (int i = 0; i < count; ++i) {
-    result.hits[i].t = (float)va_arg(ap, double); // due automatic promotion
+    result.hits[i].t = (double)va_arg(ap, double); // due automatic promotion
     result.hits[i].object = object;
   }
   va_end(ap);
@@ -37,13 +37,13 @@ Intersections intersections(Sphere object, int count, ...) {
 Intersections intersect(Sphere sphere, Ray ray) {
   Ray tRay = transform(ray, m4_inverse(sphere.transformation));
   Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
-  float a = tuple_dot_product(tRay.direction, tRay.direction);
-  float b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
-  float c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
-  float discriminant = b * b - 4 * a * c;
+  double a = tuple_dot_product(tRay.direction, tRay.direction);
+  double b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
+  double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
+  double discriminant = b * b - 4 * a * c;
   if (discriminant >= 0) {
-    float i1 = (-b - sqrtf(discriminant)) / (2 * a);
-    float i2 = (-b + sqrtf(discriminant)) / (2 * a);
+    double i1 = (-b - sqrtf(discriminant)) / (2 * a);
+    double i2 = (-b + sqrtf(discriminant)) / (2 * a);
     return intersections(sphere, 2, i1, i2);
   }
   return (Intersections){.count = 0, .hits = NULL};
@@ -60,14 +60,14 @@ bool intersection_equal(Intersection i1, Intersection i2) {
 
 Intersection *hit(Intersections is) {
   size_t idx;
-  float current = FLT_MAX;
+  double current = DBL_MAX;
   for (size_t i = 0; i < is.count; ++i) {
     if (is.hits[i].t > 0 && is.hits[i].t < current) {
       current = is.hits[i].t;
       idx = i;
     }
   }
-  return (current == FLT_MAX) ? NULL : &is.hits[idx];
+  return (current == DBL_MAX) ? NULL : &is.hits[idx];
 }
 
 Ray transform(Ray ray, Mat4 m4) {
