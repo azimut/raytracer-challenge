@@ -29,8 +29,8 @@ void test_tuple() {
   assert(1 == tuple_length(vector(1, 0, 0)));
   assert(1 == tuple_length(vector(0, 1, 0)));
   assert(1 == tuple_length(vector(0, 0, 1)));
-  assert(sqrtf(14) == tuple_length(vector(1, 2, 3)));
-  assert(sqrtf(14) == tuple_length(vector(-1, -2, -3)));
+  assert(sqrt(14) == tuple_length(vector(1, 2, 3)));
+  assert(sqrt(14) == tuple_length(vector(-1, -2, -3)));
   assert(tuple_equal(tuple_normalize(vector(4, 0, 0)), vector(1, 0, 0)));
   assert(tuple_equal(tuple_normalize(vector(1, 2, 3)),
                      vector(0.26726, 0.53452, 0.80178)));
