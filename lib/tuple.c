@@ -31,9 +31,7 @@ Tuple tuple_sdiv(Tuple a, double by) {
   return vector(a.x / by, a.y / by, a.z / by);
 }
 
-double tuple_length(Tuple a) {
-  return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z);
-}
+double tuple_length(Tuple a) { return sqrt(a.x * a.x + a.y * a.y + a.z * a.z); }
 
 Tuple tuple_normalize(Tuple a) {
   double length = tuple_length(a);

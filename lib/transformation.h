@@ -3,12 +3,12 @@
 
 #include "./matrix.h"
 
-Mat4 translation(float, float, float);
-Mat4 scaling(float, float, float);
-Mat4 rotation_x(float);
-Mat4 rotation_y(float);
-Mat4 rotation_z(float);
-Mat4 shearing(float, float, float, float, float, float);
-float radians(float);
+Mat4 translation(double, double, double);
+Mat4 scaling(double, double, double);
+Mat4 rotation_x(double);
+Mat4 rotation_y(double);
+Mat4 rotation_z(double);
+Mat4 shearing(double, double, double, double, double, double);
+double radians(double);
 
 #endif /* TRANSLATION_H */

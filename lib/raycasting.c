@@ -45,8 +45,8 @@ Intersections intersect(Sphere sphere, Ray ray) {
   double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
   double discriminant = b * b - 4 * a * c;
   if (discriminant >= 0) {
-    double i1 = (-b - sqrtf(discriminant)) / (2 * a);
-    double i2 = (-b + sqrtf(discriminant)) / (2 * a);
+    double i1 = (-b - sqrt(discriminant)) / (2 * a);
+    double i2 = (-b + sqrt(discriminant)) / (2 * a);
     return intersections(sphere, 2, i1, i2);
   }
   return (Intersections){.count = 0, .hits = NULL};
