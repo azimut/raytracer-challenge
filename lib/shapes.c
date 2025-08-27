@@ -3,7 +3,7 @@
 
 int global_id = 0;
 
-Sphere sphere() {
+Sphere sphere(void) {
   return (Sphere){
       .id = ++global_id,
       .transformation = m4_identity(),

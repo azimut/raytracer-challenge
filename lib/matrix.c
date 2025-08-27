@@ -16,11 +16,11 @@ Mat4 m4(double a, double b, double c, double d, double e, double f, double g,
   return (Mat4){{{a, b, c, d}, {e, f, g, h}, {i, j, k, l}, {m, n, o, p}}};
 }
 
-Mat4 m4_identity() {
+Mat4 m4_identity(void) {
   return (Mat4){{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}};
 }
-Mat3 m3_identity() { return (Mat3){{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}; }
-Mat2 m2_identity() { return (Mat2){{{1, 0}, {0, 1}}}; }
+Mat3 m3_identity(void) { return (Mat3){{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}; }
+Mat2 m2_identity(void) { return (Mat2){{{1, 0}, {0, 1}}}; }
 
 double m4_get(Mat4 m4, size_t row, size_t col) { return m4.m[row][col]; }
 
