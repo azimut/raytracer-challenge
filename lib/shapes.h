@@ -10,7 +10,7 @@ typedef struct Sphere {
   MaterialPhong material;
 } Sphere;
 
-Sphere sphere();
+Sphere sphere(void);
 void set_material(Sphere *, MaterialPhong);
 void set_transform(Sphere *, Mat4);
 Vector normal_at(Sphere, Point);
