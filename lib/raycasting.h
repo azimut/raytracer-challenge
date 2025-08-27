@@ -30,7 +30,6 @@ typedef struct Computations {
 
 Ray ray(Point, Vector);
 Point position(Ray, double);
-void set_material(Sphere *, MaterialPhong);
 Intersection intersection(double, Sphere);
 Intersections intersections(Sphere, int, ...);
 Intersections intersect(Sphere, Ray);
@@ -39,7 +38,6 @@ void intersections_sort(Intersections *);
 Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);
 Ray transform(Ray, Mat4);
-void set_transform(Sphere *, Mat4);
 Computations prepare_computations(Intersection, Ray);
 
 #endif /* RAYCASTING_H */

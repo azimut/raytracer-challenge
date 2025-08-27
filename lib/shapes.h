@@ -11,5 +11,8 @@ typedef struct Sphere {
 } Sphere;
 
 Sphere sphere();
+void set_material(Sphere *, MaterialPhong);
+void set_transform(Sphere *, Mat4);
+Vector normal_at(Sphere, Point);
 
 #endif /* SHAPES_H */

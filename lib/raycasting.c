@@ -82,14 +82,6 @@ Ray transform(Ray ray, Mat4 m4) {
   };
 }
 
-void set_transform(Sphere *sphere, Mat4 transformation) {
-  sphere->transformation = transformation;
-}
-
-void set_material(Sphere *sphere, MaterialPhong material) {
-  sphere->material = material;
-}
-
 void intersections_sort(Intersections *is) {
   if (!is->count)
     return;

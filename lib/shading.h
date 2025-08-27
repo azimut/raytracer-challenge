@@ -3,7 +3,6 @@
 
 #include "./color.h"
 #include "./material.h"
-#include "./shapes.h"
 #include "./tuple.h"
 
 typedef struct PointLight {
@@ -11,7 +10,6 @@ typedef struct PointLight {
   Color intensity;
 } PointLight;
 
-Vector normal_at(Sphere, Point);
 Vector reflect(Vector, Vector);
 
 PointLight pointlight(Point, Color);
