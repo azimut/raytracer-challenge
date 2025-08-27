@@ -16,7 +16,7 @@ build/unit: test/unit.c $(SRC) $(HDR)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
 media/%.jpg: media/%.ppm ; convert $< $@
-media/%.ppm: build/%     ; $<
+media/%.ppm: build/%     ; time $<
 
 build/5raysphere:
 build/6shading:
