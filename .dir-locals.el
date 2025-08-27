@@ -1,4 +1,5 @@
-((c-mode . ((dape-configs . ((gdb-test-unit
+((c-mode . ((compile-command . "cd ..; make -B test")
+            (dape-configs . ((gdb-test-unit
                               modes (c-mode)
                               command-cwd dape-command-cwd
                               command "gdb"
