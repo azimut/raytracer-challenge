@@ -4,15 +4,28 @@
 #include "./material.h"
 #include "./matrix.h"
 
-typedef struct Sphere {
+typedef enum {
+  SHAPE_TYPE_SPHERE = 0,
+  SHAPE_TYPE_PLANE,
+} ShapeType;
+
+typedef struct Shape {
   int id;
   Mat4 transformation;
   MaterialPhong material;
-} Sphere;
+  ShapeType shape_type;
+  union {
+    struct {
+    } sphere;
+    struct {
+    } plane;
+  } shape_data;
+} Shape;
 
-Sphere sphere(void);
-void set_material(Sphere *, MaterialPhong);
-void set_transform(Sphere *, Mat4);
-Vector normal_at(Sphere, Point);
+Shape plane(void);
+Shape sphere(void);
+void set_material(Shape *, MaterialPhong);
+void set_transform(Shape *, Mat4);
+Vector normal_at(Shape, Point);
 
 #endif /* SHAPES_H */

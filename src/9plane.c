@@ -13,32 +13,15 @@ int main(void) {
   World w = {0};
   w.light = pointlight(point(-10, 4, -10), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(500, 500, M_PI / 3);
+  Camera cam = camera(500, 500, M_PI / 2);
   cam.transform =
       view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
 
-  Shape floor = sphere();
-  floor.transformation = scaling(10, 0.01, 10);
+  Shape floor = plane();
   floor.material = material();
   floor.material.color = color(1, 0.9, 0.9);
   floor.material.specular = 0;
   world_enter(&w, floor);
-
-  Shape left_wall = sphere();
-  left_wall.transformation =
-      m4_mul(translation(0, 0, 5),
-             m4_mul(rotation_y(-M_PI_4),
-                    m4_mul(rotation_x(M_PI_2), scaling(10, 0.01, 10))));
-  left_wall.material = floor.material;
-  world_enter(&w, left_wall);
-
-  Shape right_wall = sphere();
-  right_wall.transformation =
-      m4_mul(translation(0, 0, 5),
-             m4_mul(rotation_y(M_PI_4),
-                    m4_mul(rotation_x(M_PI_2), scaling(10, 0.01, 10))));
-  right_wall.material = floor.material;
-  world_enter(&w, right_wall);
 
   Shape middle = sphere();
   middle.transformation = translation(-0.5, 1, 0.5);
@@ -67,7 +50,7 @@ int main(void) {
   world_enter(&w, left);
 
   Canvas canvas = render(cam, w);
-  canvas_save(canvas, "media/7world.ppm");
+  canvas_save(canvas, "media/9plane.ppm");
   canvas_free(&canvas);
   world_free(&w);
   return 0;

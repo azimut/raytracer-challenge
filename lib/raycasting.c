@@ -17,12 +17,11 @@ Point position(Ray r, double t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
 }
 
-Intersection intersection(double t, Sphere object) {
+Intersection intersection(double t, Shape object) {
   return (Intersection){t, object};
 }
 
-// NOTE: if called with literals, use "1.0" notation, NOT bare "1"
-Intersections intersections(Sphere object, int count, ...) {
+Intersections intersections(Shape object, int count, ...) {
   assert(count > 0);
   va_list ap;
   Intersections result;
@@ -30,26 +29,40 @@ Intersections intersections(Sphere object, int count, ...) {
   result.count = count;
   va_start(ap, count);
   for (int i = 0; i < count; ++i) {
-    result.hits[i].t = (double)va_arg(ap, double); // due automatic promotion
+    result.hits[i].t = va_arg(ap, double); // automatic promotion
     result.hits[i].object = object;
   }
   va_end(ap);
   return result;
 }
 
-Intersections intersect(Sphere sphere, Ray ray) {
-  Ray tRay = transform(ray, m4_inverse(sphere.transformation));
-  Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
-  double a = tuple_dot_product(tRay.direction, tRay.direction);
-  double b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
-  double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
-  double discriminant = b * b - 4 * a * c;
-  if (discriminant >= 0) {
-    double i1 = (-b - sqrt(discriminant)) / (2 * a);
-    double i2 = (-b + sqrt(discriminant)) / (2 * a);
-    return intersections(sphere, 2, i1, i2);
+Intersections intersect(Shape shape, Ray ray) {
+  Intersections is = {.count = 0, .hits = NULL};
+  switch (shape.shape_type) {
+  case SHAPE_TYPE_SPHERE: {
+    Ray tRay = transform(ray, m4_inverse(shape.transformation));
+    Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
+    double a = tuple_dot_product(tRay.direction, tRay.direction);
+    double b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
+    double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
+    double discriminant = b * b - 4 * a * c;
+    if (discriminant >= 0) {
+      double i1 = (-b - sqrt(discriminant)) / (2 * a);
+      double i2 = (-b + sqrt(discriminant)) / (2 * a);
+      is = intersections(shape, 2, i1, i2);
+      break;
+    }
+    break;
   }
-  return (Intersections){.count = 0, .hits = NULL};
+  case SHAPE_TYPE_PLANE:
+    if (fabs(ray.direction.y) < EPSILON) {
+      break;
+    }
+    double i = -ray.origin.y / ray.direction.y; // only for xz planes
+    is = intersections(shape, 1, i);
+    break;
+  }
+  return is;
 }
 
 void free_intersections(Intersections *is) {

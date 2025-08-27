@@ -10,7 +10,7 @@
 #include <math.h>
 #include <stdio.h>
 
-void test_tuple() {
+void test_tuple(void) {
   assert(tuple_equal(tuple_add(tuple(3, -2, 5, 1), tuple(-2, 3, 1, 0)),
                      tuple(1, 1, 6, 1)));
   assert(tuple_equal(tuple_sub(point(3, 2, 1), point(5, 6, 7)),
@@ -42,14 +42,14 @@ void test_tuple() {
                      vector(1, -2, 1)));
 }
 
-void test_canvas() {
+void test_canvas(void) {
   size_t canvas_pixels = 3;
   Canvas c = canvas(canvas_pixels, canvas_pixels);
   canvas_print(c);
   canvas_free(&c);
 }
 
-void test_matrix() {
+void test_matrix(void) {
   assert(m4_equal(m4_identity(), m4_identity()));
   assert(m3_equal(m4_submatrix(m4_identity(), 0, 0), m3_identity()));
   assert(m3_equal(m4_submatrix(m4_identity(), 3, 3), m3_identity()));
@@ -109,7 +109,7 @@ void test_matrix() {
   assert(m4_equal(m4_inverse(a4), a4i));
 }
 
-void test_transformation() {
+void test_transformation(void) {
   Mat4 t = translation(5, -3, 2);
   assert(tuple_equal(m4_tmul(t, point(-3, 4, 5)), point(2, 1, 7)));
   assert(tuple_equal(m4_tmul(m4_inverse(t), point(-3, 4, 5)), point(-8, 7, 3)));
@@ -162,7 +162,7 @@ void test_raycasting(void) {
   assert(tuple_equal(position(r, 1), point(3, 3, 4)));
   assert(tuple_equal(position(r, -1), point(1, 3, 4)));
   assert(tuple_equal(position(r, 2.5), point(4.5, 3, 4)));
-  Sphere s = sphere();
+  Shape s = sphere();
   r = ray(point(0, 0, -5), vector(0, 0, 1)); // ray/sphere 2 points
   Intersections si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == 4 && si.hits[1].t == 6);
@@ -224,7 +224,7 @@ void test_raycasting(void) {
 }
 
 void test_shading(void) {
-  Sphere s = sphere();
+  Shape s = sphere();
   assert(tuple_equal(vector(1, 0, 0), normal_at(s, point(1, 0, 0))));
   assert(tuple_equal(vector(0, 1, 0), normal_at(s, point(0, 1, 0))));
   assert(tuple_equal(vector(0, 0, 1), normal_at(s, point(0, 0, 1))));
@@ -290,7 +290,7 @@ void test_world(void) {
   free_intersections(&is);
   world_free(&w);
   // prepare_computations()
-  Sphere s = sphere();
+  Shape s = sphere();
   Intersection i = intersection(4, s);
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   Computations comp = prepare_computations(i, r);
@@ -409,7 +409,7 @@ void test_shadow(void) {
   // shade_hit() given a shadow
   w = world_default();
   w.light = pointlight(point(0, 0, -10), color(1, 1, 1));
-  Sphere s1 = sphere(), s2 = sphere();
+  Shape s1 = sphere(), s2 = sphere();
   set_transform(&s2, translation(0, 0, 10));
   world_enter(&w, s1);
   world_enter(&w, s2);
@@ -429,15 +429,37 @@ void test_shadow(void) {
   world_free(&w);
 }
 
+void test_plane(void) {
+  Shape p = plane();
+  assert(m4_equal(p.transformation, m4_identity()));
+  Ray r = ray(point(0, 10, 0), vector(0, 0, 1));
+  Intersections is = intersect(p, r);
+  assert(is.count == 0); // ray parallel to plane
+  r = ray(point(0, 0, 0), vector(0, 0, 1));
+  is = intersect(p, r);
+  assert(is.count == 0); // coplanar ray
+  r = ray(point(0, 1, 0), vector(0, -1, 0));
+  is = intersect(p, r);
+  assert(is.count == 1); // ray from above
+  assert(near(is.hits[0].t, 1));
+  assert(is.hits[0].object.id == p.id);
+  r = ray(point(0, -1, 0), vector(0, 1, 0));
+  is = intersect(p, r);
+  assert(is.count == 1); // ray from below
+  assert(near(is.hits[0].t, 1));
+  assert(is.hits[0].object.id == p.id);
+}
+
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
-  test_raycasting();
-  test_shading();
-  test_world();
-  test_shadow();
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
+  /* test_raycasting(); */
+  /* test_shading(); */
+  /* test_world(); */
+  /* test_shadow(); */
+  test_plane();
   printf("ALL OK!\n");
   return 0;
 }

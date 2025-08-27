@@ -7,11 +7,11 @@
 typedef struct World {
   PointLight light;
   size_t count;
-  Sphere *objects;
+  Shape *objects;
 } World;
 
 Intersections world_intersect(World, Ray);
-void world_enter(World *, Sphere);
+void world_enter(World *, Shape);
 World world_default(void);
 void world_free(World *);
 Color shade_hit(World, Computations);

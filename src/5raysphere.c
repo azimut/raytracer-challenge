@@ -11,7 +11,7 @@ int main(void) {
   Canvas c = canvas(canvas_pixels, canvas_pixels);
   float pixel_size = wall_size / canvas_pixels; // 0.02333
   float half = wall_size / 2;                   // 3.5
-  Sphere s = sphere();
+  Shape s = sphere();
   /* set_transform(&s, scaling(1, 0.5, 1)); */
   set_transform(&s, m4_mul(s.transformation, shearing(1, 2, 1, 1, -2, 1)));
   Color black = (Color){0, 0, 0};

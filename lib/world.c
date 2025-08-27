@@ -2,12 +2,12 @@
 #include "./transformation.h"
 #include <stdio.h>
 
-void world_enter(World *world, Sphere s) {
+void world_enter(World *world, Shape s) {
   if (world->objects) {
     world->objects =
-        reallocarray(world->objects, world->count + 1, sizeof(Sphere));
+        reallocarray(world->objects, world->count + 1, sizeof(Shape));
   } else {
-    world->objects = calloc(1, sizeof(Sphere));
+    world->objects = calloc(1, sizeof(Shape));
   }
   if (world->objects == NULL) {
     perror("alloc in world_enter()");
@@ -20,13 +20,13 @@ World world_default(void) {
   World w = {0};
   w.light = pointlight(point(-10, 10, -10), color(1, 1, 1));
 
-  Sphere s1 = sphere();
+  Shape s1 = sphere();
   s1.material.color = color(0.8, 1.0, 0.6);
   s1.material.diffuse = 0.7;
   s1.material.specular = 0.2;
   world_enter(&w, s1);
 
-  Sphere s2 = sphere();
+  Shape s2 = sphere();
   set_transform(&s2, scaling(0.5, 0.5, 0.5));
   world_enter(&w, s2);
 

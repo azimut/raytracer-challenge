@@ -2,7 +2,7 @@ CC      := gcc
 LDFLAGS := -lm
 SRC     := $(wildcard lib/*.c)
 HDR     := $(wildcard lib/*.h)
-CFLAGS  := -Wall -Wextra -std=gnu99 -pedantic
+CFLAGS  := -Wall -Wextra -std=gnu11
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 endif
@@ -21,5 +21,6 @@ media/%.ppm: build/%     ; time $<
 build/5raysphere:
 build/6shading:
 build/7world:
+build/9plane:
 build/%: src/%.c $(SRC)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)

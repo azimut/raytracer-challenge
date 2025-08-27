@@ -15,7 +15,7 @@ int main(void) {
   Canvas c = canvas(canvas_pixels, canvas_pixels);
   float pixel_size = wall_size / canvas_pixels; // 0.02333
   float half = wall_size / 2;                   // 3.5
-  Sphere s = sphere();
+  Shape s = sphere();
   MaterialPhong m = material();
   m.color = color(1, 0.2, 1);
   set_material(&s, m);

@@ -13,14 +13,14 @@ typedef struct Ray {
 } Ray;
 typedef struct Intersection {
   double t;
-  Sphere object;
+  Shape object;
 } Intersection;
 typedef struct Intersections {
   size_t count;
   Intersection *hits;
 } Intersections;
 typedef struct Computations {
-  Sphere object;
+  Shape object;
   Point point, over_point;
   Vector eye;
   Vector normal;
@@ -30,9 +30,9 @@ typedef struct Computations {
 
 Ray ray(Point, Vector);
 Point position(Ray, double);
-Intersection intersection(double, Sphere);
-Intersections intersections(Sphere, int, ...);
-Intersections intersect(Sphere, Ray);
+Intersection intersection(double, Shape);
+Intersections intersections(Shape, int, ...);
+Intersections intersect(Shape, Ray);
 void free_intersections(Intersections *);
 void intersections_sort(Intersections *);
 Intersection *hit(Intersections);
