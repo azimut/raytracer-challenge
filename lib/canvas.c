@@ -1,4 +1,5 @@
 #include "./canvas.h"
+#include "./util.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +19,10 @@ void canvas_set(Canvas *canvas, size_t row, size_t col, Color value) {
 }
 
 static unsigned char pixel(float channel) {
-  return fmin(fmax(channel, 0.0f), 1.0f) * 255;
+  const double gamma = 1.0;
+  double value = pow(1.0 - exp(-channel * gamma), 1.0 / 2.2);
+  /* float value = clamp(channel, 0.0f, 1.0f); */
+  return floor(value * 255);
 }
 
 static void canvas_stream(Canvas canvas, FILE *fp) {
