@@ -26,7 +26,7 @@ Intersections intersections(Sphere object, int count, ...) {
   assert(count > 0);
   va_list ap;
   Intersections result;
-  result.hits = malloc(sizeof(struct Intersection) * count);
+  result.hits = calloc(count, sizeof(struct Intersection));
   result.count = count;
   va_start(ap, count);
   for (int i = 0; i < count; ++i) {
