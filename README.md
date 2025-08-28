@@ -2,6 +2,13 @@
 
 My source code, written in C.
 
+## Renders
+
+<p float="left" align="middle">
+  <a href="media/7world.jpg"><img src="media/thumbs/7world.jpg" width="200" /></a>
+  <a href="media/9plane.jpg"><img src="media/thumbs/9plane.jpg" width="200" /></a>
+</p>
+
 ## Code
 
 - Chapter 1: `tuple.h`
@@ -12,6 +19,4 @@ My source code, written in C.
 - Chapter 6: `shading.h`, `material.h`
 - Chapter 7: `world.h`, `camera.h`
 - Chapter 8: Shadows
-  <a href="media/7world.jpg"><img src="media/thumbs/7world.jpg" width="200" /></a>
 - Chapter 9: Planes
-  <a href="media/9plane.jpg"><img src="media/thumbs/9plane.jpg" width="200" /></a>
