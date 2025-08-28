@@ -31,20 +31,19 @@ void set_transform(Shape *shape, Mat4 transformation) {
 
 Vector normal_at(Shape s, Point world_point) {
   assert(is_point(world_point));
-  Vector result;
+  Vector object_normal;
   switch (s.shape_type) {
   case SHAPE_TYPE_SPHERE: {
     Point object_point = m4_tmul(m4_inverse(s.transformation), world_point);
-    Vector object_normal = tuple_sub(object_point, point(0, 0, 0));
-    Vector world_normal =
-        m4_tmul(m4_transpose(m4_inverse(s.transformation)), object_normal);
-    world_normal.w = 0;
-    result = tuple_normalize(world_normal);
+    object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
   case SHAPE_TYPE_PLANE:
-    result = vector(0, 1, 0);
+    object_normal = vector(0, 1, 0);
     break;
   }
-  return result;
+  Vector world_normal =
+      m4_tmul(m4_transpose(m4_inverse(s.transformation)), object_normal);
+  world_normal.w = 0;
+  return tuple_normalize(world_normal);
 }
