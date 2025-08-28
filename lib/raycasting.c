@@ -43,12 +43,12 @@ Intersections intersect(Shape shape, Ray ray) {
   case SHAPE_TYPE_SPHERE:
     Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
     double a = tuple_dot_product(tRay.direction, tRay.direction);
-    double b = 2 * tuple_dot_product(tRay.direction, sphere_to_ray);
-    double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1;
-    double discriminant = b * b - 4 * a * c;
+    double b = 2.0 * tuple_dot_product(tRay.direction, sphere_to_ray);
+    double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1.0;
+    double discriminant = b * b - 4.0 * a * c;
     if (discriminant >= 0) {
-      double i1 = (-b - sqrt(discriminant)) / (2 * a);
-      double i2 = (-b + sqrt(discriminant)) / (2 * a);
+      double i1 = (-b - sqrt(discriminant)) / (2.0 * a);
+      double i2 = (-b + sqrt(discriminant)) / (2.0 * a);
       is = intersections(shape, 2, i1, i2);
       break;
     }
