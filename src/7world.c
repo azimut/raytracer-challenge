@@ -13,7 +13,7 @@ int main(void) {
   World w = {0};
   w.light = pointlight(point(-10, 4, -10), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(500, 500, M_PI / 3);
+  Camera cam = camera(1024, 1024, M_PI / 3);
   cam.transform =
       view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
 
