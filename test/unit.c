@@ -1,6 +1,7 @@
 #include "../lib/camera.h"
 #include "../lib/canvas.h"
 #include "../lib/matrix.h"
+#include "../lib/patterns.h"
 #include "../lib/raycasting.h"
 #include "../lib/shading.h"
 #include "../lib/transformation.h"
@@ -450,6 +451,56 @@ void test_plane(void) {
   assert(is.hits[0].object.id == p.id);
 }
 
+void test_patterns(void) {
+  Pattern ps = pattern_stripes(WHITE, BLACK);
+  assert(color_equal(WHITE, ps.a) && color_equal(BLACK, ps.b));
+  // constant in y
+  assert(color_equal(pattern_at(ps, point(0, 0, 0)), WHITE));
+  assert(color_equal(pattern_at(ps, point(0, 1, 0)), WHITE));
+  assert(color_equal(pattern_at(ps, point(0, 2, 0)), WHITE));
+  // constant in z
+  assert(color_equal(pattern_at(ps, point(0, 0, 0)), WHITE));
+  assert(color_equal(pattern_at(ps, point(0, 0, 1)), WHITE));
+  assert(color_equal(pattern_at(ps, point(0, 0, 2)), WHITE));
+  // alternating in x
+  assert(color_equal(pattern_at(ps, point(+0.0, 0, 0)), WHITE));
+  assert(color_equal(pattern_at(ps, point(+0.9, 0, 0)), WHITE));
+  assert(color_equal(pattern_at(ps, point(+1.0, 0, 0)), BLACK));
+  assert(color_equal(pattern_at(ps, point(-0.1, 0, 0)), BLACK));
+  assert(color_equal(pattern_at(ps, point(-1.0, 0, 0)), BLACK));
+  assert(color_equal(pattern_at(ps, point(-1.1, 0, 0)), WHITE));
+  // lighting()
+  MaterialPhong m = material();
+  m.pattern = pattern_stripes(WHITE, BLACK);
+  m.ambient = 1;
+  m.diffuse = 0;
+  m.specular = 0;
+  Vector eye = vector(0, 0, -1);
+  Vector normal = vector(0, 0, -1);
+  PointLight light = pointlight(point(0, 0, -10), WHITE);
+  Color c1 = lighting(m, point(0.9, 0, 0), light, eye, normal, false);
+  Color c2 = lighting(m, point(1.1, 0, 0), light, eye, normal, false);
+  assert(color_equal(c1, WHITE));
+  assert(color_equal(c2, BLACK));
+  // stripes + object transform
+  Shape s = sphere();
+  set_transform(&s, scaling(2, 2, 2));
+  pattern_at_object(ps, s, point(1.5, 0, 0)); // !!!!
+  // stripes + pattern transform
+  s = sphere();
+  ps = pattern_stripes(WHITE, BLACK);
+  pattern_set_transformation(&ps, scaling(2, 2, 2));
+  c1 = pattern_at_object(ps, s, point(1.5, 0, 0));
+  assert(color_equal(c1, WHITE));
+  // stripes + object+pattern transform
+  s = sphere();
+  set_transform(&s, scaling(2, 2, 2));
+  ps = pattern_stripes(WHITE, BLACK);
+  pattern_set_transformation(&ps, translation(0.5, 0, 0));
+  c1 = pattern_at_object(ps, s, point(2.5, 0, 0));
+  assert(color_equal(c1, WHITE));
+}
+
 int main(void) {
   /* test_tuple(); */
   /* test_canvas(); */
@@ -459,7 +510,8 @@ int main(void) {
   /* test_shading(); */
   /* test_world(); */
   /* test_shadow(); */
-  test_plane();
+  /* test_plane(); */
+  test_patterns();
   printf("ALL OK!\n");
   return 0;
 }

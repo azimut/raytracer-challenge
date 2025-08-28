@@ -47,3 +47,10 @@ Vector normal_at(Shape s, Point world_point) {
   world_normal.w = 0;
   return tuple_normalize(world_normal);
 }
+
+Color pattern_at_object(Pattern ps, Shape shape, Point p) {
+  assert(is_point(p));
+  Point object_point = m4_tmul(m4_inverse(shape.transformation), p);
+  Point pattern_point = m4_tmul(m4_inverse(ps.transformation), object_point);
+  return pattern_at(ps, pattern_point);
+}

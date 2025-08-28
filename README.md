@@ -20,3 +20,4 @@ My source code, written in C.
 - Chapter 7: `world.h`, `camera.h`
 - Chapter 8: Shadows
 - Chapter 9: Planes
+- Chapter 10: `patterns.h`

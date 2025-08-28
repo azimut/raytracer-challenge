@@ -2,10 +2,12 @@
 #define MATERIAL_H
 
 #include "./color.h"
+#include "./patterns.h"
 
 typedef struct MaterialPhong {
   float ambient, diffuse, specular, shininess;
   Color color;
+  Pattern pattern;
 } MaterialPhong;
 
 MaterialPhong material(void);

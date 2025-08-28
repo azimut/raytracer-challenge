@@ -2,6 +2,7 @@
 
 MaterialPhong material(void) {
   return (MaterialPhong){
+      .pattern = pattern_none(),
       .color = {1, 1, 1},
       .ambient = 0.1,
       .diffuse = 0.9,

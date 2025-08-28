@@ -15,7 +15,10 @@ PointLight pointlight(Point position, Color intensity) {
 Color lighting(MaterialPhong material, Point point, PointLight light,
                Vector eye, Vector normal, bool in_shadow) {
   assert(is_point(point) && is_vector(eye) && is_vector(normal));
-  Color effective_color = color_mul(material.color, light.intensity);
+  Color material_color = material.pattern.ptype == PATTERN_TYPE_NONE
+                             ? material.color
+                             : pattern_at(material.pattern, point);
+  Color effective_color = color_mul(material_color, light.intensity);
   Color ambient = color_smul(effective_color, material.ambient);
   Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
   float light_dot_normal = tuple_dot_product(dir_light, normal);

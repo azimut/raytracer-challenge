@@ -27,5 +27,6 @@ Shape sphere(void);
 void set_material(Shape *, MaterialPhong);
 void set_transform(Shape *, Mat4);
 Vector normal_at(Shape, Point);
+Color pattern_at_object(Pattern, Shape, Point);
 
 #endif /* SHAPES_H */
