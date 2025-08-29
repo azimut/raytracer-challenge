@@ -1,3 +1,4 @@
 *.ppm
-/build/
+build/*
+!build/.gitkeep
 /.ccls-cache/
