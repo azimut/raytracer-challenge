@@ -3,6 +3,8 @@ LDFLAGS := -lm
 SRC     := $(wildcard lib/*.c)
 HDR     := $(wildcard lib/*.h)
 CFLAGS  := -Wall -Wextra -std=gnu11
+BUILDS  := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
+
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 endif
@@ -18,10 +20,5 @@ build/unit: test/unit.c $(SRC) $(HDR)
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@
 media/%.ppm:        build/%     ; time $<
-
-build/5raysphere:
-build/6shading:
-build/7world:
-build/9plane:
-build/%: src/%.c $(SRC)
+$(BUILDS): build/%: src/%.c $(SRC)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
