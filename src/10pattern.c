@@ -22,8 +22,8 @@ int main(int argc, char *argv[]) {
 
   Shape floor = plane();
   floor.material = material();
-  floor.material.pattern = pattern_stripes(WHITE, BLACK);
-  floor.material.pattern.transformation = scaling(0.25, 1, 1);
+  /* floor.material.pattern = pattern_rings(WHITE, BLACK); */
+  /* floor.material.pattern.transformation = scaling(0.25, 1, 1); */
   floor.material.color = color(.4, 0.9, 0.9);
   floor.material.specular = 0;
   world_enter(&w, floor);
@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
 
   Shape roof = plane();
   roof.transformation = translation(0, 20, 0);
+  roof.material.pattern = pattern_rings(WHITE, BLACK);
+  roof.material.pattern.transformation =
+      m4_mul(translation(0, 0, 0), scaling(0.5, 1, 0.5));
   roof.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
   world_enter(&w, roof);
 

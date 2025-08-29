@@ -21,6 +21,12 @@ Pattern pattern_gradient(Color a, Color b) {
   return p;
 }
 
+Pattern pattern_rings(Color a, Color b) {
+  Pattern p = pattern_none();
+  p.a = a, p.b = b, p.ptype = PATTERN_TYPE_RINGS;
+  return p;
+}
+
 Color pattern_at(Pattern pattern, Point point) {
   assert(is_point(point));
   Color color;
@@ -33,6 +39,12 @@ Color pattern_at(Pattern pattern, Point point) {
     Color distance = color_sub(pattern.b, pattern.a);
     double fraction = point.x - floor(point.x);
     color = color_add(pattern.a, color_smul(distance, fraction));
+    break;
+  }
+  case PATTERN_TYPE_RINGS: {
+    color = fmod(floor(sqrt(pow(point.x, 2) + pow(point.z, 2))), 2) \
+                ? pattern.b
+                : pattern.a;
     break;
   }
   case PATTERN_TYPE_NONE:

@@ -509,6 +509,12 @@ void test_patterns(void) {
       color_equal(color(0.50, 0.50, 0.50), pattern_at(ps, point(0.5, 0, 0))));
   assert(
       color_equal(color(0.25, 0.25, 0.25), pattern_at(ps, point(0.75, 0, 0))));
+  // rings
+  ps = pattern_rings(WHITE, BLACK);
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0, 0))));
+  assert(color_equal(BLACK, pattern_at(ps, point(1, 0, 0))));
+  assert(color_equal(BLACK, pattern_at(ps, point(0, 0, 1))));
+  assert(color_equal(BLACK, pattern_at(ps, point(0.708, 0, 0.708))));
 }
 
 int main(void) {
