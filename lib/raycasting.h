@@ -24,6 +24,7 @@ typedef struct Computations {
   Point point, over_point;
   Vector eye;
   Vector normal;
+  Vector reflect;
   bool is_inside;
   double t;
 } Computations;

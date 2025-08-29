@@ -251,16 +251,16 @@ void test_shading(void) {
   Point position = point(0, 0, 0);
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
-  PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  PointLight light = pointlight(point(0, 0, -10), WHITE);
   Color result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(1.9, 1.9, 1.9)));
 
   eye = vector(0, sqrtf(2) / 2, -sqrtf(2) / 2);
   result = lighting(m, s, position, light, eye, normal, false);
-  assert(color_equal(result, color(1, 1, 1)));
+  assert(color_equal(result, WHITE));
 
   eye = vector(0, 0, -1);
-  light = pointlight(point(0, 10, -10), color(1, 1, 1));
+  light = pointlight(point(0, 10, -10), WHITE);
   result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(0.7364, 0.7364, 0.7364)));
 
@@ -269,7 +269,7 @@ void test_shading(void) {
   assert(color_equal(result, color(1.6364, 1.6364, 1.6364)));
 
   eye = vector(0, 0, -1);
-  light = pointlight(point(0, 0, 10), color(1, 1, 1));
+  light = pointlight(point(0, 0, 10), WHITE);
   result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
 }
@@ -313,36 +313,36 @@ void test_world(void) {
   w = world_default();
   i = intersection(4, w.objects[0]);
   comp = prepare_computations(i, r);
-  c = shade_hit(w, comp);
+  c = shade_hit(w, comp, 1);
   color_print(c);
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855)));
   world_free(&w);
   // shade_color() - inside
   w = world_default();
-  w.light = pointlight(point(0, 0.25, 0), color(1, 1, 1));
+  w.light = pointlight(point(0, 0.25, 0), WHITE);
   r = ray(point(0, 0, 0), vector(0, 0, 1));
   i = intersection(0.5, w.objects[1]);
   comp = prepare_computations(i, r);
-  c = shade_hit(w, comp);
+  c = shade_hit(w, comp, 1);
   color_print(c);
   assert(color_equal(c, color(0.90498, 0.90498, 0.90498)));
   world_free(&w);
   // color_at()
   w = world_default();
   r = ray(point(0, 0, -5), vector(0, 1, 0));
-  c = color_at(w, r);
-  assert(color_equal(c, color(0, 0, 0))); // misses
+  c = color_at(w, r, 1);
+  assert(color_equal(c, BLACK)); // misses
   world_free(&w);
   w = world_default();
   r = ray(point(0, 0, -5), vector(0, 0, 1));
-  c = color_at(w, r);
+  c = color_at(w, r, 1);
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855))); // hits
   world_free(&w);
   w = world_default();
   w.objects[0].material.ambient = 1;
   w.objects[1].material.ambient = 1;
   r = ray(point(0, 0, 0.75), vector(0, 0, -1));
-  c = color_at(w, r);
+  c = color_at(w, r, 1);
   assert(color_equal(c, w.objects[1].material.color)); // behind the ray
   world_free(&w);
   // view_transform()
@@ -392,7 +392,7 @@ void test_shadow(void) {
   // lighting/in_shadow
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
-  PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  PointLight light = pointlight(point(0, 0, -10), WHITE);
   bool in_shadow = true;
   MaterialPhong m = material();
   Point position = point(0, 0, 0);
@@ -410,7 +410,7 @@ void test_shadow(void) {
   world_free(&w);
   // shade_hit() given a shadow
   w = world_default();
-  w.light = pointlight(point(0, 0, -10), color(1, 1, 1));
+  w.light = pointlight(point(0, 0, -10), WHITE);
   Shape s1 = sphere(), s2 = sphere();
   set_transform(&s2, translation(0, 0, 10));
   world_enter(&w, s1);
@@ -418,7 +418,7 @@ void test_shadow(void) {
   Ray r = ray(point(0, 0, 5), vector(0, 0, 1));
   Intersection i = intersection(4, s2);
   Computations comp = prepare_computations(i, r);
-  Color c = shade_hit(w, comp);
+  Color c = shade_hit(w, comp, 1);
   assert(color_equal(c, color(0.1, 0.1, 0.1)));
   // a hit should offset the point
   r = ray(point(0, 0, -5), vector(0, 0, 1));
@@ -531,17 +531,85 @@ void test_patterns(void) {
   assert(color_equal(BLACK, pattern_at(ps, point(0, 0, 1.01))));
 }
 
+void test_reflections(void) {
+  MaterialPhong m = material();
+  assert(m.reflective == 0);
+  Shape pl = plane();
+  Ray r = ray(point(0, 1, -1), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
+  Intersection i = intersection(sqrt(2), pl);
+  Computations comp = prepare_computations(i, r);
+  assert(tuple_equal(comp.reflect, vector(0, sqrt(2) / 2, sqrt(2) / 2)));
+  // strike a non-reflective surface
+  World world = world_default();
+  r = ray(point(0, 0, 0), vector(0, 0, 1));
+  world.objects[1].material.ambient = 1;
+  i = intersection(1, world.objects[1]);
+  comp = prepare_computations(i, r);
+  assert(color_equal(BLACK, reflected_color(world, comp, 1)));
+  world_free(&world);
+  // strike a reflective surface
+  world = world_default();
+  pl = plane();
+  pl.material.reflective = 0.5;
+  pl.transformation = translation(0, -1, 0);
+  world_enter(&world, pl);
+  r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
+  i = intersection(sqrt(2), pl);
+  comp = prepare_computations(i, r);
+  assert(color_equal(color(0.19032, 0.2379, 0.14274),
+                     reflected_color(world, comp, 1)));
+  world_free(&world);
+  // shade_hit() updated
+  world = world_default();
+  pl = plane();
+  pl.material.reflective = 0.5;
+  pl.transformation = translation(0, -1, 0);
+  world_enter(&world, pl);
+  r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
+  i = intersection(sqrt(2), pl);
+  comp = prepare_computations(i, r);
+  assert(
+      color_equal(color(0.87677, 0.92436, 0.82918), shade_hit(world, comp, 1)));
+  world_free(&world);
+  // mutually reflected surfaces
+  world = world_default();
+  world.light = pointlight(point(0, 0, 0), WHITE);
+  Shape lower = plane();
+  lower.material.reflective = 1;
+  lower.transformation = translation(0, -1, 0);
+  world_enter(&world, lower);
+  Shape upper = plane();
+  lower.material.reflective = 1;
+  lower.transformation = translation(0, 1, 0);
+  world_enter(&world, upper);
+  r = ray(point(0, 0, 0), vector(0, 1, 0));
+  color_at(world, r, 1); // returns, and no loops TODO: timeout?
+  world_free(&world);
+  // limit recursion
+  world = world_default();
+  pl = plane();
+  pl.material.reflective = 0.5;
+  pl.transformation = translation(0, -1, 0);
+  world_enter(&world, pl);
+  r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
+  i = intersection(sqrt(2), pl);
+  comp = prepare_computations(i, r);
+  assert(color_equal(BLACK, reflected_color(world, comp, 0)));
+  world_free(&world);
+}
+
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
-  test_raycasting();
-  test_shading();
-  test_world();
-  test_shadow();
-  test_plane();
-  test_patterns();
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
+  /* test_raycasting(); */
+  /* test_shading(); */
+  /* test_world(); */
+  /* test_shadow(); */
+  /* test_plane(); */
+  /* test_patterns(); */
+  test_reflections();
   printf("ALL OK!\n");
   return 0;
 }

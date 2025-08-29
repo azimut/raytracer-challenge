@@ -68,19 +68,21 @@ Intersections world_intersect(World world, Ray ray) {
   return is;
 }
 
-Color shade_hit(World world, Computations comp) {
-  return lighting(comp.object.material, comp.object, comp.over_point,
-                  world.light, comp.eye, comp.normal,
-                  is_shadowed(world, comp.over_point));
+Color shade_hit(World world, Computations comp, uint8_t life) {
+  bool shadowed = is_shadowed(world, comp.over_point);
+  Color surface = lighting(comp.object.material, comp.object, comp.over_point,
+                           world.light, comp.eye, comp.normal, shadowed);
+  Color reflected = reflected_color(world, comp, life);
+  return color_add(surface, reflected);
 }
 
-Color color_at(World world, Ray ray) {
+Color color_at(World world, Ray ray, uint8_t life) {
   Intersections is = world_intersect(world, ray);
   Intersection *i = hit(is);
   Color color = (Color){0, 0, 0};
   if (i) {
     Computations comp = prepare_computations(*i, ray);
-    color = shade_hit(world, comp);
+    color = shade_hit(world, comp, life);
   }
   free_intersections(&is);
   return color;
@@ -98,4 +100,13 @@ bool is_shadowed(World w, Point p) {
   }
   free_intersections(&is);
   return shadowed;
+}
+
+Color reflected_color(World world, Computations comp, uint8_t life) {
+  if (comp.object.material.reflective == 0 || life == 0) {
+    return BLACK;
+  }
+  Ray r = ray(comp.over_point, comp.reflect); // avoid self-reflection
+  Color color = color_at(world, r, life - 1);
+  return color_smul(color, comp.object.material.reflective);
 }

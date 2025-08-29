@@ -123,6 +123,7 @@ Computations prepare_computations(Intersection ii, Ray r) {
   } else {
     comp.is_inside = false;
   }
+  comp.reflect = reflect(r.direction, comp.normal);
   comp.over_point = tuple_add(comp.point, tuple_smul(comp.normal, EPSILON));
   return comp;
 }

@@ -6,6 +6,8 @@
 #include "./raycasting.h"
 #include "./world.h"
 
+#define REFLECTION_HITS 5
+
 typedef struct Camera {
   size_t hsize, vsize; // in pixels
   float fov;           // an angle
