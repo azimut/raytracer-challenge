@@ -11,14 +11,18 @@
 #include <math.h>
 #include <string.h>
 
+#ifndef DIMENSION
+#define DIMENSION 1024
+#endif
+
 int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
   w.light = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(500, 500, M_PI / 2);
+  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3.5);
   cam.transform =
-      view_transform(point(3, 0.5, 3), point(-1, 1.5, -1.5), vector(0, 1, 0));
+      view_transform(point(8, 3.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
 
   Shape floor = plane();
   floor.material = material();
@@ -26,7 +30,7 @@ int main(int argc, char *argv[]) {
   /* floor.material.pattern.transformation = scaling(0.25, 1, 1); */
   floor.material.color = color(.4, 0.9, 0.9);
   floor.material.specular = 0;
-  floor.material.reflective = 0.2;
+  floor.material.reflective = 0.1;
   world_enter(&w, floor);
 
   double radius = 50;
@@ -38,8 +42,11 @@ int main(int argc, char *argv[]) {
                            radius * sin(M_PI / 6.0 + (i * M_PI) / 3.0)),
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
-    hexa.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
-    hexa.material.reflective = 0.5;
+    /* hexa.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255); */
+    hexa.material.pattern = pattern_stripes(WHITE, BLACK);
+    hexa.material.pattern.transformation =
+        m4_mul(scaling(10, 1, 1), m4_identity());
+    hexa.material.reflective = 0.15;
     hexa.material.specular = 0;
     world_enter(&w, hexa);
   }
@@ -48,7 +55,7 @@ int main(int argc, char *argv[]) {
   roof.transformation = translation(0, 20, 0);
   roof.material.pattern = pattern_rings(WHITE, BLACK);
   roof.material.pattern.transformation =
-      m4_mul(translation(0, 0, 0), scaling(0.5, 1, 0.5));
+      m4_mul(translation(0, 0, 0), scaling(3, 1, 3));
   roof.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
   world_enter(&w, roof);
 
@@ -58,7 +65,7 @@ int main(int argc, char *argv[]) {
   middle.material.color = color(0.1, 1, 0.5);
   middle.material.pattern = pattern_stripes(WHITE, BLACK);
   middle.material.pattern.transformation =
-      m4_mul(rotation_z(M_PI / 3), scaling(0.25, 1, 1));
+      m4_mul(rotation_z(M_PI / 3), scaling(0.11, 1, 1));
   middle.material.diffuse = 0.7;
   middle.material.specular = 0.3;
   world_enter(&w, middle);
@@ -69,11 +76,21 @@ int main(int argc, char *argv[]) {
   right.material = material();
   right.material.pattern = pattern_gradient(RED, BLUE);
   right.material.pattern.transformation =
-      m4_mul(translation(1, 0, 0), scaling(2, 1, 1));
+      m4_mul(translation(1.1, 0, 0), scaling(2, 1, 1));
   right.material.color = color(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
   right.material.specular = 0.3;
   world_enter(&w, right);
+
+  Shape left = sphere();
+  left.transformation =
+      m4_mul(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
+  left.material = material();
+  left.material.color = color(1, 0.8, 0.1);
+  left.material.diffuse = 0.7;
+  left.material.specular = 0;
+  left.material.reflective = 1;
+  world_enter(&w, left);
 
   char *buff = calloc(100, sizeof(char));
   strcat(strcat(strcat(buff, "media/"), basename(argv[0])), ".ppm");

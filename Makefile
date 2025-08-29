@@ -1,9 +1,10 @@
-CC      := gcc
-LDFLAGS := -lm
-SRC     := $(wildcard lib/*.c)
-HDR     := $(wildcard lib/*.h)
-CFLAGS  := -Wall -Wextra -std=gnu11
-BUILDS  := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
+CC        := gcc
+LDFLAGS   := -lm
+SRC       := $(wildcard lib/*.c)
+HDR       := $(wildcard lib/*.h)
+DIMENSION ?= 1024
+CFLAGS    := -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION)
+BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
