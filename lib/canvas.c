@@ -18,10 +18,10 @@ void canvas_set(Canvas *canvas, size_t row, size_t col, Color value) {
   canvas->grid[col + (row * canvas->width)] = value;
 }
 
-static unsigned char pixel(float channel) {
+static unsigned char pixel(double channel) {
   const double gamma = 1.0;
   double value = pow(1.0 - exp(-channel * gamma), 1.0 / 2.2);
-  /* float value = clamp(channel, 0.0f, 1.0f); */
+  /* double value = clamp(channel, 0.0, 1.0); */
   return floor(value * 255);
 }
 

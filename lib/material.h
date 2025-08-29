@@ -5,7 +5,7 @@
 #include "./patterns.h"
 
 typedef struct MaterialPhong {
-  float ambient, diffuse, specular, shininess, reflective;
+  double ambient, diffuse, specular, shininess, reflective;
   Color color;
   Pattern pattern;
 } MaterialPhong;

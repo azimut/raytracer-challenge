@@ -14,10 +14,10 @@ Mat4 view_transform(Point from, Point to, Vector up) {
   return m4_mul(orientation, translation(-from.x, -from.y, -from.z));
 }
 
-Camera camera(size_t hsize, size_t vsize, float fov) {
-  float half_view = tanf(fov / 2); // width of half of canvas
-  float aspect = hsize / (float)vsize;
-  float half_width, half_height;
+Camera camera(size_t hsize, size_t vsize, double fov) {
+  double half_view = tan(fov / 2); // width of half of canvas
+  double aspect = hsize / (double)vsize;
+  double half_width, half_height;
   if (aspect >= 1) {
     half_width = half_view;
     half_height = half_view / aspect;
@@ -40,11 +40,11 @@ Camera camera(size_t hsize, size_t vsize, float fov) {
 // and then construct a Ray that passes through that point.
 Ray ray_for_pixel(Camera cam, size_t px, size_t py) {
   // ?offset from the edge of the canvas to the pixel's center
-  float xoffset = ((float)px + 0.5) * cam.pixel_size;
-  float yoffset = ((float)py + 0.5) * cam.pixel_size;
+  double xoffset = ((double)px + 0.5) * cam.pixel_size;
+  double yoffset = ((double)py + 0.5) * cam.pixel_size;
   // untransformed pixel coord in world space
-  float world_x = cam.half_width - xoffset;
-  float world_y = cam.half_height - yoffset;
+  double world_x = cam.half_width - xoffset;
+  double world_y = cam.half_height - yoffset;
   // transform canvas_point, and origin
   Point pixel = m4_tmul(m4_inverse(cam.transform), point(world_x, world_y, -1));
   Point origin = m4_tmul(m4_inverse(cam.transform), point(0, 0, 0));

@@ -35,13 +35,13 @@ int main(int argc, char *argv[]) {
                            radius * sin(M_PI / 6.0 + (i * M_PI) / 3.0)),
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
-    hexa.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
+    hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
     world_enter(&w, hexa);
   }
 
   Shape roof = plane();
   roof.transformation = translation(0, 20, 0);
-  roof.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
+  roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
   world_enter(&w, roof);
 
   Shape middle = sphere();

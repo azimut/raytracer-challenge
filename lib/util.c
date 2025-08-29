@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdbool.h>
 
-float clamp(float value, float min, float max) {
+double clamp(double value, double min, double max) {
   return fmin(fmax(value, min), max);
 }
 
-bool near(float x, float y) { return fabs(x - y) < EPSILON; }
+bool near(double x, double y) { return fabs(x - y) < EPSILON; }

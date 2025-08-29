@@ -90,7 +90,7 @@ Color color_at(World world, Ray ray, uint8_t life) {
 
 bool is_shadowed(World w, Point p) {
   Vector shadow_vector = tuple_sub(w.light.position, p);
-  float distance = tuple_length(shadow_vector);
+  double distance = tuple_length(shadow_vector);
   Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
   Intersections is = world_intersect(w, shadow_ray);
   Intersection *h = hit(is);

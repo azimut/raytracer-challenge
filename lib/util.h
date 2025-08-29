@@ -5,7 +5,7 @@
 
 #define EPSILON 0.0001
 
-float clamp(float, float, float);
-bool near(float, float);
+double clamp(double, double, double);
+bool near(double, double);
 
 #endif /* UTIL_H */

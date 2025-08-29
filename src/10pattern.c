@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
                            radius * sin(M_PI / 6.0 + (i * M_PI) / 3.0)),
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
-    hexa.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
+    hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
     world_enter(&w, hexa);
   }
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
   roof.material.pattern = pattern_rings(WHITE, BLACK);
   roof.material.pattern.transformation =
       m4_mul(translation(0, 0, 0), scaling(0.5, 1, 0.5));
-  roof.material.color = color(136.0f / 255, 198.0f / 255, 252.0f / 255);
+  roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
   world_enter(&w, roof);
 
   Shape middle = sphere();

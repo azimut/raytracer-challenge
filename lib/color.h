@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 typedef struct Color {
-  float red, green, blue;
+  double red, green, blue;
 } Color;
 
 #define BLACK ((Color){0, 0, 0})
@@ -13,12 +13,12 @@ typedef struct Color {
 #define GREEN ((Color){0, 1, 0})
 #define BLUE ((Color){0, 0, 1})
 
-Color color(float, float, float);
+Color color(double, double, double);
 Color color_add(Color, Color);
 Color color_sub(Color, Color);
 Color color_mul(Color, Color);
-Color color_smul(Color, float);
-Color color_sdiv(Color, float);
+Color color_smul(Color, double);
+Color color_sdiv(Color, double);
 bool color_equal(Color, Color);
 void color_print(Color);
 
