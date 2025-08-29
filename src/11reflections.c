@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   World w = {0};
   w.light = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3.5);
+  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 4);
   cam.transform =
       view_transform(point(8, 3.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
 
