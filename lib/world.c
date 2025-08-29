@@ -69,8 +69,9 @@ Intersections world_intersect(World world, Ray ray) {
 }
 
 Color shade_hit(World world, Computations comp) {
-  return lighting(comp.object.material, comp.over_point, world.light, comp.eye,
-                  comp.normal, is_shadowed(world, comp.over_point));
+  return lighting(comp.object.material, comp.object, comp.over_point,
+                  world.light, comp.eye, comp.normal,
+                  is_shadowed(world, comp.over_point));
 }
 
 Color color_at(World world, Ray ray) {

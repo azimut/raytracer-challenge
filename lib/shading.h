@@ -3,6 +3,7 @@
 
 #include "./color.h"
 #include "./material.h"
+#include "./shapes.h"
 #include "./tuple.h"
 
 typedef struct PointLight {
@@ -14,6 +15,6 @@ Vector reflect(Vector, Vector);
 
 PointLight pointlight(Point, Color);
 
-Color lighting(MaterialPhong, Point, PointLight, Vector, Vector, bool);
+Color lighting(MaterialPhong, Shape, Point, PointLight, Vector, Vector, bool);
 
 #endif /* SHADING_H */

@@ -252,25 +252,25 @@ void test_shading(void) {
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
   PointLight light = pointlight(point(0, 0, -10), color(1, 1, 1));
-  Color result = lighting(m, position, light, eye, normal, false);
+  Color result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(1.9, 1.9, 1.9)));
 
   eye = vector(0, sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(1, 1, 1)));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 10, -10), color(1, 1, 1));
-  result = lighting(m, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(0.7364, 0.7364, 0.7364)));
 
   eye = vector(0, -sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(1.6364, 1.6364, 1.6364)));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 0, 10), color(1, 1, 1));
-  result = lighting(m, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
 }
 
@@ -396,7 +396,8 @@ void test_shadow(void) {
   bool in_shadow = true;
   MaterialPhong m = material();
   Point position = point(0, 0, 0);
-  Color result = lighting(m, position, light, eye, normal, in_shadow);
+  Shape s = sphere();
+  Color result = lighting(m, s, position, light, eye, normal, in_shadow);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
   // is_shadowed()
   World w = world_default();
@@ -478,12 +479,12 @@ void test_patterns(void) {
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
   PointLight light = pointlight(point(0, 0, -10), WHITE);
-  Color c1 = lighting(m, point(0.9, 0, 0), light, eye, normal, false);
-  Color c2 = lighting(m, point(1.1, 0, 0), light, eye, normal, false);
+  Shape s = sphere();
+  Color c1 = lighting(m, s, point(0.9, 0, 0), light, eye, normal, false);
+  Color c2 = lighting(m, s, point(1.1, 0, 0), light, eye, normal, false);
   assert(color_equal(c1, WHITE));
   assert(color_equal(c2, BLACK));
   // stripes + object transform
-  Shape s = sphere();
   set_transform(&s, scaling(2, 2, 2));
   pattern_at_object(ps, s, point(1.5, 0, 0)); // !!!!
   // stripes + pattern transform
@@ -502,15 +503,15 @@ void test_patterns(void) {
 }
 
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
-  /* test_raycasting(); */
-  /* test_shading(); */
-  /* test_world(); */
-  /* test_shadow(); */
-  /* test_plane(); */
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
+  test_raycasting();
+  test_shading();
+  test_world();
+  test_shadow();
+  test_plane();
   test_patterns();
   printf("ALL OK!\n");
   return 0;

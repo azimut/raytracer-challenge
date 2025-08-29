@@ -40,7 +40,7 @@ int main(void) {
         Vector normal = normal_at(i->object, obj_pos);
         Vector eye = tuple_neg(rr.direction);
         canvas_set(&c, row, col,
-                   lighting(s.material, obj_pos, light, eye, normal, false));
+                   lighting(s.material, s, obj_pos, light, eye, normal, false));
       }
       free_intersections(&is);
     }
