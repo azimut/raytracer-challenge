@@ -8,7 +8,7 @@
 typedef enum {
   PATTERN_TYPE_NONE = 0,
   PATTERN_TYPE_STRIPES,
-  /* PATTERN_TYPE_GRADIENTS, */
+  PATTERN_TYPE_GRADIENT,
   /* PATTERN_TYPE_RINGS, */
   /* PATTERN_TYPE_CHECKERS, */
 } Pattern_Type;
@@ -21,6 +21,7 @@ typedef struct Pattern {
 
 Pattern pattern_none(void);
 Pattern pattern_stripes(Color, Color);
+Pattern pattern_gradient(Color, Color);
 Color pattern_at(Pattern, Point);
 void pattern_set_transformation(Pattern *, Mat4);
 

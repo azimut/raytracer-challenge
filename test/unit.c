@@ -500,6 +500,15 @@ void test_patterns(void) {
   pattern_set_transformation(&ps, translation(0.5, 0, 0));
   c1 = pattern_at_shape(ps, s, point(2.5, 0, 0));
   assert(color_equal(c1, WHITE));
+  // gradient
+  ps = pattern_gradient(WHITE, BLACK);
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0, 0))));
+  assert(
+      color_equal(color(0.75, 0.75, 0.75), pattern_at(ps, point(0.25, 0, 0))));
+  assert(
+      color_equal(color(0.50, 0.50, 0.50), pattern_at(ps, point(0.5, 0, 0))));
+  assert(
+      color_equal(color(0.25, 0.25, 0.25), pattern_at(ps, point(0.75, 0, 0))));
 }
 
 int main(void) {

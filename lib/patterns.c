@@ -15,15 +15,27 @@ Pattern pattern_stripes(Color a, Color b) {
   return p;
 }
 
-Color pattern_at(Pattern ps, Point p) {
-  assert(is_point(p));
+Pattern pattern_gradient(Color a, Color b) {
+  Pattern p = pattern_none();
+  p.a = a, p.b = b, p.ptype = PATTERN_TYPE_GRADIENT;
+  return p;
+}
+
+Color pattern_at(Pattern pattern, Point point) {
+  assert(is_point(point));
   Color color;
-  switch (ps.ptype) {
+  switch (pattern.ptype) {
   case PATTERN_TYPE_STRIPES: {
-    color = fmod(floor(p.x), 2) ? ps.b : ps.a;
+    color = fmod(floor(point.x), 2) ? pattern.b : pattern.a;
     break;
   }
-  default:
+  case PATTERN_TYPE_GRADIENT: {
+    Color distance = color_sub(pattern.b, pattern.a);
+    double fraction = point.x - floor(point.x);
+    color = color_add(pattern.a, color_smul(distance, fraction));
+    break;
+  }
+  case PATTERN_TYPE_NONE:
     color = RED;
     break;
   }
