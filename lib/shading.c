@@ -18,7 +18,7 @@ Color lighting(MaterialPhong material, Shape object, Point point,
   Color material_color =
       material.pattern.ptype == PATTERN_TYPE_NONE
           ? material.color
-          : pattern_at_object(material.pattern, object, point);
+          : pattern_at_shape(material.pattern, object, point);
   Color effective_color = color_mul(material_color, light.intensity);
   Color ambient = color_smul(effective_color, material.ambient);
   Vector dir_light = tuple_normalize(tuple_sub(light.position, point));

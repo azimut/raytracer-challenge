@@ -486,19 +486,19 @@ void test_patterns(void) {
   assert(color_equal(c2, BLACK));
   // stripes + object transform
   set_transform(&s, scaling(2, 2, 2));
-  pattern_at_object(ps, s, point(1.5, 0, 0)); // !!!!
+  pattern_at_shape(ps, s, point(1.5, 0, 0)); // !!!!
   // stripes + pattern transform
   s = sphere();
   ps = pattern_stripes(WHITE, BLACK);
   pattern_set_transformation(&ps, scaling(2, 2, 2));
-  c1 = pattern_at_object(ps, s, point(1.5, 0, 0));
+  c1 = pattern_at_shape(ps, s, point(1.5, 0, 0));
   assert(color_equal(c1, WHITE));
   // stripes + object+pattern transform
   s = sphere();
   set_transform(&s, scaling(2, 2, 2));
   ps = pattern_stripes(WHITE, BLACK);
   pattern_set_transformation(&ps, translation(0.5, 0, 0));
-  c1 = pattern_at_object(ps, s, point(2.5, 0, 0));
+  c1 = pattern_at_shape(ps, s, point(2.5, 0, 0));
   assert(color_equal(c1, WHITE));
 }
 
