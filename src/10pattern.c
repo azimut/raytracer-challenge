@@ -11,12 +11,16 @@
 #include <math.h>
 #include <string.h>
 
+#ifndef DIMENSION
+#define DIMENSION 1024
+#endif
+
 int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
   w.light = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(200, 200, M_PI / 3);
+  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3);
   cam.transform =
       view_transform(point(3, 0.5, 3), point(-1, 1.5, -1.5), vector(0, 1, 0));
 

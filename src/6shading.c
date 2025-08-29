@@ -6,15 +6,18 @@
 #include "../lib/transformation.h"
 #include "../lib/tuple.h"
 
+#ifndef DIMENSION
+#define DIMENSION 1024
+#endif
+
 int main(void) {
   PointLight light = pointlight(point(-10, 10, -10), color(1, 1, 1));
   Point ray_origin = point(0, 0, -5);
   float wall_z = 10;
   float wall_size = 7;
-  size_t canvas_pixels = 300;
-  Canvas c = canvas(canvas_pixels, canvas_pixels);
-  float pixel_size = wall_size / canvas_pixels; // 0.02333
-  float half = wall_size / 2;                   // 3.5
+  Canvas c = canvas(DIMENSION, DIMENSION);
+  float pixel_size = wall_size / DIMENSION; // 0.02333
+  float half = wall_size / 2;               // 3.5
   Shape s = sphere();
   MaterialPhong m = material();
   m.color = color(1, 0.2, 1);
