@@ -515,6 +515,20 @@ void test_patterns(void) {
   assert(color_equal(BLACK, pattern_at(ps, point(1, 0, 0))));
   assert(color_equal(BLACK, pattern_at(ps, point(0, 0, 1))));
   assert(color_equal(BLACK, pattern_at(ps, point(0.708, 0, 0.708))));
+  // checkers
+  ps = pattern_checkers(WHITE, BLACK);
+  // repeat in x
+  assert(color_equal(WHITE, pattern_at(ps, point(0.00, 0, 0))));
+  assert(color_equal(WHITE, pattern_at(ps, point(0.99, 0, 0))));
+  assert(color_equal(BLACK, pattern_at(ps, point(1.01, 0, 0))));
+  // repeat in y
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0.00, 0))));
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0.99, 0))));
+  assert(color_equal(BLACK, pattern_at(ps, point(0, 1.01, 0))));
+  // repeat in z
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0, 0.00))));
+  assert(color_equal(WHITE, pattern_at(ps, point(0, 0, 0.99))));
+  assert(color_equal(BLACK, pattern_at(ps, point(0, 0, 1.01))));
 }
 
 int main(void) {

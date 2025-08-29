@@ -27,6 +27,12 @@ Pattern pattern_rings(Color a, Color b) {
   return p;
 }
 
+Pattern pattern_checkers(Color a, Color b) {
+  Pattern p = pattern_none();
+  p.a = a, p.b = b, p.ptype = PATTERN_TYPE_CHECKERS;
+  return p;
+}
+
 Color pattern_at(Pattern pattern, Point point) {
   assert(is_point(point));
   Color color;
@@ -42,7 +48,12 @@ Color pattern_at(Pattern pattern, Point point) {
     break;
   }
   case PATTERN_TYPE_RINGS: {
-    color = fmod(floor(sqrt(pow(point.x, 2) + pow(point.z, 2))), 2) \
+    color = fmod(floor(sqrt(pow(point.x, 2) + pow(point.z, 2))), 2) ? pattern.b
+                                                                    : pattern.a;
+    break;
+  }
+  case PATTERN_TYPE_CHECKERS: {
+    color = fmod(floor(point.x) + floor(point.y) + floor(point.z), 2)
                 ? pattern.b
                 : pattern.a;
     break;

@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
   Shape floor = plane();
   floor.material = material();
-  /* floor.material.pattern = pattern_rings(WHITE, BLACK); */
+  floor.material.pattern = pattern_checkers(WHITE, BLACK);
   /* floor.material.pattern.transformation = scaling(0.25, 1, 1); */
   floor.material.color = color(.4, 0.9, 0.9);
   floor.material.specular = 0;
