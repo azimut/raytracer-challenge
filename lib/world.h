@@ -6,18 +6,20 @@
 #include <stdint.h>
 
 typedef struct World {
-  PointLight light;
-  size_t count;
-  Shape *objects;
+  PointLight *lights;
+  size_t lights_count;
+  Shape *shapes;
+  size_t shapes_count;
 } World;
 
 Intersections world_intersect(World, Ray);
 void world_enter(World *, Shape);
+void world_enlight(World *, PointLight);
 World world_default(void);
 void world_free(World *);
 Color shade_hit(World, Computations, uint8_t);
 Color color_at(World, Ray, uint8_t);
 Color reflected_color(World, Computations, uint8_t);
-bool is_shadowed(World, Point);
+bool is_shadowed(World, Point, Point);
 
 #endif /* WORLD_H */

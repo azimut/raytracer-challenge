@@ -18,7 +18,8 @@
 int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
-  w.light = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
+  PointLight p = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
+  world_enlight(&w, p);
 
   Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3);
   cam.transform =

@@ -311,7 +311,7 @@ void test_world(void) {
   // shade_color()
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   w = world_default();
-  i = intersection(4, w.objects[0]);
+  i = intersection(4, w.shapes[0]);
   comp = prepare_computations(i, r);
   c = shade_hit(w, comp, 1);
   color_print(c);
@@ -319,9 +319,10 @@ void test_world(void) {
   world_free(&w);
   // shade_color() - inside
   w = world_default();
-  w.light = pointlight(point(0, 0.25, 0), WHITE);
+  w.lights[0].position = point(0, 0.25, 0);
+  w.lights[0].intensity = WHITE;
   r = ray(point(0, 0, 0), vector(0, 0, 1));
-  i = intersection(0.5, w.objects[1]);
+  i = intersection(0.5, w.shapes[1]);
   comp = prepare_computations(i, r);
   c = shade_hit(w, comp, 1);
   color_print(c);
@@ -339,11 +340,11 @@ void test_world(void) {
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855))); // hits
   world_free(&w);
   w = world_default();
-  w.objects[0].material.ambient = 1;
-  w.objects[1].material.ambient = 1;
+  w.shapes[0].material.ambient = 1;
+  w.shapes[1].material.ambient = 1;
   r = ray(point(0, 0, 0.75), vector(0, 0, -1));
   c = color_at(w, r, 1);
-  assert(color_equal(c, w.objects[1].material.color)); // behind the ray
+  assert(color_equal(c, w.shapes[1].material.color)); // behind the ray
   world_free(&w);
   // view_transform()
   mat4 = view_transform(point(0, 0, 0), point(0, 0, -1), vector(0, 1, 0));
@@ -402,15 +403,17 @@ void test_shadow(void) {
   // is_shadowed()
   World w = world_default();
   Point p = point(0, 10, 0);
-  assert(!is_shadowed(w, p));
-  assert(!is_shadowed(w, point(0, 10, 0)));     // nothing hit
-  assert(is_shadowed(w, point(10, -10, 10)));   // nothing hit, behind sphere
-  assert(!is_shadowed(w, point(-20, 20, -20))); // nothing hit, sides apart
-  assert(!is_shadowed(w, point(-2, 2, -2)));    // nothing hit, in between
+  Point lp = w.lights[0].position;
+  assert(!is_shadowed(w, p, lp));
+  assert(!is_shadowed(w, point(0, 10, 0), lp));   // nothing hit
+  assert(is_shadowed(w, point(10, -10, 10), lp)); // nothing hit, behind sphere
+  assert(!is_shadowed(w, point(-20, 20, -20), lp)); // nothing hit, sides apart
+  assert(!is_shadowed(w, point(-2, 2, -2), lp));    // nothing hit, in between
   world_free(&w);
   // shade_hit() given a shadow
   w = world_default();
-  w.light = pointlight(point(0, 0, -10), WHITE);
+  w.lights[0].position = point(0, 0, -10);
+  w.lights[0].intensity = WHITE;
   Shape s1 = sphere(), s2 = sphere();
   set_transform(&s2, translation(0, 0, 10));
   world_enter(&w, s1);
@@ -542,8 +545,8 @@ void test_reflections(void) {
   // strike a non-reflective surface
   World world = world_default();
   r = ray(point(0, 0, 0), vector(0, 0, 1));
-  world.objects[1].material.ambient = 1;
-  i = intersection(1, world.objects[1]);
+  world.shapes[1].material.ambient = 1;
+  i = intersection(1, world.shapes[1]);
   comp = prepare_computations(i, r);
   assert(color_equal(BLACK, reflected_color(world, comp, 1)));
   world_free(&world);
@@ -573,7 +576,8 @@ void test_reflections(void) {
   world_free(&world);
   // mutually reflected surfaces
   world = world_default();
-  world.light = pointlight(point(0, 0, 0), WHITE);
+  world.lights[0].position = point(0, 0, 0);
+  world.lights[0].intensity = WHITE;
   Shape lower = plane();
   lower.material.reflective = 1;
   lower.transformation = translation(0, -1, 0);
@@ -604,18 +608,18 @@ void test_refraction(void) {
 }
 
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
-  /* test_raycasting(); */
-  /* test_shading(); */
-  /* test_world(); */
-  /* test_shadow(); */
-  /* test_plane(); */
-  /* test_patterns(); */
-  /* test_reflections(); */
-  test_refraction();
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
+  test_raycasting();
+  test_shading();
+  test_world();
+  test_shadow();
+  test_plane();
+  test_patterns();
+  test_reflections();
+  /* test_refraction(); */
   printf("ALL OK!\n");
   return 0;
 }

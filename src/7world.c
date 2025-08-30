@@ -11,7 +11,10 @@
 
 int main(void) {
   World w = {0};
-  w.light = pointlight(point(-10, 4, -10), color(1, 0.9450981, 0.87843144));
+
+  PointLight p =
+      pointlight(point(-10, 4, -10), color(1, 0.9450981, 0.87843144));
+  world_enlight(&w, p);
 
   Camera cam = camera(1024, 1024, M_PI / 3);
   cam.transform =

@@ -1,24 +1,40 @@
 #include "./world.h"
 #include "./transformation.h"
+#include <assert.h>
 #include <stdio.h>
 
 void world_enter(World *world, Shape s) {
-  if (world->objects) {
-    world->objects =
-        reallocarray(world->objects, world->count + 1, sizeof(Shape));
+  if (world->shapes) {
+    world->shapes =
+        reallocarray(world->shapes, world->shapes_count + 1, sizeof(Shape));
   } else {
-    world->objects = calloc(1, sizeof(Shape));
+    world->shapes = calloc(1, sizeof(Shape));
   }
-  if (world->objects == NULL) {
+  if (world->shapes == NULL) {
     perror("alloc in world_enter()");
   }
-  world->objects[world->count] = s;
-  world->count++;
+  world->shapes[world->shapes_count] = s;
+  world->shapes_count++;
+}
+
+void world_enlight(World *world, PointLight light) {
+  if (world->lights) {
+    world->lights = reallocarray(world->lights, world->lights_count + 1,
+                                 sizeof(PointLight));
+  } else {
+    world->lights = calloc(1, sizeof(PointLight));
+  }
+  if (world->lights == NULL)
+    perror("alloc in world_enlight()");
+  world->lights[world->lights_count] = light;
+  world->lights_count++;
 }
 
 World world_default(void) {
   World w = {0};
-  w.light = pointlight(point(-10, 10, -10), color(1, 1, 1));
+
+  PointLight pl = pointlight(point(-10, 10, -10), color(1, 1, 1));
+  world_enlight(&w, pl);
 
   Shape s1 = sphere();
   s1.material.color = color(0.8, 1.0, 0.6);
@@ -34,15 +50,15 @@ World world_default(void) {
 }
 
 void world_free(World *world) {
-  free(world->objects);
-  world->objects = NULL;
+  free(world->shapes);
+  world->shapes = NULL;
 }
 
 Intersections world_intersect(World world, Ray ray) {
   Intersections is = {0};
-  for (size_t i = 0; i < world.count; ++i) {
+  for (size_t i = 0; i < world.shapes_count; ++i) {
     /* fprintf(stderr, "Intersecting: ID=%d\n", world.objects[i].id); */
-    Intersections temp_is = intersect(world.objects[i], ray);
+    Intersections temp_is = intersect(world.shapes[i], ray);
     if (temp_is.count == 0) {
       /* fprintf(stderr, "Skipping %d\n", world.objects[i].id); */
       continue;
@@ -69,9 +85,14 @@ Intersections world_intersect(World world, Ray ray) {
 }
 
 Color shade_hit(World world, Computations comp, uint8_t life) {
-  bool shadowed = is_shadowed(world, comp.over_point);
-  Color surface = lighting(comp.object.material, comp.object, comp.over_point,
-                           world.light, comp.eye, comp.normal, shadowed);
+  Color surface = BLACK;
+  for (size_t i = 0; i < world.lights_count; ++i) {
+    bool shadowed =
+        is_shadowed(world, comp.over_point, world.lights[i].position);
+    Color new = lighting(comp.object.material, comp.object, comp.over_point,
+                         world.lights[i], comp.eye, comp.normal, shadowed);
+    surface = color_add(surface, new);
+  }
   Color reflected = reflected_color(world, comp, life);
   return color_add(surface, reflected);
 }
@@ -88,8 +109,9 @@ Color color_at(World world, Ray ray, uint8_t life) {
   return color;
 }
 
-bool is_shadowed(World w, Point p) {
-  Vector shadow_vector = tuple_sub(w.light.position, p);
+bool is_shadowed(World w, Point p, Point light_pos) {
+  assert(is_point(p) && is_point(light_pos));
+  Vector shadow_vector = tuple_sub(light_pos, p);
   double distance = tuple_length(shadow_vector);
   Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
   Intersections is = world_intersect(w, shadow_ray);
