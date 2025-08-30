@@ -22,4 +22,7 @@ media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@
 media/%.ppm:        build/%     ; time $<
 $(BUILDS): build/%: src/%.c $(SRC)
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+
 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
