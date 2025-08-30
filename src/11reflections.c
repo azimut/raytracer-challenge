@@ -12,7 +12,7 @@
 #include <string.h>
 
 #ifndef DIMENSION
-#define DIMENSION 1024
+#define DIMENSION 200
 #endif
 
 int main(int argc, char *argv[]) {
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   World w = {0};
   w.light = pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144));
 
-  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 4);
+  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 5.5);
   cam.transform =
       view_transform(point(8, 3.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
 
@@ -43,10 +43,11 @@ int main(int argc, char *argv[]) {
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
     /* hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255); */
-    hexa.material.pattern = pattern_stripes(WHITE, BLACK);
-    hexa.material.pattern.transformation =
-        m4_mul(scaling(10, 1, 1), m4_identity());
-    hexa.material.reflective = 0.15;
+    hexa.material.color = BLACK;
+    /* hexa.material.pattern = pattern_stripes(WHITE, BLACK); */
+    /* hexa.material.pattern.transformation = */
+    /*     m4_mul(scaling(10, 1, 1), m4_identity()); */
+    hexa.material.reflective = 0.1;
     hexa.material.specular = 0;
     world_enter(&w, hexa);
   }
@@ -63,7 +64,8 @@ int main(int argc, char *argv[]) {
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
   middle.material.color = color(0.1, 1, 0.5);
-  middle.material.pattern = pattern_stripes(WHITE, BLACK);
+  middle.material.reflective = 0.2;
+  middle.material.pattern = pattern_stripes(RED, BLUE);
   middle.material.pattern.transformation =
       m4_mul(rotation_z(M_PI / 3), scaling(0.11, 1, 1));
   middle.material.diffuse = 0.7;

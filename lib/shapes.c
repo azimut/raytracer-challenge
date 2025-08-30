@@ -21,6 +21,13 @@ Shape sphere(void) {
   };
 }
 
+Shape sphere_glass(void) {
+  Shape s = sphere();
+  s.material.transparency = 1;
+  s.material.refractive_index = 1.5;
+  return s;
+}
+
 void set_material(Shape *shape, MaterialPhong material) {
   shape->material = material;
 }

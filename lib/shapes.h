@@ -24,6 +24,7 @@ typedef struct Shape {
 
 Shape plane(void);
 Shape sphere(void);
+Shape sphere_glass(void);
 void set_material(Shape *, MaterialPhong);
 void set_transform(Shape *, Mat4);
 Vector normal_at(Shape, Point);

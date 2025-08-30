@@ -598,6 +598,11 @@ void test_reflections(void) {
   world_free(&world);
 }
 
+void test_refraction(void) {
+  MaterialPhong m = material();
+  assert(m.transparency == 0 && m.refractive_index == 1);
+}
+
 int main(void) {
   /* test_tuple(); */
   /* test_canvas(); */
@@ -609,7 +614,8 @@ int main(void) {
   /* test_shadow(); */
   /* test_plane(); */
   /* test_patterns(); */
-  test_reflections();
+  /* test_reflections(); */
+  test_refraction();
   printf("ALL OK!\n");
   return 0;
 }

@@ -7,7 +7,9 @@ MaterialPhong material(void) {
       .ambient = 0.1,
       .diffuse = 0.9,
       .specular = 0.9,
-      .shininess = 200.0,
-      .reflective = 0.0,
+      .shininess = 200,
+      .reflective = 0,
+      .transparency = 0, // opaque by default = 0
+      .refractive_index = DEFAULT_REFRACTIVE_VACUUM,
   };
 }
