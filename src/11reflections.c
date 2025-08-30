@@ -22,14 +22,16 @@ int main(int argc, char *argv[]) {
   /* world_enlight(&w, */
   /*               pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144)));
    */
-  world_enlight(&w,
-                pointlight(point(5, 3, 2), color(0, 0.9450981, 0.387843144)));
-  world_enlight(
-      &w, pointlight(point(-3, 1, -3), color(.3, 0.09450981, 0.87843144)));
+  PointLight p = pointlight(point(5, 3, 2), color(0, 0.9450981, 0.387843144));
+  p.attenuation_idx = 4;
+  world_enlight(&w, p);
+  p = pointlight(point(-3, 1, -3), color(.3, 0.09450981, 0.87843144));
+  p.attenuation_idx = 10;
+  world_enlight(&w, p);
 
   Camera cam = camera(DIMENSION, DIMENSION, M_PI / 5.5);
   cam.transform =
-      view_transform(point(8, 3.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
+      view_transform(point(8, 0.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
 
   Shape floor = plane();
   floor.material = material();

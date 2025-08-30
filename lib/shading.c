@@ -9,7 +9,7 @@ Vector reflect(Vector v, Vector n) {
 
 PointLight pointlight(Point position, Color intensity) {
   assert(is_point(position));
-  return (PointLight){position, intensity};
+  return (PointLight){position, intensity, 0};
 }
 
 Color lighting(MaterialPhong material, Shape object, Point point,
@@ -26,8 +26,10 @@ Color lighting(MaterialPhong material, Shape object, Point point,
   Color diffuse = {0, 0, 0}, specular = {0, 0, 0};
   double attenuation = 1;
   if (!in_shadow && light_dot_normal >= 0) {
-    /* double distance = tuple_length(tuple_sub(light.position, point)); */
-    /* attenuation = 1 / (1.0 + 0.14 * distance + 0.07 * distance); */
+    double distance = tuple_length(tuple_sub(light.position, point));
+    double linear = default_attenuations[light.attenuation_idx].linear;
+    double quadratic = default_attenuations[light.attenuation_idx].quadratic;
+    attenuation = 1 / (1.0 + linear * distance + quadratic * distance);
     diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
     Vector reflection = reflect(tuple_neg(dir_light), normal);
     double reflect_dot_eye = tuple_dot_product(reflection, eye);
