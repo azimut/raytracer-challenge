@@ -52,7 +52,8 @@ int main(int argc, char *argv[]) {
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
     /* hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255); */
-    hexa.material.color = BLACK;
+    /* hexa.material.color = BLACK; */
+    hexa.material.color = i % 2 ? BLACK : WHITE;
     /* hexa.material.pattern = pattern_stripes(WHITE, BLACK); */
     /* hexa.material.pattern.transformation = */
     /*     m4_mul(scaling(10, 1, 1), m4_identity()); */
