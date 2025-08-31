@@ -33,8 +33,8 @@ gmon.out:    CFLAGS   += -pg
 gmon.out:    DIMENSION = 100
 gmon.out:    build/$(TARGET)  ; ./build/$(TARGET)
 profile.txt: gmon.out         ; gprof ./build/$(TARGET) $< > $@
-profile.dot: profile.txt      ; gprof2dot $< > $@
-profile.png: profile.dot      ; dot -Tpng < $< > $@
+profile.dot: profile.txt      ; gprof2dot               $< > $@
+profile.png: profile.dot      ; dot -Tpng             < $< > $@
 
 .PHONY: clean
 clean: ; rm -f ./profile.* ./build/*
