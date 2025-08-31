@@ -3,7 +3,7 @@ LDFLAGS   := -lm
 SRC       := $(wildcard lib/*.c)
 HDR       := $(wildcard lib/*.h)
 DIMENSION ?= 1024
-CFLAGS    := -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION)
+CFLAGS     = -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION)
 BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
 ifdef DEBUG
@@ -11,9 +11,6 @@ ifdef DEBUG
 endif
 ifdef SANITIZE
 	CFLAGS += -fsanitize=undefined -fsanitize=address -fPIE -fno-omit-frame-pointer -ggdb3 -O0
-endif
-ifdef PROFILE
-	CFLAGS += -pg
 endif
 ifdef SPEED
 	CFLAGS += -march=native -mtune=native -Ofast -ffast-math
@@ -30,9 +27,11 @@ test: build/unit; ./build/unit
 build/unit: test/unit.c $(SRC) $(HDR)
 	mkdir -p $(@D); $(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
-# build/profile/%/%: src/%.c $(SRC) $(HDR)
-# 	mkdir -p $(@D); $(CC) $(CFLAGS) -pg -o $@ $(SRC) $< $(LDFLAGS)
-# gmon.out:    build/%  ; ./BIN
-# profile.txt: gmon.out ; gprof BIN $< > $@
-profile.dot: profile.txt ; gprof2dot $< > $@
-profile.png: profile.dot ; dot -Tpng < $< > $@
+.PHONY: profile
+profile: profile.png
+gmon.out:    CFLAGS   += -pg
+gmon.out:    DIMENSION = 50
+gmon.out:    build/$(TARGET)  ; ./build/$(TARGET)
+profile.txt: gmon.out         ; gprof ./build/$(TARGET) $< > $@
+profile.dot: profile.txt      ; gprof2dot $< > $@
+profile.png: profile.dot      ; dot -Tpng < $< > $@

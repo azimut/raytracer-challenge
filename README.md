@@ -29,6 +29,12 @@ To compile&run tests, with debug symbols. I let my IDE run this command for me t
 $ make test DEBUG=1
 ```
 
+To profile the given `TARGET` and generate a `gprof2dot` png image.
+
+``` shellsession
+$ make profile TARGET=11reflections
+```
+
 ## Code Overview
 
 - Chapter 1: `tuple.h`
