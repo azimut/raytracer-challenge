@@ -51,15 +51,15 @@ void test_canvas(void) {
 }
 
 void test_matrix(void) {
-  assert(m4_equal(m4_identity(), m4_identity()));
-  assert(m3_equal(m4_submatrix(m4_identity(), 0, 0), m3_identity()));
-  assert(m3_equal(m4_submatrix(m4_identity(), 3, 3), m3_identity()));
-  assert(m2_equal(m2_identity(), m3_submatrix(m3_identity(), 0, 0)));
+  assert(m4_equal(M4_IDENTITY, M4_IDENTITY));
+  assert(m3_equal(m4_submatrix(M4_IDENTITY, 0, 0), M3_IDENTITY));
+  assert(m3_equal(m4_submatrix(M4_IDENTITY, 3, 3), M3_IDENTITY));
+  assert(m2_equal(M2_IDENTITY, m3_submatrix(M3_IDENTITY, 0, 0)));
   Mat4 am4 = m4(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2);
   assert(m4_equal(
       m4_mul(am4, m4(-2, 1, 2, 3, 3, 2, 1, -1, 4, 3, 6, 5, 1, 2, 7, 8)),
       m4(20, 22, 50, 48, 44, 54, 114, 108, 40, 58, 110, 102, 16, 26, 46, 42)));
-  assert(m4_equal(m4_mul(am4, m4_identity()), am4));
+  assert(m4_equal(m4_mul(am4, M4_IDENTITY), am4));
   assert(tuple_equal(m4_tmul(m4(1, 2, 3, 4, 2, 4, 4, 2, 8, 6, 4, 1, 0, 0, 0, 1),
                              tuple(1, 2, 3, 1)),
                      tuple(18, 24, 33, 1)));
@@ -208,7 +208,7 @@ void test_raycasting(void) {
   assert(tuple_equal(new_ray.origin, point(2, 6, 12)));
   assert(tuple_equal(new_ray.direction, vector(0, 3, 0)));
   // set_transform
-  assert(m4_equal(s.transformation, m4_identity()));
+  assert(m4_equal(s.transformation, M4_IDENTITY));
   set_transform(&s, translation(2, 3, 4));
   assert(m4_equal(s.transformation, translation(2, 3, 4)));
   // transform() on intersect()
@@ -348,7 +348,7 @@ void test_world(void) {
   world_free(&w);
   // view_transform()
   mat4 = view_transform(point(0, 0, 0), point(0, 0, -1), vector(0, 1, 0));
-  assert(m4_equal(mat4, m4_identity())); // default orientation
+  assert(m4_equal(mat4, M4_IDENTITY)); // default orientation
   mat4 = view_transform(point(0, 0, 0), point(0, 0, 1), vector(0, 1, 0));
   assert(m4_equal(mat4, scaling(-1, 1, -1))); // positive z == mirror
   mat4 = view_transform(point(0, 0, 8), point(0, 0, 0), vector(0, 1, 0));
@@ -359,7 +359,7 @@ void test_world(void) {
                            -0.71714, 0, 0, 0, 0, 1)));
   // camera()
   Camera cam = camera(160, 120, M_PI_2);
-  assert(m4_equal(cam.transform, m4_identity()));
+  assert(m4_equal(cam.transform, M4_IDENTITY));
   cam = camera(200, 125, M_PI_2);
   assert(near(cam.pixel_size, 0.01)); // horizontal canvas
   cam = camera(125, 200, M_PI_2);
@@ -436,7 +436,7 @@ void test_shadow(void) {
 
 void test_plane(void) {
   Shape p = plane();
-  assert(m4_equal(p.transformation, m4_identity()));
+  assert(m4_equal(p.transformation, M4_IDENTITY));
   Ray r = ray(point(0, 10, 0), vector(0, 0, 1));
   Intersections is = intersect(p, r);
   assert(is.count == 0); // ray parallel to plane

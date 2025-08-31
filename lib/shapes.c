@@ -6,7 +6,7 @@ int global_id = 0;
 Shape plane(void) {
   return (Shape){
       .id = ++global_id,
-      .transformation = m4_identity(),
+      .transformation = M4_IDENTITY,
       .material = material(),
       .shape_type = SHAPE_TYPE_PLANE,
   };
@@ -15,7 +15,7 @@ Shape plane(void) {
 Shape sphere(void) {
   return (Shape){
       .id = ++global_id,
-      .transformation = m4_identity(),
+      .transformation = M4_IDENTITY,
       .material = material(),
       .shape_type = SHAPE_TYPE_SPHERE,
   };

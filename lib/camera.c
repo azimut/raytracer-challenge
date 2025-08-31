@@ -29,7 +29,7 @@ Camera camera(size_t hsize, size_t vsize, double fov) {
       .half_height = half_height,
       .half_width = half_width,
       .pixel_size = (half_width * 2) / hsize,
-      .transform = m4_identity(),
+      .transform = M4_IDENTITY,
       .hsize = hsize,
       .vsize = vsize,
       .fov = fov,

@@ -5,7 +5,7 @@
 Pattern pattern_none(void) {
   Pattern p = {0};
   p.ptype = PATTERN_TYPE_NONE;
-  p.transformation = m4_identity();
+  p.transformation = M4_IDENTITY;
   return p;
 }
 
