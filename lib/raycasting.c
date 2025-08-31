@@ -40,7 +40,7 @@ Intersections intersect(Shape shape, Ray ray) {
   Ray tRay = transform(ray, m4_inverse(shape.transformation));
   Intersections is = {.count = 0, .hits = NULL};
   switch (shape.shape_type) {
-  case SHAPE_TYPE_SPHERE:
+  case SHAPE_TYPE_SPHERE: {
     Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
     double a = tuple_dot_product(tRay.direction, tRay.direction);
     double b = 2.0 * tuple_dot_product(tRay.direction, sphere_to_ray);
@@ -53,13 +53,15 @@ Intersections intersect(Shape shape, Ray ray) {
       break;
     }
     break;
-  case SHAPE_TYPE_PLANE:
+  }
+  case SHAPE_TYPE_PLANE: {
     if (fabs(tRay.direction.y) < EPSILON) {
       break;
     }
     double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
     is = intersections(shape, 1, i);
     break;
+  }
   }
   return is;
 }

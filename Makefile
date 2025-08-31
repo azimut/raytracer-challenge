@@ -1,4 +1,4 @@
-CC        := gcc
+CC        ?= clang
 LDFLAGS   := -lm
 SRC       := $(wildcard lib/*.c)
 HDR       := $(wildcard lib/*.h)
@@ -10,7 +10,7 @@ ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 endif
 ifdef SANITIZE
-	CFLAGS += -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer
+	CFLAGS += -fsanitize=undefined -fsanitize=address -fPIE -fno-omit-frame-pointer -ggdb3 -O0
 endif
 ifdef PROFILE
 	CFLAGS += -pg
