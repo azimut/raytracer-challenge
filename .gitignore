@@ -1,4 +1,5 @@
 gmon.out
+/profile.*
 *.ppm
 /build/
 /.ccls-cache/
