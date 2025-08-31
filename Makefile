@@ -15,6 +15,9 @@ endif
 ifdef PROFILE
 	CFLAGS += -pg
 endif
+ifdef SPEED
+	CFLAGS += -march=native -mtune=native -Ofast -ffast-math
+endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@
