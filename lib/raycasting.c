@@ -76,7 +76,7 @@ bool intersection_equal(Intersection i1, Intersection i2) {
 }
 
 Intersection *hit(Intersections is) {
-  size_t idx;
+  size_t idx = 0;
   double current = DBL_MAX;
   for (size_t i = 0; i < is.count; ++i) {
     if (is.hits[i].t > 0 && is.hits[i].t < current) {
