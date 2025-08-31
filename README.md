@@ -21,3 +21,23 @@ My source code, written in C.
 - Chapter 8: Shadows
 - Chapter 9: Planes
 - Chapter 10: `patterns.h`
+
+## Usage
+
+To render an image with the given 1:1 dimensions. `SPEED` adds some CFLAGS that makes the binary run faster.
+
+``` shellsession
+$ make media/11reflections.jpg DIMENSION=1024 SPEED=1
+```
+
+To compile&run tests, checking for memory leaks.
+
+``` shellsession
+$ make -B test SANITIZE=1
+```
+
+To compile&run tests, with debug symbols. I let my IDE run this command for me to launch its debugger.
+
+``` shellsession
+$ make -B test DEBUG=1
+```
