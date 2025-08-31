@@ -30,7 +30,7 @@ build/unit: test/unit.c $(SRC) $(HDR)
 .PHONY: profile
 profile: profile.png
 gmon.out:    CFLAGS   += -pg
-gmon.out:    DIMENSION = 50
+gmon.out:    DIMENSION = 100
 gmon.out:    build/$(TARGET)  ; ./build/$(TARGET)
 profile.txt: gmon.out         ; gprof ./build/$(TARGET) $< > $@
 profile.dot: profile.txt      ; gprof2dot $< > $@

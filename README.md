@@ -32,7 +32,7 @@ $ make test DEBUG=1
 To profile the given `TARGET` and generate a `gprof2dot` png image.
 
 ``` shellsession
-$ make profile TARGET=11reflections
+$ make -B profile TARGET=11reflections
 ```
 
 ## Code Overview

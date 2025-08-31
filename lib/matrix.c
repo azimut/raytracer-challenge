@@ -100,8 +100,7 @@ Mat2 m3_submatrix(const Mat3 m3, size_t skip_row, size_t skip_col) {
 }
 
 Mat3 m4_submatrix(const Mat4 m4, size_t skip_row, size_t skip_col) {
-  Mat3 result;
-  result.m[0][0] = 0;
+  Mat3 result = {0};
   size_t trow = 0;
   for (size_t row = 0; row < 4; row++) {
     size_t tcol = 0;
@@ -123,7 +122,7 @@ static double m3_minor(const Mat3 m, size_t row, size_t col) {
 }
 static double m3_cofactor(const Mat3 m3, size_t row, size_t col) {
   double minor = m3_minor(m3, row, col);
-  return ((row + col) % 2 == 0) ? minor : -minor;
+  return ((row + col) % 2) ? -minor : minor;
 }
 static double m3_determinant(const Mat3 m3) {
   double result = 0;
@@ -138,7 +137,7 @@ static double m4_minor(const Mat4 m4, size_t row, size_t col) {
 }
 static double m4_cofactor(const Mat4 m4, size_t row, size_t col) {
   double minor = m4_minor(m4, row, col);
-  return ((row + col) % 2 == 0) ? minor : -minor;
+  return ((row + col) % 2) ? -minor : minor;
 }
 static double m4_determinant(const Mat4 m4) {
   double result = 0;
