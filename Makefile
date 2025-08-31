@@ -12,25 +12,24 @@ endif
 ifdef SANITIZE
 	CFLAGS += -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer
 endif
+ifdef PROFILE
+	CFLAGS += -pg
+endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@
 media/%.ppm:        build/%     ; time $<
 $(BUILDS): build/%: src/%.c $(SRC)
-	@mkdir -p $(@D); $(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+	mkdir -p $(@D); $(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
 .PHONY: test
 test: build/unit; ./build/unit
 build/unit: test/unit.c $(SRC) $(HDR)
-	@mkdir -p $(@D); $(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
+	mkdir -p $(@D); $(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
 
-# ifdef PROFILE
-# 	CFLAGS += -pg
-# endif
-# build/unit: test/unit.c $(SRC) $(HDR)
-# 	$(CC) $(CFLAGS) -o $@ $(SRC) $< $(LDFLAGS)
-# gmon.out: build/%
-# 	./$<
-# profile.txt: gmon.out
-# 	gprof BIN $< | tee profile.txt
-
+# build/profile/%/%: src/%.c $(SRC) $(HDR)
+# 	mkdir -p $(@D); $(CC) $(CFLAGS) -pg -o $@ $(SRC) $< $(LDFLAGS)
+# gmon.out:    build/%  ; ./BIN
+# profile.txt: gmon.out ; gprof BIN $< > $@
+profile.dot: profile.txt ; gprof2dot $< > $@
+profile.png: profile.dot ; dot -Tpng < $< > $@
