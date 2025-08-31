@@ -441,18 +441,22 @@ void test_plane(void) {
   Intersections is = intersect(p, r);
   assert(is.count == 0); // ray parallel to plane
   r = ray(point(0, 0, 0), vector(0, 0, 1));
+  free_intersections(&is);
   is = intersect(p, r);
   assert(is.count == 0); // coplanar ray
   r = ray(point(0, 1, 0), vector(0, -1, 0));
+  free_intersections(&is);
   is = intersect(p, r);
   assert(is.count == 1); // ray from above
   assert(near(is.hits[0].t, 1));
   assert(is.hits[0].object.id == p.id);
   r = ray(point(0, -1, 0), vector(0, 1, 0));
+  free_intersections(&is);
   is = intersect(p, r);
   assert(is.count == 1); // ray from below
   assert(near(is.hits[0].t, 1));
   assert(is.hits[0].object.id == p.id);
+  free_intersections(&is);
 }
 
 void test_patterns(void) {

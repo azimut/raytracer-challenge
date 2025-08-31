@@ -52,6 +52,8 @@ World world_default(void) {
 void world_free(World *world) {
   free(world->shapes);
   world->shapes = NULL;
+  free(world->lights);
+  world->lights = NULL;
 }
 
 Intersections world_intersect(World world, Ray ray) {
