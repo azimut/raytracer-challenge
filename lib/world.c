@@ -12,6 +12,7 @@ void world_enter(World *world, Shape s) {
   }
   if (world->shapes == NULL) {
     perror("alloc in world_enter()");
+    exit(EXIT_FAILURE);
   }
   world->shapes[world->shapes_count] = s;
   world->shapes_count++;
@@ -24,8 +25,10 @@ void world_enlight(World *world, PointLight light) {
   } else {
     world->lights = calloc(1, sizeof(PointLight));
   }
-  if (world->lights == NULL)
+  if (world->lights == NULL) {
     perror("alloc in world_enlight()");
+    exit(EXIT_FAILURE);
+  }
   world->lights[world->lights_count] = light;
   world->lights_count++;
 }

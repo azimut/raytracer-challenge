@@ -10,6 +10,7 @@ typedef struct Intersection {
   double t;
   Shape object;
 } Intersection;
+
 typedef struct Intersections {
   size_t count;
   size_t capacity;

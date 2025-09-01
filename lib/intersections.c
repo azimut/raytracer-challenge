@@ -49,23 +49,34 @@ void intersections_sort(Intersections *is) {
 }
 
 Intersections intersections_new(size_t capacity) {
-  assert(capacity < 1000); // ensure sanity
-  return (Intersections){
+  assert(capacity < 1000 && capacity > 0); // ensure sanity
+  Intersections is = {
+      .count = 0,
       .capacity = capacity,
       .hits = calloc(capacity, sizeof(Intersection)),
   };
+  if (!is.hits) {
+    perror("_new");
+    exit(EXIT_FAILURE);
+  }
+  return is;
 }
 
 void intersections_append(Intersections *is, const Intersection i) {
-  if (is->count + 2 > is->capacity) {
+  if ((is->count + 2) > is->capacity) {
+    fprintf(stderr, "INCREEEASE: cap=%li count=%li\n", is->capacity, is->count);
     is->capacity += RENEWED_CAPACITY;
     is->hits = realloc(is->hits, is->capacity);
+    fprintf(stderr, "-----> cap=%li count=%li\n", is->capacity, is->count);
     if (!is->hits) {
       perror("_push");
+      exit(EXIT_FAILURE);
     }
   }
+  /* fprintf(stderr, "append - cap=%li  count=%li  is=%p\n", is->capacity,
+   * is->count, is); */
   is->hits[is->count] = i;
-  is->count++;
+  is->count = is->count + 1;
 }
 
 static int intersections_index(const Intersections is, const Intersection i) {

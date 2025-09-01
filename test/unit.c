@@ -641,14 +641,16 @@ void test_refraction(void) {
 void test_intersections(void) {
   Intersections is = intersections_new(10);
   Shape a = sphere();
+  Shape b = plane();
   intersections_append(&is, (Intersection){1, a});
-  intersections_append(&is, (Intersection){2, a});
+  intersections_append(&is, (Intersection){2, b});
+  intersections_append(&is, (Intersection){3, a});
+  assert(is.count == 3);
+  intersections_remove(&is, (Intersection){2, b});
   assert(is.count == 2);
-  intersections_remove(&is, (Intersection){1, a});
-  assert(is.count == 1);
   intersections_remove(&is, (Intersection){88, a});
-  assert(is.count == 1);
-  assert(intersections_includes(is, (Intersection){2, a}));
+  assert(is.count == 2);
+  assert(intersections_includes(is, (Intersection){3, a}));
   intersections_free(&is);
 }
 
