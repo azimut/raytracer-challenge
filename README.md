@@ -34,7 +34,7 @@ $ make -B profile TARGET=11reflections
 To compile&run `TARGET` with `valgrind` to detect memory issues.
 
 ``` shellsession
-$ make -B profile TARGET=11reflections
+$ make -B valgrind TARGET=11reflections
 ```
 
 To compile&run tests, with debug symbols. I let my IDE run part of this command for me to launch its debugger.
