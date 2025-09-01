@@ -45,7 +45,7 @@ int main(void) {
         canvas_set(&c, row, col,
                    lighting(s.material, s, obj_pos, light, eye, normal, false));
       }
-      free_intersections(&is);
+      intersections_free(&is);
     }
   }
   canvas_save(c, "media/6shading.ppm");

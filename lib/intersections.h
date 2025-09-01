@@ -15,7 +15,7 @@ typedef struct Intersections {
 
 Intersection intersection(double, Shape);
 Intersections intersections(Shape, int, ...);
-void free_intersections(Intersections *);
+void intersections_free(Intersections *);
 void intersections_sort(Intersections *);
 bool intersection_equal(Intersection, Intersection);
 

@@ -20,7 +20,7 @@ Intersections intersections(Shape object, int count, ...) {
   return result;
 }
 
-void free_intersections(Intersections *is) {
+void intersections_free(Intersections *is) {
   if (!is->hits)
     return;
   free(is->hits);

@@ -80,7 +80,7 @@ Intersections world_intersect(World world, Ray ray) {
     }
 
     is.count += temp_is.count;
-    free_intersections(&temp_is);
+    intersections_free(&temp_is);
   }
   intersections_sort(&is);
   return is;
@@ -107,7 +107,7 @@ Color color_at(World world, Ray ray, uint8_t life) {
     Computations comp = prepare_computations(*i, ray, is);
     color = shade_hit(world, comp, life);
   }
-  free_intersections(&is);
+  intersections_free(&is);
   return color;
 }
 
@@ -122,7 +122,7 @@ bool is_shadowed(World w, Point p, Point light_pos) {
   if (h && h->t < distance) {
     shadowed = true;
   }
-  free_intersections(&is);
+  intersections_free(&is);
   return shadowed;
 }
 

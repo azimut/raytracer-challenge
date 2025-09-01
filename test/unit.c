@@ -168,35 +168,35 @@ void test_raycasting(void) {
   Intersections si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == 4 && si.hits[1].t == 6);
   r = ray(point(0, 1, -5), vector(0, 0, 1)); // tangent intersection
-  free_intersections(&si);
+  intersections_free(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == 5 && si.hits[1].t == 5);
   r = ray(point(0, 2, -5), vector(0, 0, 1)); // ray misses the sphere
-  free_intersections(&si);
+  intersections_free(&si);
   si = intersect(s, r);
   assert(si.count == 0);
   r = ray(point(0, 0, 0), vector(0, 0, 1)); // ray inside sphere
-  free_intersections(&si);
+  intersections_free(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -1 && si.hits[1].t == 1);
   r = ray(point(0, 0, 5), vector(0, 0, 1)); // sphere behind a ray
-  free_intersections(&si);
+  intersections_free(&si);
   si = intersect(s, r);
   assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
-  free_intersections(&si);
+  intersections_free(&si);
   // hit()
   Intersections is = intersections(s, 2, 1.0, 2.0); // all positive
   assert(hit(is) == &is.hits[0]);
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersections(s, 2, -1.0, 1.0); // some are negative
   assert(hit(is) == &is.hits[1]);
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersections(s, 2, -2.0, -1.0); // all are negative
   assert(hit(is) == NULL);
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
   assert(hit(is) == &is.hits[3]);
-  free_intersections(&is);
+  intersections_free(&is);
   // transform()
   r = ray(point(1, 2, 3), vector(0, 1, 0));
   Mat4 m4 = translation(3, 4, 5);
@@ -219,7 +219,7 @@ void test_raycasting(void) {
   assert(near(is.hits[0].t, 3));
   assert(near(is.hits[1].t, 7));
   set_transform(&s, translation(5, 0, 0));
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersect(s, r);
   assert(is.count == 0);
 }
@@ -288,7 +288,7 @@ void test_world(void) {
   assert(is.hits[1].t == 4.5);
   assert(is.hits[2].t == 5.5);
   assert(is.hits[3].t == 6.0);
-  free_intersections(&is);
+  intersections_free(&is);
   world_free(&w);
   // prepare_computations()
   Shape s = sphere();
@@ -442,22 +442,22 @@ void test_plane(void) {
   Intersections is = intersect(p, r);
   assert(is.count == 0); // ray parallel to plane
   r = ray(point(0, 0, 0), vector(0, 0, 1));
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersect(p, r);
   assert(is.count == 0); // coplanar ray
   r = ray(point(0, 1, 0), vector(0, -1, 0));
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersect(p, r);
   assert(is.count == 1); // ray from above
   assert(near(is.hits[0].t, 1));
   assert(is.hits[0].object.id == p.id);
   r = ray(point(0, -1, 0), vector(0, 1, 0));
-  free_intersections(&is);
+  intersections_free(&is);
   is = intersect(p, r);
   assert(is.count == 1); // ray from below
   assert(near(is.hits[0].t, 1));
   assert(is.hits[0].object.id == p.id);
-  free_intersections(&is);
+  intersections_free(&is);
 }
 
 void test_patterns(void) {
