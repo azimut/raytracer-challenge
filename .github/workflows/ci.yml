@@ -1,0 +1,17 @@
+name: ci build
+
+on:
+  push:
+    paths-ignore:
+      - README.org
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update
+      - run: make deps
+      - run: make -B test DEBUG=1
+      - run: make -B test SANITIZE=1
+      - run: make -B valgrind TARGET=10pattern
