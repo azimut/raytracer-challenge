@@ -294,7 +294,7 @@ void test_world(void) {
   Shape s = sphere();
   Intersection i = intersection(4, s);
   r = ray(point(0, 0, -5), vector(0, 0, 1));
-  Computations comp = prepare_computations(i, r);
+  Computations comp = prepare_computations(i, r, is);
   assert(!comp.is_inside);
   assert(comp.t == i.t);
   assert(comp.object.id == s.id);
@@ -303,7 +303,7 @@ void test_world(void) {
   assert(tuple_equal(comp.normal, vector(0, 0, -1)));
   r = ray(point(0, 0, 0), vector(0, 0, 1));
   i = intersection(1, s);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(comp.is_inside);
   assert(tuple_equal(comp.point, point(0, 0, 1)));
   assert(tuple_equal(comp.eye, vector(0, 0, -1)));
@@ -312,7 +312,7 @@ void test_world(void) {
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   w = world_default();
   i = intersection(4, w.shapes[0]);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   c = shade_hit(w, comp, 1);
   color_print(c);
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855)));
@@ -323,7 +323,7 @@ void test_world(void) {
   w.lights[0].intensity = WHITE;
   r = ray(point(0, 0, 0), vector(0, 0, 1));
   i = intersection(0.5, w.shapes[1]);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   c = shade_hit(w, comp, 1);
   color_print(c);
   assert(color_equal(c, color(0.90498, 0.90498, 0.90498)));
@@ -420,7 +420,8 @@ void test_shadow(void) {
   world_enter(&w, s2);
   Ray r = ray(point(0, 0, 5), vector(0, 0, 1));
   Intersection i = intersection(4, s2);
-  Computations comp = prepare_computations(i, r);
+  Intersections is = {0};
+  Computations comp = prepare_computations(i, r, is);
   Color c = shade_hit(w, comp, 1);
   assert(color_equal(c, color(0.1, 0.1, 0.1)));
   // a hit should offset the point
@@ -428,7 +429,7 @@ void test_shadow(void) {
   s1 = sphere();
   set_transform(&s1, translation(0, 0, 1));
   i = intersection(5, s1);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(comp.over_point.z < -EPSILON / 2);
   assert(comp.point.z > comp.over_point.z);
   world_free(&w);
@@ -544,14 +545,15 @@ void test_reflections(void) {
   Shape pl = plane();
   Ray r = ray(point(0, 1, -1), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
   Intersection i = intersection(sqrt(2), pl);
-  Computations comp = prepare_computations(i, r);
+  Intersections is = {0};
+  Computations comp = prepare_computations(i, r, is);
   assert(tuple_equal(comp.reflect, vector(0, sqrt(2) / 2, sqrt(2) / 2)));
   // strike a non-reflective surface
   World world = world_default();
   r = ray(point(0, 0, 0), vector(0, 0, 1));
   world.shapes[1].material.ambient = 1;
   i = intersection(1, world.shapes[1]);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(color_equal(BLACK, reflected_color(world, comp, 1)));
   world_free(&world);
   // strike a reflective surface
@@ -562,7 +564,7 @@ void test_reflections(void) {
   world_enter(&world, pl);
   r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
   i = intersection(sqrt(2), pl);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(color_equal(color(0.19032, 0.2379, 0.14274),
                      reflected_color(world, comp, 1)));
   world_free(&world);
@@ -574,7 +576,7 @@ void test_reflections(void) {
   world_enter(&world, pl);
   r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
   i = intersection(sqrt(2), pl);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(
       color_equal(color(0.87677, 0.92436, 0.82918), shade_hit(world, comp, 1)));
   world_free(&world);
@@ -601,7 +603,7 @@ void test_reflections(void) {
   world_enter(&world, pl);
   r = ray(point(0, 0, -3), vector(0, -sqrt(2) / 2, sqrt(2) / 2));
   i = intersection(sqrt(2), pl);
-  comp = prepare_computations(i, r);
+  comp = prepare_computations(i, r, is);
   assert(color_equal(BLACK, reflected_color(world, comp, 0)));
   world_free(&world);
 }
@@ -609,6 +611,30 @@ void test_reflections(void) {
 void test_refraction(void) {
   MaterialPhong m = material();
   assert(m.transparency == 0 && m.refractive_index == 1);
+  Shape gs = sphere_glass();
+  assert(gs.material.transparency == 1);
+  assert(gs.material.refractive_index == 1.5);
+  Shape a = sphere_glass();
+  a.transformation = scaling(2, 2, 2);
+  a.material.refractive_index = 1.5;
+  Shape b = sphere_glass();
+  b.transformation = translation(0, 0, -0.25);
+  b.material.refractive_index = 2.0;
+  Shape c = sphere_glass();
+  c.transformation = translation(0, 0, +0.25);
+  c.material.refractive_index = 2.5;
+  Ray r = ray(point(0, 0, -4), vector(0, 0, 1));
+  Intersection hits[6] = {
+      {2, a}, {2.75, b}, {3.25, c}, {4.75, b}, {5.25, c}, {6, a},
+  };
+  Intersections xs = {.count = 6, .hits = hits};
+  double n1s[6] = {1.0, 1.5, 2.0, 2.5, 2.5, 1.5};
+  double n2s[6] = {1.5, 2.0, 2.5, 2.5, 1.5, 1.0};
+  for (int i = 0; i < 6; ++i) {
+    Computations comp = prepare_computations(xs.hits[i], r, xs);
+    assert(comp.n1 == n1s[i]);
+    assert(comp.n2 == n2s[i]);
+  }
 }
 
 int main(void) {

@@ -111,7 +111,7 @@ void intersections_sort(Intersections *is) {
   }
 }
 
-Computations prepare_computations(Intersection ii, Ray r) {
+Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
   Computations comp = {
       .eye = tuple_neg(r.direction),
       .point = position(r, ii.t),

@@ -104,7 +104,7 @@ Color color_at(World world, Ray ray, uint8_t life) {
   Intersection *i = hit(is);
   Color color = (Color){0, 0, 0};
   if (i) {
-    Computations comp = prepare_computations(*i, ray);
+    Computations comp = prepare_computations(*i, ray, is);
     color = shade_hit(world, comp, life);
   }
   free_intersections(&is);

@@ -27,6 +27,7 @@ typedef struct Computations {
   Vector reflect;
   bool is_inside;
   double t;
+  double n1, n2; // refraction
 } Computations;
 
 Ray ray(Point, Vector);
@@ -39,6 +40,6 @@ void intersections_sort(Intersections *);
 Intersection *hit(Intersections);
 bool intersection_equal(Intersection, Intersection);
 Ray transform(Ray, Mat4);
-Computations prepare_computations(Intersection, Ray);
+Computations prepare_computations(Intersection, Ray, Intersections);
 
 #endif /* RAYCASTING_H */
