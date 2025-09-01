@@ -7,21 +7,6 @@ Intersection intersection(double t, Shape object) {
   return (Intersection){t, object};
 }
 
-Intersections intersections(Shape object, int count, ...) {
-  assert(count > 0);
-  va_list ap;
-  Intersections result;
-  result.hits = calloc(count, sizeof(struct Intersection));
-  result.count = count;
-  va_start(ap, count);
-  for (int i = 0; i < count; ++i) {
-    result.hits[i].t = va_arg(ap, double); // automatic promotion
-    result.hits[i].object = object;
-  }
-  va_end(ap);
-  return result;
-}
-
 void intersections_free(Intersections *is) {
   if (!is->hits)
     return;
@@ -73,8 +58,6 @@ void intersections_append(Intersections *is, const Intersection i) {
       exit(EXIT_FAILURE);
     }
   }
-  /* fprintf(stderr, "append - cap=%li  count=%li  is=%p\n", is->capacity,
-   * is->count, is); */
   is->hits[is->count] = i;
   is->count = is->count + 1;
 }

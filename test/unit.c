@@ -185,16 +185,26 @@ void test_raycasting(void) {
   assert(si.count == 2 && si.hits[0].t == -6 && si.hits[1].t == -4);
   intersections_free(&si);
   // hit()
-  Intersections is = intersections(s, 2, 1.0, 2.0); // all positive
+  Intersections is = intersections_new(4); // all positive
+  intersections_append(&is, (Intersection){1, s});
+  intersections_append(&is, (Intersection){2, s});
   assert(hit(is) == &is.hits[0]);
   intersections_free(&is);
-  is = intersections(s, 2, -1.0, 1.0); // some are negative
+  is = intersections_new(4); // all positive
+  intersections_append(&is, (Intersection){-1, s});
+  intersections_append(&is, (Intersection){+1, s});
   assert(hit(is) == &is.hits[1]);
   intersections_free(&is);
-  is = intersections(s, 2, -2.0, -1.0); // all are negative
+  is = intersections_new(4); // all are negative
+  intersections_append(&is, (Intersection){-2, s});
+  intersections_append(&is, (Intersection){-1, s});
   assert(hit(is) == NULL);
   intersections_free(&is);
-  is = intersections(s, 4, 5.0, 7.0, -3.0, 2.0); // lowest non-negative
+  is = intersections_new(4); // lowest non-negative
+  intersections_append(&is, (Intersection){+5, s});
+  intersections_append(&is, (Intersection){+7, s});
+  intersections_append(&is, (Intersection){-3, s});
+  intersections_append(&is, (Intersection){+2, s});
   assert(hit(is) == &is.hits[3]);
   intersections_free(&is);
   // transform()

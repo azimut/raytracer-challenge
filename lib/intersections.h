@@ -2,7 +2,6 @@
 #define INTERSECTIONS_H
 
 #include "./shapes.h"
-#include <stdarg.h>
 
 #define RENEWED_CAPACITY 10
 
@@ -18,7 +17,6 @@ typedef struct Intersections {
 } Intersections;
 
 Intersection intersection(double, Shape);
-Intersections intersections(Shape, int, ...);
 void intersections_free(Intersections *);
 void intersections_sort(Intersections *);
 bool intersection_equal(Intersection, Intersection);
