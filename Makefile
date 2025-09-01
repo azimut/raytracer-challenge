@@ -38,3 +38,9 @@ profile.png: profile.dot      ; dot -Tpng             < $< > $@
 
 .PHONY: clean
 clean: ; rm -f ./profile.* ./build/*
+
+.PHONY: valgrind
+valgrind: CFLAGS   += -ggdb3 -O0
+valgrind: DIMENSION = 50
+valgrind: CC        = gcc
+valgrind: build/$(TARGET) ; valgrind ./build/$(TARGET)

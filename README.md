@@ -17,22 +17,30 @@ To render an image with the given 1:1 dimensions. `SPEED` adds some CFLAGS that 
 $ make media/11reflections.jpg DIMENSION=1024 SPEED=1
 ```
 
-To compile&run tests, checking for memory leaks.
+### Development
+
+To compile&run tests, checking for address memory leaks with `ASAN`.
 
 ``` shellsession
-$ make test SANITIZE=1
-```
-
-To compile&run tests, with debug symbols. I let my IDE run this command for me to launch its debugger.
-
-``` shellsession
-$ make test DEBUG=1
+$ make -B test SANITIZE=1
 ```
 
 To profile the given `TARGET` and generate a `gprof2dot` png image.
 
 ``` shellsession
 $ make -B profile TARGET=11reflections
+```
+
+To compile&run `TARGET` with `valgrind` to detect memory issues.
+
+``` shellsession
+$ make -B profile TARGET=11reflections
+```
+
+To compile&run tests, with debug symbols. I let my IDE run part of this command for me to launch its debugger.
+
+``` shellsession
+$ make -B test DEBUG=1
 ```
 
 ## Code Overview
