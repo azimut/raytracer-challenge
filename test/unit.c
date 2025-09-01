@@ -667,6 +667,7 @@ int main(void) {
   test_patterns();
   test_reflections();
   /* test_refraction(); */
+  test_intersections();
   printf("ALL OK!\n");
   return 0;
 }

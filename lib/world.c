@@ -60,28 +60,16 @@ void world_free(World *world) {
 }
 
 Intersections world_intersect(World world, Ray ray) {
-  Intersections is = intersections_new(10);
+  Intersections is = intersections_new(15);
   for (size_t i = 0; i < world.shapes_count; ++i) {
     Intersections temp_is = intersect(world.shapes[i], ray);
     if (temp_is.count == 0) {
       intersections_free(&temp_is);
       continue;
     }
-
-    if (is.hits) {
-      is.hits =
-          reallocarray(is.hits, is.count + temp_is.count, sizeof(Intersection));
-    } else {
-      is.hits = calloc(temp_is.count, sizeof(Intersection));
-    }
-    if (is.hits == NULL) {
-      perror("alloc?");
-    }
     for (size_t j = 0; j < temp_is.count; ++j) {
-      is.hits[is.count + j] = temp_is.hits[j];
+      intersections_append(&is, temp_is.hits[j]);
     }
-
-    is.count += temp_is.count;
     intersections_free(&temp_is);
   }
   intersections_sort(&is);
