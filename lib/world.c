@@ -57,12 +57,11 @@ void world_free(World *world) {
 }
 
 Intersections world_intersect(World world, Ray ray) {
-  Intersections is = {0};
+  Intersections is = intersections_new(10);
   for (size_t i = 0; i < world.shapes_count; ++i) {
-    /* fprintf(stderr, "Intersecting: ID=%d\n", world.objects[i].id); */
     Intersections temp_is = intersect(world.shapes[i], ray);
     if (temp_is.count == 0) {
-      /* fprintf(stderr, "Skipping %d\n", world.objects[i].id); */
+      intersections_free(&temp_is);
       continue;
     }
 

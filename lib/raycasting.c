@@ -19,7 +19,7 @@ Point position(Ray r, double t) {
 
 Intersections intersect(Shape shape, Ray ray) {
   Ray tRay = transform(ray, m4_inverse(shape.transformation));
-  Intersections is = {.count = 0, .hits = NULL};
+  Intersections is = intersections_new(5);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
     Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
@@ -30,7 +30,8 @@ Intersections intersect(Shape shape, Ray ray) {
     if (discriminant >= 0) {
       double i1 = (-b - sqrt(discriminant)) / (2.0 * a);
       double i2 = (-b + sqrt(discriminant)) / (2.0 * a);
-      is = intersections(shape, 2, i1, i2);
+      intersections_append(&is, (Intersection){i1, shape});
+      intersections_append(&is, (Intersection){i2, shape});
       break;
     }
     break;
@@ -40,7 +41,7 @@ Intersections intersect(Shape shape, Ray ray) {
       break;
     }
     double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
-    is = intersections(shape, 1, i);
+    intersections_append(&is, (Intersection){i, shape});
     break;
   }
   }
@@ -67,6 +68,7 @@ Ray transform(Ray ray, Mat4 m4) {
 }
 
 Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
+  (void)is; //// FIXMEEEEEEEEEEEEEEEEEE!
   Computations comp = {
       .eye = tuple_neg(r.direction),
       .point = position(r, ii.t),

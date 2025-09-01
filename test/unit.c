@@ -222,6 +222,7 @@ void test_raycasting(void) {
   intersections_free(&is);
   is = intersect(s, r);
   assert(is.count == 0);
+  intersections_free(&is);
 }
 
 void test_shading(void) {
@@ -635,6 +636,20 @@ void test_refraction(void) {
     assert(comp.n1 == n1s[i]);
     assert(comp.n2 == n2s[i]);
   }
+}
+
+void test_intersections(void) {
+  Intersections is = intersections_new(10);
+  Shape a = sphere();
+  intersections_append(&is, (Intersection){1, a});
+  intersections_append(&is, (Intersection){2, a});
+  assert(is.count == 2);
+  intersections_remove(&is, (Intersection){1, a});
+  assert(is.count == 1);
+  intersections_remove(&is, (Intersection){88, a});
+  assert(is.count == 1);
+  assert(intersections_includes(is, (Intersection){2, a}));
+  intersections_free(&is);
 }
 
 int main(void) {

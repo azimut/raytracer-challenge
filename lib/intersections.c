@@ -1,5 +1,7 @@
 #include "./intersections.h"
+#include "./util.h"
 #include <assert.h>
+#include <stdio.h>
 
 Intersection intersection(double t, Shape object) {
   return (Intersection){t, object};
@@ -24,7 +26,7 @@ void intersections_free(Intersections *is) {
   if (!is->hits)
     return;
   free(is->hits);
-  is->hits = NULL;
+  is->hits = NULL, is->count = 0, is->capacity = 0;
 }
 
 bool intersection_equal(Intersection i1, Intersection i2) {
@@ -44,4 +46,45 @@ void intersections_sort(Intersections *is) {
       }
     }
   }
+}
+
+Intersections intersections_new(size_t capacity) {
+  assert(capacity < 1000); // ensure sanity
+  return (Intersections){
+      .capacity = capacity,
+      .hits = calloc(capacity, sizeof(Intersection)),
+  };
+}
+
+void intersections_append(Intersections *is, const Intersection i) {
+  if (is->count + 2 > is->capacity) {
+    is->capacity += RENEWED_CAPACITY;
+    is->hits = realloc(is->hits, is->capacity);
+    if (!is->hits) {
+      perror("_push");
+    }
+  }
+  is->hits[is->count] = i;
+  is->count++;
+}
+
+static int intersections_index(const Intersections is, const Intersection i) {
+  for (size_t idx = 0; idx < is.count; ++idx)
+    if (intersection_equal(is.hits[idx], i))
+      return idx;
+  return -1;
+}
+
+bool intersections_includes(const Intersections is, const Intersection i) {
+  return (intersections_index(is, i) >= 0);
+}
+
+void intersections_remove(Intersections *is, const Intersection i) {
+  int found_idx = intersections_index(*is, i);
+  if (found_idx == -1)
+    return;
+  for (size_t next_idx = found_idx + 1; next_idx < is->count; ++next_idx) {
+    is->hits[next_idx - 1] = is->hits[next_idx];
+  }
+  is->count--;
 }
