@@ -25,10 +25,11 @@ typedef struct PointLight {
   uint8_t attenuation_idx;
 } PointLight;
 
-Vector reflect(Vector, Vector);
+Vector reflect(const Vector, const Vector);
 
-PointLight pointlight(Point, Color);
+PointLight pointlight(const Point, const Color);
 
-Color lighting(MaterialPhong, Shape, Point, PointLight, Vector, Vector, bool);
+Color lighting(const MaterialPhong, const Shape, const Point, const PointLight,
+               const Vector, const Vector, bool);
 
 #endif /* SHADING_H */

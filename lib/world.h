@@ -17,9 +17,9 @@ void world_enlight(World *, PointLight);
 World world_default(void);
 void world_free(World *);
 Color shade_hit(const World, const Computations, uint8_t);
-Color color_at(World, Ray, uint8_t);
-Color reflected_color(World, Computations, uint8_t);
-Color refracted_color(World, Computations, uint8_t);
-bool is_shadowed(World, Point, Point);
+Color color_at(const World, const Ray, uint8_t);
+Color reflected_color(const World, const Computations, uint8_t);
+Color refracted_color(const World, const Computations, uint8_t);
+bool is_shadowed(const World, const Point, const Point);
 
 #endif /* WORLD_H */

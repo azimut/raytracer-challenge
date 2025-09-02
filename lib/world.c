@@ -87,27 +87,27 @@ Color shade_hit(const World world, const Computations comp, uint8_t life) {
   return surface;
 }
 
-Color color_at(World world, Ray ray, uint8_t life) {
+Color color_at(const World world, const Ray ray, uint8_t life) {
   Intersections is = world_intersect(world, ray);
   Intersection *i = hit(is);
   Color color = (Color){0, 0, 0};
   if (i) {
-    Computations comp = prepare_computations(*i, ray, is);
+    const Computations comp = prepare_computations(*i, ray, is);
     color = shade_hit(world, comp, life);
   }
   intersections_free(&is);
   return color;
 }
 
-bool is_shadowed(World w, Point p, Point light_pos) {
+bool is_shadowed(const World world, const Point p, const Point light_pos) {
 #ifndef BLAZE
   assert(is_point(p) && is_point(light_pos));
 #endif
-  Vector shadow_vector = tuple_sub(light_pos, p);
-  double distance = tuple_length(shadow_vector);
-  Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
-  Intersections is = world_intersect(w, shadow_ray);
+  const Vector shadow_vector = tuple_sub(light_pos, p);
+  const Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
+  Intersections is = world_intersect(world, shadow_ray);
   Intersection *h = hit(is);
+  const double distance = tuple_length(shadow_vector);
   bool shadowed = false;
   if (h && h->t < distance) {
     shadowed = true;
@@ -116,24 +116,26 @@ bool is_shadowed(World w, Point p, Point light_pos) {
   return shadowed;
 }
 
-Color reflected_color(World world, Computations comp, uint8_t life) {
+Color reflected_color(const World world, const Computations comp,
+                      uint8_t life) {
   if (!life || !comp.object.material.reflective) {
     return BLACK;
   }
-  Ray r = ray(comp.over_point, comp.reflect); // avoid self-reflection
-  Color color = color_at(world, r, life - 1);
+  const Ray r = ray(comp.over_point, comp.reflect); // avoid self-reflection
+  const Color color = color_at(world, r, life - 1);
   return color_smul(color, comp.object.material.reflective);
 }
 
-Color refracted_color(World world, Computations comp, uint8_t life) {
+Color refracted_color(const World world, const Computations comp,
+                      uint8_t life) {
   const bool total_ireflection = comp.sin2_t > 1;
   if (!life || !comp.object.material.transparency || total_ireflection) {
     return BLACK;
   }
-  Vector direction = tuple_sub(
+  const Vector direction = tuple_sub(
       tuple_smul(comp.normal, ((comp.n_ratio * comp.cos_i) - comp.cos_t)),
       tuple_smul(comp.eye, comp.n_ratio));
-  Ray r = ray(comp.under_point, direction);
+  const Ray r = ray(comp.under_point, direction);
   return color_smul(color_at(world, r, life - 1),
                     comp.object.material.transparency);
 }
