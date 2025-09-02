@@ -9,6 +9,12 @@ Pattern pattern_none(void) {
   return p;
 }
 
+Pattern pattern_test(void) {
+  Pattern p = pattern_none();
+  p.ptype = PATTERN_TYPE_TEST;
+  return p;
+}
+
 Pattern pattern_stripes(Color a, Color b) {
   Pattern p = pattern_none();
   p.a = a, p.b = b, p.ptype = PATTERN_TYPE_STRIPES;
@@ -37,6 +43,10 @@ Color pattern_at(Pattern pattern, Point point) {
   assert(is_point(point));
   Color color;
   switch (pattern.ptype) {
+  case PATTERN_TYPE_TEST: {
+    color = (Color){point.x, point.y, point.z};
+    break;
+  }
   case PATTERN_TYPE_STRIPES: {
     color = fmod(floor(point.x), 2) ? pattern.b : pattern.a;
     break;

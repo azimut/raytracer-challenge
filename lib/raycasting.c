@@ -108,9 +108,6 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
       .object = ii.object,
       .t = ii.t,
   };
-  const Computations temp_comp = compute_refractions(is, ii);
-  comp.n1 = temp_comp.n1;
-  comp.n2 = temp_comp.n2;
   if (tuple_dot_product(comp.normal, comp.eye) < 0) {
     comp.is_inside = true;
     comp.normal = tuple_neg(comp.normal);
@@ -120,5 +117,12 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
   comp.reflect = reflect(r.direction, comp.normal);
   comp.over_point = tuple_add(comp.point, tuple_smul(comp.normal, EPSILON));
   comp.under_point = tuple_sub(comp.point, tuple_smul(comp.normal, EPSILON));
+  const Computations temp_comp = compute_refractions(is, ii);
+  comp.n1 = temp_comp.n1;
+  comp.n2 = temp_comp.n2;
+  // Snell's Law
+  comp.n_ratio = comp.n1 / comp.n2;
+  comp.cos_i = tuple_dot_product(comp.eye, comp.normal);
+  comp.sin2_t = pow(comp.n_ratio, 2.0) * (1.0 - pow(comp.cos_i, 2.0));
   return comp;
 }

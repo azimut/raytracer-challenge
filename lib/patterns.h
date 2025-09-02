@@ -7,6 +7,7 @@
 
 typedef enum {
   PATTERN_TYPE_NONE = 0,
+  PATTERN_TYPE_TEST,
   PATTERN_TYPE_STRIPES,
   PATTERN_TYPE_GRADIENT,
   PATTERN_TYPE_RINGS,
@@ -20,6 +21,7 @@ typedef struct Pattern {
 } Pattern;
 
 Pattern pattern_none(void);
+Pattern pattern_test(void);
 Pattern pattern_stripes(Color, Color);
 Pattern pattern_gradient(Color, Color);
 Pattern pattern_rings(Color, Color);

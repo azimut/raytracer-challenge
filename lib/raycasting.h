@@ -20,7 +20,7 @@ typedef struct Computations {
   Vector reflect;
   bool is_inside;
   double t;
-  double n1, n2; // refraction
+  double n1, n2, sin2_t, cos_i, n_ratio; // refraction
 } Computations;
 
 Ray ray(Point, Vector);

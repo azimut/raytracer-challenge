@@ -1,6 +1,7 @@
 #include "./world.h"
 #include "./transformation.h"
 #include <assert.h>
+#include <math.h>
 #include <stdio.h>
 
 void world_enter(World *world, Shape s) { shapes_append(&world->shapes, s); }
@@ -112,8 +113,14 @@ Color reflected_color(World world, Computations comp, uint8_t life) {
 }
 
 Color refracted_color(World world, Computations comp, uint8_t life) {
-  if (!life || !comp.object.material.transparency) {
+  if (!life || !comp.object.material.transparency || comp.sin2_t > 1) {
     return BLACK;
   }
-  return WHITE;
+  double cos_t = sqrt(1.0 - comp.sin2_t);
+  Vector direction =
+      tuple_sub(tuple_smul(comp.normal, ((comp.n_ratio * comp.cos_i) - cos_t)),
+                tuple_smul(comp.eye, comp.n_ratio));
+  Ray r = ray(comp.under_point, direction);
+  return color_smul(color_at(world, r, life - 1),
+                    comp.object.material.transparency);
 }
