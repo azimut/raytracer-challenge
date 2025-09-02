@@ -14,12 +14,12 @@ typedef struct Color {
 #define BLUE ((Color){0, 0, 1})
 
 Color color(double, double, double);
-Color color_add(Color, Color);
-Color color_sub(Color, Color);
-Color color_mul(Color, Color);
-Color color_smul(Color, double);
-Color color_sdiv(Color, double);
-bool color_equal(Color, Color);
-void color_print(Color);
+Color color_add(const Color, const Color);
+Color color_sub(const Color, const Color);
+Color color_mul(const Color, const Color);
+Color color_smul(const Color, double);
+Color color_sdiv(const Color, double);
+bool color_equal(const Color, const Color);
+void color_print(const Color);
 
 #endif /* COLOR_H */
