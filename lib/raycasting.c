@@ -67,7 +67,8 @@ Ray transform(Ray ray, Mat4 m4) {
   };
 }
 
-static Computations compute_refractions(Intersections is, Intersection hit) {
+static Computations compute_refractions(Intersections is,
+                                        const Intersection hit) {
   Computations comp = {0};
   Shapes containers = shapes_new(5);
   for (size_t idx = 0; idx < is.count; ++idx) {
@@ -107,7 +108,7 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
       .object = ii.object,
       .t = ii.t,
   };
-  Computations temp_comp = compute_refractions(is, ii);
+  const Computations temp_comp = compute_refractions(is, ii);
   comp.n1 = temp_comp.n1;
   comp.n2 = temp_comp.n2;
   if (tuple_dot_product(comp.normal, comp.eye) < 0) {

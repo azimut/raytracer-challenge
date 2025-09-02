@@ -19,7 +19,7 @@ typedef struct Intersections {
 Intersection intersection(double, Shape);
 void intersections_free(Intersections *);
 void intersections_sort(Intersections *);
-bool intersection_equal(Intersection, Intersection);
+bool intersection_equal(const Intersection, const Intersection);
 
 Intersections intersections_new(size_t);
 void intersections_append(Intersections *, const Intersection);

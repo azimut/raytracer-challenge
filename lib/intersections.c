@@ -14,7 +14,7 @@ void intersections_free(Intersections *is) {
   is->hits = NULL, is->count = 0, is->capacity = 0;
 }
 
-bool intersection_equal(Intersection i1, Intersection i2) {
+bool intersection_equal(const Intersection i1, const Intersection i2) {
   return (i1.object.id == i2.object.id) && (i1.t == i2.t);
 }
 
