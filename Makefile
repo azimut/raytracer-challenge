@@ -15,7 +15,9 @@ ifdef SANITIZE
 endif
 ifdef FAST
 	CFLAGS += -march=native -mtune=native -O3
-#       CFLAGS += -Ofast -ffast-math
+endif
+ifdef BLAZE
+	CFLAGS += -march=native -mtune=native -Ofast -ffast-math
 endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
