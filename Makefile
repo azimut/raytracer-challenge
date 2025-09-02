@@ -17,7 +17,7 @@ ifdef FAST
 	CFLAGS += -march=native -mtune=native -O3
 endif
 ifdef BLAZE
-	CFLAGS += -march=native -mtune=native -Ofast -ffast-math
+	CFLAGS += -march=native -mtune=native -Ofast -ffast-math -DBLAZE=$(BLAZE)
 endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
