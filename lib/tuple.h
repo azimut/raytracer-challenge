@@ -13,18 +13,18 @@ Tuple tuple(double, double, double, double);
 Tuple point(double, double, double);
 Tuple vector(double, double, double);
 
-bool is_point(Tuple);
-bool is_vector(Tuple);
+bool is_point(const Tuple);
+bool is_vector(const Tuple);
 
-bool tuple_equal(Tuple, Tuple);
-Tuple tuple_add(Tuple, Tuple);
-Tuple tuple_sub(Tuple, Tuple);
-Tuple tuple_neg(Tuple);
-Tuple tuple_smul(Tuple, double);
-Tuple tuple_sdiv(Tuple, double);
-double tuple_length(Tuple);
-Tuple tuple_normalize(Tuple);
-double tuple_dot_product(Tuple, Tuple);
-Tuple tuple_cross_product(Tuple, Tuple);
+bool tuple_equal(const Tuple, const Tuple);
+Tuple tuple_add(const Tuple, const Tuple);
+Tuple tuple_sub(const Tuple, const Tuple);
+Tuple tuple_neg(const Tuple);
+Tuple tuple_smul(const Tuple, double);
+Tuple tuple_sdiv(const Tuple, double);
+double tuple_length(const Tuple);
+Tuple tuple_normalize(const Tuple);
+double tuple_dot_product(const Tuple, const Tuple);
+Tuple tuple_cross_product(const Tuple, const Tuple);
 
 #endif /* TUPLE_H */
