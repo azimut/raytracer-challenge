@@ -11,10 +11,10 @@ My source code, written in C.
 
 ## Usage
 
-To render an image with the given 1:1 dimensions. `SPEED` adds some CFLAGS that makes the binary run faster.
+To render an image with the given 1:1 dimensions. `FAST` adds some CFLAGS that makes the binary run faster.
 
 ``` shellsession
-$ make media/11reflections.jpg DIMENSION=1024 SPEED=1
+$ make media/11reflections.jpg DIMENSION=1024 FAST=1
 ```
 
 ### Development

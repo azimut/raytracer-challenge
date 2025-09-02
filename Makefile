@@ -12,8 +12,9 @@ endif
 ifdef SANITIZE
 	CFLAGS += -fsanitize=undefined -fsanitize=address -fPIE -fno-omit-frame-pointer -ggdb3 -O0
 endif
-ifdef SPEED
-	CFLAGS += -march=native -mtune=native -Ofast -ffast-math
+ifdef FAST
+	CFLAGS += -march=native -mtune=native -O3
+#       CFLAGS += -Ofast -ffast-math
 endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
