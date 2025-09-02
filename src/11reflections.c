@@ -19,14 +19,12 @@ int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
 
-  /* world_enlight(&w, */
-  /*               pointlight(point(9, 3, 4), color(1, 0.9450981, 0.87843144)));
-   */
-  PointLight p = pointlight(point(5, 3, 2), color(0, 0.9450981, 0.387843144));
-  p.attenuation_idx = 4;
+  PointLight p = pointlight(point(-5, 3, 2), color(.3, 0.9450981, 0.387843144));
+  p.attenuation_idx = 1;
   world_enlight(&w, p);
+
   p = pointlight(point(-3, 1, -3), color(.3, 0.09450981, 0.87843144));
-  p.attenuation_idx = 10;
+  p.attenuation_idx = 4;
   world_enlight(&w, p);
 
   Shape floor = plane();
@@ -35,10 +33,10 @@ int main(int argc, char *argv[]) {
   /* floor.material.pattern.transformation = scaling(0.25, 1, 1); */
   floor.material.color = color(.4, 0.9, 0.9);
   floor.material.specular = 0;
-  floor.material.reflective = 0.1;
+  /* floor.material.reflective = 0.1; */
   world_enter(&w, floor);
 
-  double radius = 40;
+  double radius = 20;
   double rot = 0;
   for (size_t i = 0; i < 6; i += 1) {
     Shape hexa = plane();
@@ -49,7 +47,8 @@ int main(int argc, char *argv[]) {
     rot -= 60;
     /* hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255); */
     /* hexa.material.color = BLACK; */
-    hexa.material.color = i % 2 ? BLACK : (Color){0.5, 0.5, 0.5};
+    hexa.material.color =
+        i % 2 ? (Color){0.25, 0.25, 0.25} : (Color){0.5, 0.5, 0.5};
     hexa.material.pattern.transformation =
         m4_mul(scaling(10, 1, 1), M4_IDENTITY);
     hexa.material.reflective = i % 2 ? 0.1 : 0;
@@ -70,14 +69,15 @@ int main(int argc, char *argv[]) {
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
   middle.material.color = color(0.1, 1, 0.5);
-  /* middle.material.reflective = 0.1; */
+  middle.material.reflective = 0.9;
   /* middle.material.pattern = pattern_stripes(RED, BLUE); */
   middle.material.transparency = 1;
-  middle.material.refractive_index = DEFAULT_REFRACTIVE_GLASS;
+  middle.material.refractive_index = DEFAULT_REFRACTIVE_DIAMOND;
   middle.material.pattern.transformation =
       m4_mul(rotation_z(M_PI / 3), scaling(0.11, 1, 1));
-  middle.material.diffuse = 0.7;
-  middle.material.specular = 0.3;
+  middle.material.diffuse = 0.2;
+  middle.material.specular = 1;
+  middle.material.shininess = 300;
   world_enter(&w, middle);
 
   Shape right = sphere();
@@ -97,16 +97,17 @@ int main(int argc, char *argv[]) {
       m4_mul(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
   left.material = material();
   left.material.color = color(1, 0.8, 0.1);
-  left.material.diffuse = 0.7;
-  left.material.specular = 0;
-  /* left.material.reflective = 1; */
-  left.material.transparency = 1;
+  left.material.diffuse = 0.2;
+  left.material.ambient = 0.05;
+  left.material.specular = 1;
+  left.material.reflective = 1;
   left.material.refractive_index = DEFAULT_REFRACTIVE_GLASS;
+  left.material.transparency = 1;
   world_enter(&w, left);
 
   char *filename = basename(argv[0]);
   Camera cam = camera(DIMENSION, DIMENSION, M_PI / 5.5);
-  cam.transform = view_transform(point(-9.7, 0.5, -2.11), point(-1, 1.5, 0),
+  cam.transform = view_transform(point(-9.7, 3.5, -2.11), point(-1, 1.5, 0),
                                  vector(0, 1, 0));
 
   /* int frame = 0; */

@@ -1,9 +1,10 @@
+NSAMPLES  ?= 1
 DIMENSION ?= 1024
 CC        ?= gcc
 LDFLAGS   := -lm
 SRC       := $(wildcard lib/*.c)
 HDR       := $(wildcard lib/*.h)
-CFLAGS     = -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION)
+CFLAGS     = -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION) -DNSAMPLES=$(NSAMPLES)
 BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
 ifdef DEBUG

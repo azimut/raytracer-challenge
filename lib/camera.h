@@ -7,6 +7,9 @@
 #include "./world.h"
 
 #define REFLECTION_HITS 5
+#ifndef NSAMPLES
+#define NSAMPLES 50
+#endif
 
 typedef struct Camera {
   size_t hsize, vsize; // in pixels
@@ -18,7 +21,7 @@ typedef struct Camera {
 
 Mat4 view_transform(Point, Point, Vector);
 Camera camera(size_t, size_t, double);
-Ray ray_for_pixel(Camera, size_t, size_t);
-Canvas render(Camera, World);
+Ray ray_for_pixel(const Camera, double, double);
+Canvas render(const Camera, const World);
 
 #endif /* CAMERA_H */

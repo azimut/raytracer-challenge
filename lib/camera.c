@@ -38,30 +38,38 @@ Camera camera(size_t hsize, size_t vsize, double fov) {
 
 // Computes the world coordinates at the center of the given pixel coords
 // and then construct a Ray that passes through that point.
-Ray ray_for_pixel(Camera cam, size_t px, size_t py) {
+Ray ray_for_pixel(const Camera cam, double px, double py) {
   // ?offset from the edge of the canvas to the pixel's center
-  double xoffset = ((double)px + 0.5) * cam.pixel_size;
-  double yoffset = ((double)py + 0.5) * cam.pixel_size;
+  const double xoffset = (px + 0.5) * cam.pixel_size;
+  const double yoffset = (py + 0.5) * cam.pixel_size;
   // untransformed pixel coord in world space
-  double world_x = cam.half_width - xoffset;
-  double world_y = cam.half_height - yoffset;
+  const double world_x = cam.half_width - xoffset;
+  const double world_y = cam.half_height - yoffset;
   // transform canvas_point, and origin
-  Point pixel = m4_tmul(m4_inverse(cam.transform), point(world_x, world_y, -1));
-  Point origin = m4_tmul(m4_inverse(cam.transform), point(0, 0, 0));
-  Vector direction = tuple_normalize(tuple_sub(pixel, origin));
+  const Point pixel =
+      m4_tmul(m4_inverse(cam.transform), point(world_x, world_y, -1));
+  const Point origin = m4_tmul(m4_inverse(cam.transform), point(0, 0, 0));
+  const Vector direction = tuple_normalize(tuple_sub(pixel, origin));
   return (Ray){
       .origin = origin,
       .direction = direction,
   };
 }
 
-Canvas render(Camera cam, World world) {
+Canvas render(const Camera cam, const World world) {
   Canvas c = canvas(cam.hsize, cam.vsize);
-  Ray ray;
-  for (size_t row = 0; row < cam.vsize; ++row) {
-    for (size_t col = 0; col < cam.hsize; ++col) {
-      ray = ray_for_pixel(cam, col, row);
-      canvas_set(&c, row, col, color_at(world, ray, REFLECTION_HITS));
+  for (double row = 0; row < cam.vsize; ++row) {
+    for (double col = 0; col < cam.hsize; ++col) {
+      Ray ray = ray_for_pixel(cam, col, row);
+      Color pixel = color_at(world, ray, REFLECTION_HITS);
+      if (NSAMPLES > 1) { // ANTIALIASING
+        for (size_t i = 1; i < NSAMPLES; ++i) {
+          ray = ray_for_pixel(cam, col + drand48(), row + drand48());
+          pixel = color_add(pixel, color_at(world, ray, REFLECTION_HITS));
+        }
+      }
+      pixel = color_sdiv(pixel, NSAMPLES);
+      canvas_set(&c, row, col, pixel);
     }
   }
   return c;
