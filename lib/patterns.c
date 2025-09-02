@@ -39,7 +39,7 @@ Pattern pattern_checkers(Color a, Color b) {
   return p;
 }
 
-Color pattern_at(Pattern pattern, Point point) {
+Color pattern_at(const Pattern pattern, const Point point) {
   assert(is_point(point));
   Color color;
   switch (pattern.ptype) {

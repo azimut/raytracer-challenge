@@ -33,8 +33,8 @@ Shape sphere(void);
 Shape sphere_glass(void);
 void set_material(Shape *, MaterialPhong);
 void set_transform(Shape *, Mat4);
-Vector normal_at(Shape, Point);
-Color pattern_at_shape(Pattern, Shape, Point);
+Vector normal_at(const Shape, const Point);
+Color pattern_at_shape(const Pattern, const Shape, const Point);
 
 Shapes shapes_new(size_t);
 void shapes_append(Shapes *, const Shape);

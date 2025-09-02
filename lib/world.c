@@ -46,7 +46,7 @@ void world_free(World *world) {
   world->lights = NULL;
 }
 
-Intersections world_intersect(World world, Ray ray) {
+Intersections world_intersect(const World world, const Ray ray) {
   Intersections is = intersections_new(15);
   for (size_t i = 0; i < world.shapes.count; ++i) {
     Intersections temp_is = intersect(world.shapes.shapes[i], ray);
@@ -63,7 +63,7 @@ Intersections world_intersect(World world, Ray ray) {
   return is;
 }
 
-Color shade_hit(World world, Computations comp, uint8_t life) {
+Color shade_hit(const World world, const Computations comp, uint8_t life) {
   Color surface = {0};
   for (size_t i = 0; i < world.lights_count; ++i) {
     const Vector light_pos = world.lights[i].position;

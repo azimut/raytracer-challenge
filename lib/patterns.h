@@ -26,7 +26,7 @@ Pattern pattern_stripes(Color, Color);
 Pattern pattern_gradient(Color, Color);
 Pattern pattern_rings(Color, Color);
 Pattern pattern_checkers(Color, Color);
-Color pattern_at(Pattern, Point);
+Color pattern_at(const Pattern, const Point);
 void pattern_set_transformation(Pattern *, Mat4);
 
 #endif /* PATTERNS_H */

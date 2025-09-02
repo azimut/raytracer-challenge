@@ -24,8 +24,7 @@ void intersections_sort(Intersections *is) {
   for (size_t i = 0; i < is->count - 1; ++i) {
     for (size_t j = i + 1; j < is->count; ++j) {
       if (is->hits[i].t > is->hits[j].t) {
-        Intersection in;
-        in = is->hits[i];
+        const Intersection in = is->hits[i];
         is->hits[i] = is->hits[j];
         is->hits[j] = in;
       }

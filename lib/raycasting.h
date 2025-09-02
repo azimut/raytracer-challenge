@@ -25,10 +25,10 @@ typedef struct Computations {
 
 Ray ray(Point, Vector);
 Point position(Ray, double);
-Intersections intersect(Shape, Ray);
+Intersections intersect(const Shape, const Ray);
 Intersection *hit(Intersections);
 Ray transform(Ray, Mat4);
-Computations prepare_computations(Intersection, Ray, Intersections);
+Computations prepare_computations(const Intersection, const Ray, Intersections);
 double schlick(const Computations);
 
 #endif /* RAYCASTING_H */

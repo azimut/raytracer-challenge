@@ -49,7 +49,7 @@ Mat4 m4_mul(const Mat4 a, const Mat4 b) {
   return res;
 }
 
-Tuple m4_tmul(const Mat4 m, Tuple t) {
+Tuple m4_tmul(const Mat4 m, const Tuple t) {
   return (Tuple){
       m.m[0][0] * t.x + m.m[0][1] * t.y + m.m[0][2] * t.z + m.m[0][3] * t.w,
       m.m[1][0] * t.x + m.m[1][1] * t.y + m.m[1][2] * t.z + m.m[1][3] * t.w,
@@ -117,11 +117,11 @@ Mat3 m4_submatrix(const Mat4 m4, size_t skip_row, size_t skip_col) {
   return result;
 }
 
-static double m3_minor(const Mat3 m, size_t row, size_t col) {
+static inline double m3_minor(const Mat3 m, size_t row, size_t col) {
   return m2_determinant(m3_submatrix(m, row, col));
 }
-static double m3_cofactor(const Mat3 m3, size_t row, size_t col) {
-  double minor = m3_minor(m3, row, col);
+static inline double m3_cofactor(const Mat3 m3, size_t row, size_t col) {
+  const double minor = m3_minor(m3, row, col);
   return ((row + col) % 2) ? -minor : minor;
 }
 static double m3_determinant(const Mat3 m3) {
@@ -132,11 +132,11 @@ static double m3_determinant(const Mat3 m3) {
   return result;
 }
 
-static double m4_minor(const Mat4 m4, size_t row, size_t col) {
+static inline double m4_minor(const Mat4 m4, size_t row, size_t col) {
   return m3_determinant(m4_submatrix(m4, row, col));
 }
-static double m4_cofactor(const Mat4 m4, size_t row, size_t col) {
-  double minor = m4_minor(m4, row, col);
+static inline double m4_cofactor(const Mat4 m4, size_t row, size_t col) {
+  const double minor = m4_minor(m4, row, col);
   return ((row + col) % 2) ? -minor : minor;
 }
 static double m4_determinant(const Mat4 m4) {
@@ -150,7 +150,7 @@ static double m4_determinant(const Mat4 m4) {
 /* static bool m4_is_invertible(Mat4 m4) { return m4_determinant(m4) != 0; } */
 
 Mat4 m4_inverse(const Mat4 m) {
-  double determinant = m4_determinant(m);
+  const double determinant = m4_determinant(m);
   Mat4 result;
   for (size_t row = 0; row < 4; row++) {
     for (size_t col = 0; col < 4; col++) {

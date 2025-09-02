@@ -17,19 +17,19 @@ Point position(Ray r, double t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
 }
 
-Intersections intersect(Shape shape, Ray ray) {
-  Ray tRay = transform(ray, m4_inverse(shape.transformation));
+Intersections intersect(const Shape shape, const Ray ray) {
+  const Ray tRay = transform(ray, m4_inverse(shape.transformation));
   Intersections is = intersections_new(5);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
-    Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
-    double a = tuple_dot_product(tRay.direction, tRay.direction);
-    double b = 2.0 * tuple_dot_product(tRay.direction, sphere_to_ray);
-    double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1.0;
-    double discriminant = b * b - 4.0 * a * c;
+    const Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
+    const double a = tuple_dot_product(tRay.direction, tRay.direction);
+    const double b = 2.0 * tuple_dot_product(tRay.direction, sphere_to_ray);
+    const double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1.0;
+    const double discriminant = b * b - 4.0 * a * c;
     if (discriminant >= 0) {
-      double i1 = (-b - sqrt(discriminant)) / (2.0 * a);
-      double i2 = (-b + sqrt(discriminant)) / (2.0 * a);
+      const double i1 = (-b - sqrt(discriminant)) / (2.0 * a);
+      const double i2 = (-b + sqrt(discriminant)) / (2.0 * a);
       intersections_append(&is, (Intersection){i1, shape});
       intersections_append(&is, (Intersection){i2, shape});
       break;
@@ -40,7 +40,7 @@ Intersections intersect(Shape shape, Ray ray) {
     if (fabs(tRay.direction.y) < EPSILON) {
       break;
     }
-    double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
+    const double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
     intersections_append(&is, (Intersection){i, shape});
     break;
   }
@@ -72,7 +72,7 @@ static Computations compute_refractions(Intersections is,
   Computations comp = {0};
   Shapes containers = shapes_new(10);
   for (size_t idx = 0; idx < is.count; ++idx) {
-    Intersection intersection = is.hits[idx];
+    const Intersection intersection = is.hits[idx];
     if (intersection_equal(hit, intersection)) {
       if (containers.count == 0) {
         comp.n1 = 1;
@@ -112,7 +112,8 @@ double schlick(const Computations comp) {
   return r0 + (1 - r0) * pow((1 - cos), 5);
 }
 
-Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
+Computations prepare_computations(const Intersection ii, const Ray r,
+                                  Intersections is) {
   Computations comp = {
       .eye = tuple_neg(r.direction),
       .point = position(r, ii.t),

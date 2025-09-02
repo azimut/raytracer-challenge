@@ -37,12 +37,13 @@ void set_transform(Shape *shape, Mat4 transformation) {
   shape->transformation = transformation;
 }
 
-Vector normal_at(Shape s, Point world_point) {
+Vector normal_at(const Shape shape, const Point world_point) {
   assert(is_point(world_point));
   Vector object_normal;
-  switch (s.shape_type) {
+  switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
-    Point object_point = m4_tmul(m4_inverse(s.transformation), world_point);
+    const Point object_point =
+        m4_tmul(m4_inverse(shape.transformation), world_point);
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
@@ -51,16 +52,18 @@ Vector normal_at(Shape s, Point world_point) {
     break;
   }
   Vector world_normal =
-      m4_tmul(m4_transpose(m4_inverse(s.transformation)), object_normal);
+      m4_tmul(m4_transpose(m4_inverse(shape.transformation)), object_normal);
   world_normal.w = 0;
   return tuple_normalize(world_normal);
 }
 
-Color pattern_at_shape(Pattern ps, Shape shape, Point p) {
+Color pattern_at_shape(const Pattern pattern, const Shape shape,
+                       const Point p) {
   assert(is_point(p));
-  Point object_point = m4_tmul(m4_inverse(shape.transformation), p);
-  Point pattern_point = m4_tmul(m4_inverse(ps.transformation), object_point);
-  return pattern_at(ps, pattern_point);
+  const Point object_point = m4_tmul(m4_inverse(shape.transformation), p);
+  const Point pattern_point =
+      m4_tmul(m4_inverse(pattern.transformation), object_point);
+  return pattern_at(pattern, pattern_point);
 }
 
 Shapes shapes_new(size_t capacity) {
