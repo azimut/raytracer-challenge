@@ -50,9 +50,19 @@ static void canvas_stream(Canvas canvas, FILE *fp) {
 
 void canvas_print(Canvas canvas) { canvas_stream(canvas, stdout); }
 
+void canvas_save_frame(Canvas canvas, char *filename, uint16_t nframe,
+                       Point pos) {
+  char *buf = calloc(200, sizeof(char));
+  sprintf(buf, "media/%s_%04d_%.2f_%.2f_%.2f.ppm", filename, nframe, pos.x,
+          pos.y, pos.z);
+  canvas_save(canvas, buf);
+  free(buf);
+}
+
 void canvas_save(Canvas canvas, char *filepath) {
   FILE *fp = fopen(filepath, "w");
   canvas_stream(canvas, fp);
+  fprintf(stderr, "Created: %s\n", filepath);
   fclose(fp);
 }
 
