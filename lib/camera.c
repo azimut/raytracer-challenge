@@ -4,7 +4,9 @@
 #include <math.h>
 
 Mat4 view_transform(Point from, Point to, Vector up) {
+#ifndef BLAZE
   assert(is_point(from) && is_point(to) && is_vector(up));
+#endif
   Vector forward = tuple_normalize(tuple_sub(to, from));
   Vector left = tuple_cross_product(forward, tuple_normalize(up));
   Vector true_up = tuple_cross_product(left, forward);

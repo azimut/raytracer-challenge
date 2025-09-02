@@ -40,7 +40,9 @@ Pattern pattern_checkers(Color a, Color b) {
 }
 
 Color pattern_at(const Pattern pattern, const Point point) {
+#ifndef BLAZE
   assert(is_point(point));
+#endif
   Color color;
   switch (pattern.ptype) {
   case PATTERN_TYPE_TEST: {

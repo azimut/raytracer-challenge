@@ -38,7 +38,9 @@ void set_transform(Shape *shape, Mat4 transformation) {
 }
 
 Vector normal_at(const Shape shape, const Point world_point) {
+#ifndef BLAZE
   assert(is_point(world_point));
+#endif
   Vector object_normal;
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
@@ -59,7 +61,9 @@ Vector normal_at(const Shape shape, const Point world_point) {
 
 Color pattern_at_shape(const Pattern pattern, const Shape shape,
                        const Point p) {
+#ifndef BLAZE
   assert(is_point(p));
+#endif
   const Point object_point = m4_tmul(m4_inverse(shape.transformation), p);
   const Point pattern_point =
       m4_tmul(m4_inverse(pattern.transformation), object_point);

@@ -9,7 +9,9 @@
 #include <stddef.h>
 
 Ray ray(Point origin, Vector direction) {
+#ifndef BLAZE
   assert(is_point(origin) && is_vector(direction));
+#endif
   return (Ray){origin, direction};
 }
 

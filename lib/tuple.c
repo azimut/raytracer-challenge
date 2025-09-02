@@ -8,13 +8,8 @@ Tuple tuple(double x, double y, double z, double w) {
 Tuple point(double x, double y, double z) { return (Tuple){x, y, z, 1}; }
 Tuple vector(double x, double y, double z) { return (Tuple){x, y, z, 0}; }
 
-#ifdef BLAZE
-bool is_point(const Tuple t) { return true; }
-bool is_vector(const Tuple t) { return true; }
-#else
 bool is_point(const Tuple t) { return t.w == 1; }
 bool is_vector(const Tuple t) { return t.w == 0; }
-#endif
 
 bool tuple_equal(const Tuple a, const Tuple b) {
   return near(a.x, b.x) && near(a.y, b.y) && near(a.z, b.z);

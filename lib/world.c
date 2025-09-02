@@ -100,7 +100,9 @@ Color color_at(World world, Ray ray, uint8_t life) {
 }
 
 bool is_shadowed(World w, Point p, Point light_pos) {
+#ifndef BLAZE
   assert(is_point(p) && is_point(light_pos));
+#endif
   Vector shadow_vector = tuple_sub(light_pos, p);
   double distance = tuple_length(shadow_vector);
   Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
