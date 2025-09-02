@@ -19,6 +19,7 @@ void world_free(World *);
 Color shade_hit(World, Computations, uint8_t);
 Color color_at(World, Ray, uint8_t);
 Color reflected_color(World, Computations, uint8_t);
+Color refracted_color(World, Computations, uint8_t);
 bool is_shadowed(World, Point, Point);
 
 #endif /* WORLD_H */

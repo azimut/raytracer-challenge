@@ -650,6 +650,41 @@ void test_refraction(void) {
     assert(comp.n2 == n2s[i]);
   }
   intersections_free(&xs);
+  // .under_point
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  c = sphere_glass();
+  c.transformation = translation(0, 0, 1);
+  xs = intersections_new(5);
+  Intersection i = (Intersection){5, c};
+  intersections_append(&xs, i);
+  Computations comp = prepare_computations(i, r, xs);
+  assert(near(comp.under_point.z, EPSILON / 2));
+  assert(comp.point.z < comp.under_point.z);
+  intersections_free(&xs);
+  // refracted_color()
+  World world = world_default();
+  Shape s = world.shapes.shapes[0];
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){4, s});
+  intersections_append(&xs, (Intersection){6, s});
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  comp = prepare_computations(xs.hits[0], r, xs);
+  assert(color_equal(BLACK, refracted_color(world, comp, 5)));
+  intersections_free(&xs);
+  world_free(&world);
+  // refracted_color() - life=0
+  world = world_default();
+  s = world.shapes.shapes[0];
+  s.material.transparency = 1;
+  s.material.refractive_index = 1.5;
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){4, s});
+  intersections_append(&xs, (Intersection){6, s});
+  comp = prepare_computations(xs.hits[0], r, xs);
+  assert(color_equal(BLACK, refracted_color(world, comp, 0)));
+  intersections_free(&xs);
+  world_free(&world);
 }
 
 void test_intersections(void) {

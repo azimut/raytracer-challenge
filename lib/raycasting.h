@@ -14,7 +14,7 @@ typedef struct Ray {
 } Ray;
 typedef struct Computations {
   Shape object;
-  Point point, over_point;
+  Point point, over_point, under_point;
   Vector eye;
   Vector normal;
   Vector reflect;

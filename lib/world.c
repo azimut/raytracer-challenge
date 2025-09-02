@@ -103,10 +103,17 @@ bool is_shadowed(World w, Point p, Point light_pos) {
 }
 
 Color reflected_color(World world, Computations comp, uint8_t life) {
-  if (comp.object.material.reflective == 0 || life == 0) {
+  if (!life || !comp.object.material.reflective) {
     return BLACK;
   }
   Ray r = ray(comp.over_point, comp.reflect); // avoid self-reflection
   Color color = color_at(world, r, life - 1);
   return color_smul(color, comp.object.material.reflective);
+}
+
+Color refracted_color(World world, Computations comp, uint8_t life) {
+  if (!life || !comp.object.material.transparency) {
+    return BLACK;
+  }
+  return WHITE;
 }

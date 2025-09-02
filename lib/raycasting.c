@@ -70,7 +70,7 @@ Ray transform(Ray ray, Mat4 m4) {
 static Computations compute_refractions(Intersections is,
                                         const Intersection hit) {
   Computations comp = {0};
-  Shapes containers = shapes_new(5);
+  Shapes containers = shapes_new(10);
   for (size_t idx = 0; idx < is.count; ++idx) {
     Intersection intersection = is.hits[idx];
     if (intersection_equal(hit, intersection)) {
@@ -119,5 +119,6 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
   }
   comp.reflect = reflect(r.direction, comp.normal);
   comp.over_point = tuple_add(comp.point, tuple_smul(comp.normal, EPSILON));
+  comp.under_point = tuple_sub(comp.point, tuple_smul(comp.normal, EPSILON));
   return comp;
 }
