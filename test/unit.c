@@ -635,10 +635,13 @@ void test_refraction(void) {
   c.transformation = translation(0, 0, +0.25);
   c.material.refractive_index = 2.5;
   Ray r = ray(point(0, 0, -4), vector(0, 0, 1));
-  Intersection hits[6] = {
-      {2, a}, {2.75, b}, {3.25, c}, {4.75, b}, {5.25, c}, {6, a},
-  };
-  Intersections xs = {.count = 6, .hits = hits};
+  Intersections xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){2, a});
+  intersections_append(&xs, (Intersection){2.75, b});
+  intersections_append(&xs, (Intersection){3.25, c});
+  intersections_append(&xs, (Intersection){4.75, b});
+  intersections_append(&xs, (Intersection){5.25, c});
+  intersections_append(&xs, (Intersection){7, a});
   double n1s[6] = {1.0, 1.5, 2.0, 2.5, 2.5, 1.5};
   double n2s[6] = {1.5, 2.0, 2.5, 2.5, 1.5, 1.0};
   for (int i = 0; i < 6; ++i) {
@@ -646,6 +649,7 @@ void test_refraction(void) {
     assert(comp.n1 == n1s[i]);
     assert(comp.n2 == n2s[i]);
   }
+  intersections_free(&xs);
 }
 
 void test_intersections(void) {
@@ -676,8 +680,8 @@ int main(void) {
   test_plane();
   test_patterns();
   test_reflections();
-  /* test_refraction(); */
   test_intersections();
+  test_refraction();
   printf("ALL OK!\n");
   return 0;
 }

@@ -88,3 +88,26 @@ void shapes_free(Shapes *shapes) {
   free(shapes->shapes);
   shapes->shapes = NULL, shapes->count = 0, shapes->capacity = 0;
 }
+
+static bool shape_equal(const Shape a, const Shape b) { return (a.id == b.id); }
+
+static int shapes_index(const Shapes shapes, const Shape s) {
+  for (size_t idx = 0; idx < shapes.count; ++idx)
+    if (shape_equal(shapes.shapes[idx], s))
+      return idx;
+  return -1;
+}
+
+bool shapes_includes(const Shapes shapes, const Shape s) {
+  return (shapes_index(shapes, s) >= 0);
+}
+
+void shapes_remove(Shapes *shapes, const Shape s) {
+  int found_idx = shapes_index(*shapes, s);
+  if (found_idx == -1)
+    return;
+  for (size_t next_idx = found_idx + 1; next_idx < shapes->count; ++next_idx) {
+    shapes->shapes[next_idx - 1] = shapes->shapes[next_idx];
+  }
+  shapes->count--;
+}

@@ -39,5 +39,7 @@ Color pattern_at_shape(Pattern, Shape, Point);
 Shapes shapes_new(size_t);
 void shapes_append(Shapes *, const Shape);
 void shapes_free(Shapes *);
+bool shapes_includes(const Shapes, const Shape);
+void shapes_remove(Shapes *, const Shape);
 
 #endif /* SHAPES_H */

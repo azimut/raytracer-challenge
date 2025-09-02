@@ -67,8 +67,39 @@ Ray transform(Ray ray, Mat4 m4) {
   };
 }
 
+static Computations compute_refractions(Intersections is, Intersection hit) {
+  Computations comp = {0};
+  Shapes containers = shapes_new(5);
+  for (size_t idx = 0; idx < is.count; ++idx) {
+    Intersection intersection = is.hits[idx];
+    if (intersection_equal(hit, intersection)) {
+      if (containers.count == 0) {
+        comp.n1 = 1;
+      } else {
+        Shape last = containers.shapes[containers.count - 1];
+        comp.n1 = last.material.refractive_index;
+      }
+    }
+    if (shapes_includes(containers, intersection.object)) {
+      shapes_remove(&containers, intersection.object);
+    } else {
+      shapes_append(&containers, intersection.object);
+    }
+    if (intersection_equal(hit, intersection)) {
+      if (containers.count == 0) {
+        comp.n2 = 1;
+      } else {
+        Shape last = containers.shapes[containers.count - 1];
+        comp.n2 = last.material.refractive_index;
+      }
+      break;
+    }
+  }
+  shapes_free(&containers);
+  return comp;
+}
+
 Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
-  (void)is; //// FIXMEEEEEEEEEEEEEEEEEE!
   Computations comp = {
       .eye = tuple_neg(r.direction),
       .point = position(r, ii.t),
@@ -76,6 +107,9 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
       .object = ii.object,
       .t = ii.t,
   };
+  Computations temp_comp = compute_refractions(is, ii);
+  comp.n1 = temp_comp.n1;
+  comp.n2 = temp_comp.n2;
   if (tuple_dot_product(comp.normal, comp.eye) < 0) {
     comp.is_inside = true;
     comp.normal = tuple_neg(comp.normal);
