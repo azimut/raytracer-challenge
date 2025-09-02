@@ -64,17 +64,27 @@ Intersections world_intersect(World world, Ray ray) {
 }
 
 Color shade_hit(World world, Computations comp, uint8_t life) {
-  Color surface = BLACK;
+  Color surface = {0};
   for (size_t i = 0; i < world.lights_count; ++i) {
-    bool shadowed =
-        is_shadowed(world, comp.over_point, world.lights[i].position);
-    Color new = lighting(comp.object.material, comp.object, comp.over_point,
-                         world.lights[i], comp.eye, comp.normal, shadowed);
+    const Vector light_pos = world.lights[i].position;
+    const bool shadowed = is_shadowed(world, comp.over_point, light_pos);
+    const Color new =
+        lighting(comp.object.material, comp.object, comp.over_point,
+                 world.lights[i], comp.eye, comp.normal, shadowed);
     surface = color_add(surface, new);
   }
-  Color reflected = reflected_color(world, comp, life);
-  Color refraction = refracted_color(world, comp, life);
-  return color_add(color_add(surface, reflected), refraction);
+  const Color reflected = reflected_color(world, comp, life);
+  const Color refraction = refracted_color(world, comp, life);
+  const MaterialPhong m = comp.object.material;
+  if (m.reflective > 0 && m.transparency > 0) {
+    const double reflectance = schlick(comp);
+    surface = color_add(surface,
+                        color_add(color_smul(reflected, reflectance),
+                                  color_smul(refraction, (1.0 - reflectance))));
+  } else {
+    surface = color_add(color_add(surface, reflected), refraction);
+  }
+  return surface;
 }
 
 Color color_at(World world, Ray ray, uint8_t life) {
@@ -114,13 +124,13 @@ Color reflected_color(World world, Computations comp, uint8_t life) {
 }
 
 Color refracted_color(World world, Computations comp, uint8_t life) {
-  if (!life || !comp.object.material.transparency || comp.sin2_t > 1) {
+  const bool total_ireflection = comp.sin2_t > 1;
+  if (!life || !comp.object.material.transparency || total_ireflection) {
     return BLACK;
   }
-  double cos_t = sqrt(1.0 - comp.sin2_t);
-  Vector direction =
-      tuple_sub(tuple_smul(comp.normal, ((comp.n_ratio * comp.cos_i) - cos_t)),
-                tuple_smul(comp.eye, comp.n_ratio));
+  Vector direction = tuple_sub(
+      tuple_smul(comp.normal, ((comp.n_ratio * comp.cos_i) - comp.cos_t)),
+      tuple_smul(comp.eye, comp.n_ratio));
   Ray r = ray(comp.under_point, direction);
   return color_smul(color_at(world, r, life - 1),
                     comp.object.material.transparency);

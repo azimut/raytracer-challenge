@@ -772,6 +772,55 @@ void test_intersections(void) {
   intersections_free(&is);
 }
 
+void test_fresnel(void) {
+  // schlick() - total internal reflection
+  Shape shape = sphere_glass();
+  Ray r = ray(point(0, 0, M_SQRT2 / 2), vector(0, 1, 0));
+  Intersections xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){-M_SQRT2 / 2, shape});
+  intersections_append(&xs, (Intersection){+M_SQRT2 / 2, shape});
+  Computations comp = prepare_computations(xs.hits[1], r, xs);
+  assert(near(1, schlick(comp)));
+  intersections_free(&xs);
+  // schlick() - 90° aka perpendicular
+  shape = sphere_glass();
+  r = ray(point(0, 0, 0), vector(0, 1, 0));
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){-1, shape});
+  intersections_append(&xs, (Intersection){+1, shape});
+  comp = prepare_computations(xs.hits[1], r, xs);
+  assert(near(0.04, schlick(comp)));
+  intersections_free(&xs);
+  // schlick() - n2>n1 and small angle
+  shape = sphere_glass();
+  r = ray(point(0, 0.99, -2), vector(0, 0, 1));
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){1.8589, shape});
+  comp = prepare_computations(xs.hits[0], r, xs);
+  assert(near(0.48874, schlick(comp)));
+  intersections_free(&xs);
+  // schlick() + shade_hit()
+  World w = world_default();
+  Shape floor = plane();
+  floor.transformation = translation(0, -1, 0);
+  floor.material.reflective = 0.5;
+  floor.material.transparency = 0.5;
+  floor.material.refractive_index = 1.5;
+  world_enter(&w, floor);
+  Shape ball = sphere();
+  ball.material.color = (Color){1, 0, 0};
+  ball.material.ambient = 0.5;
+  ball.transformation = translation(0, -3.5, -0.5);
+  world_enter(&w, ball);
+  r = ray(point(0, 0, -3), vector(0, -M_SQRT2 / 2, M_SQRT2 / 2));
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){M_SQRT2, floor});
+  comp = prepare_computations(xs.hits[0], r, xs);
+  assert(color_equal(shade_hit(w, comp, 5), color(0.93391, 0.69643, 0.69243)));
+  intersections_free(&xs);
+  world_free(&w);
+}
+
 int main(void) {
   test_tuple();
   test_canvas();
@@ -786,6 +835,7 @@ int main(void) {
   test_reflections();
   test_intersections();
   test_refraction();
+  test_fresnel();
   printf("ALL OK!\n");
   return 0;
 }

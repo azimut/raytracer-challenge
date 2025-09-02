@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
   middle.material.color = color(0.1, 1, 0.5);
-  middle.material.reflective = 0.1;
-  middle.material.pattern = pattern_stripes(RED, BLUE);
+  /* middle.material.reflective = 0.1; */
+  /* middle.material.pattern = pattern_stripes(RED, BLUE); */
   middle.material.transparency = 1;
   middle.material.refractive_index = DEFAULT_REFRACTIVE_GLASS;
   middle.material.pattern.transformation =
@@ -99,27 +99,31 @@ int main(int argc, char *argv[]) {
   left.material.color = color(1, 0.8, 0.1);
   left.material.diffuse = 0.7;
   left.material.specular = 0;
-  left.material.reflective = 1;
+  /* left.material.reflective = 1; */
+  left.material.transparency = 1;
+  left.material.refractive_index = DEFAULT_REFRACTIVE_GLASS;
   world_enter(&w, left);
 
   char *filename = basename(argv[0]);
   Camera cam = camera(DIMENSION, DIMENSION, M_PI / 5.5);
-  cam.transform =
-      view_transform(point(8, 0.5, -5), point(-1, 1.5, 0), vector(0, 1, 0));
-  int frame = 0;
-  for (float i = 0; i < 5; i += .1) {
-    Point from = point(sin(i) * 10, 0.5, cos(i) * 10);
-    cam.transform = view_transform(from, point(-1, 1.5, 0), vector(0, 1, 0));
-    Canvas canvas = render(cam, w);
-    canvas_save_frame(canvas, filename, ++frame, from);
-    canvas_free(&canvas);
-  }
+  cam.transform = view_transform(point(-9.7, 0.5, -2.11), point(-1, 1.5, 0),
+                                 vector(0, 1, 0));
 
-  /* char *buff = calloc(100, sizeof(char)); */
-  /* strcat(strcat(strcat(buff, "media/"), filename), ".ppm"); */
-  /* Canvas canvas = render(cam, w); */
-  /* canvas_save(canvas, buff); */
-  /* free(buff); */
+  /* int frame = 0; */
+  /* for (float i = 0; i < M_PI * 2; i += .1) { */
+  /*   Point from = point(sin(i) * 10, 0.5, cos(i) * 10); */
+  /*   cam.transform = view_transform(from, point(-1, 1.5, 0), vector(0, 1, 0));
+   */
+  /*   Canvas canvas = render(cam, w); */
+  /*   canvas_save_frame(canvas, filename, ++frame, from); */
+  /*   canvas_free(&canvas); */
+  /* } */
+
+  char *buff = calloc(100, sizeof(char));
+  strcat(strcat(strcat(buff, "media/"), filename), ".ppm");
+  Canvas canvas = render(cam, w);
+  canvas_save(canvas, buff);
+  free(buff);
   world_free(&w);
   return 0;
 }

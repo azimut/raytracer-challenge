@@ -77,7 +77,7 @@ static Computations compute_refractions(Intersections is,
       if (containers.count == 0) {
         comp.n1 = 1;
       } else {
-        Shape last = containers.shapes[containers.count - 1];
+        const Shape last = containers.shapes[containers.count - 1];
         comp.n1 = last.material.refractive_index;
       }
     }
@@ -90,7 +90,7 @@ static Computations compute_refractions(Intersections is,
       if (containers.count == 0) {
         comp.n2 = 1;
       } else {
-        Shape last = containers.shapes[containers.count - 1];
+        const Shape last = containers.shapes[containers.count - 1];
         comp.n2 = last.material.refractive_index;
       }
       break;
@@ -98,6 +98,18 @@ static Computations compute_refractions(Intersections is,
   }
   shapes_free(&containers);
   return comp;
+}
+
+double schlick(const Computations comp) {
+  double cos = comp.cos_i;
+  if (comp.n1 > comp.n2) {
+    if (comp.sin2_t > 1) {
+      return 1;
+    }
+    cos = comp.cos_t;
+  }
+  const double r0 = pow(((comp.n1 - comp.n2) / (comp.n1 + comp.n2)), 2);
+  return r0 + (1 - r0) * pow((1 - cos), 5);
 }
 
 Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
@@ -124,5 +136,6 @@ Computations prepare_computations(Intersection ii, Ray r, Intersections is) {
   comp.n_ratio = comp.n1 / comp.n2;
   comp.cos_i = tuple_dot_product(comp.eye, comp.normal);
   comp.sin2_t = pow(comp.n_ratio, 2.0) * (1.0 - pow(comp.cos_i, 2.0));
+  comp.cos_t = sqrt(1.0 - comp.sin2_t);
   return comp;
 }

@@ -20,7 +20,7 @@ typedef struct Computations {
   Vector reflect;
   bool is_inside;
   double t;
-  double n1, n2, sin2_t, cos_i, n_ratio; // refraction
+  double n1, n2, sin2_t, cos_t, cos_i, n_ratio; // refraction
 } Computations;
 
 Ray ray(Point, Vector);
@@ -29,5 +29,6 @@ Intersections intersect(Shape, Ray);
 Intersection *hit(Intersections);
 Ray transform(Ray, Mat4);
 Computations prepare_computations(Intersection, Ray, Intersections);
+double schlick(const Computations);
 
 #endif /* RAYCASTING_H */
