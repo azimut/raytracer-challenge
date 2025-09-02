@@ -49,7 +49,7 @@ Intersections intersections_new(size_t capacity) {
 
 void intersections_append(Intersections *is, const Intersection i) {
   if ((is->count + 2) > is->capacity) {
-    fprintf(stderr, "-----> cap=%li count=%li\n", is->capacity, is->count);
+    fprintf(stderr, "IS-----> cap=%li count=%li\n", is->capacity, is->count);
     is->capacity += RENEWED_CAPACITY;
     is->hits =
         reallocarray(is->hits, is->capacity, sizeof(struct Intersection));

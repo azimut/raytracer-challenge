@@ -1,5 +1,6 @@
 #include "./shapes.h"
 #include <assert.h>
+#include <stdio.h>
 
 int global_id = 0;
 
@@ -60,4 +61,30 @@ Color pattern_at_shape(Pattern ps, Shape shape, Point p) {
   Point object_point = m4_tmul(m4_inverse(shape.transformation), p);
   Point pattern_point = m4_tmul(m4_inverse(ps.transformation), object_point);
   return pattern_at(ps, pattern_point);
+}
+
+Shapes shapes_new(size_t capacity) {
+  assert(capacity > 0 && capacity < 100);
+  return (Shapes){
+      .capacity = capacity,
+      .shapes = calloc(capacity, sizeof(Shape)),
+  };
+}
+void shapes_append(Shapes *shapes, const Shape shape) {
+  if ((shapes->count + 2) > shapes->capacity) {
+    if (shapes->capacity > 0)
+      fprintf(stderr, "SH-----> cap=%li count=%li\n", shapes->capacity,
+              shapes->count);
+    shapes->capacity += 10;
+    shapes->shapes =
+        reallocarray(shapes->shapes, shapes->capacity, sizeof(Shape));
+  }
+  shapes->shapes[shapes->count] = shape;
+  shapes->count++;
+}
+void shapes_free(Shapes *shapes) {
+  if (!shapes)
+    return;
+  free(shapes->shapes);
+  shapes->shapes = NULL, shapes->count = 0, shapes->capacity = 0;
 }

@@ -22,6 +22,12 @@ typedef struct Shape {
   } shape_data;
 } Shape;
 
+typedef struct Shapes {
+  size_t count;
+  size_t capacity;
+  Shape *shapes;
+} Shapes;
+
 Shape plane(void);
 Shape sphere(void);
 Shape sphere_glass(void);
@@ -29,5 +35,9 @@ void set_material(Shape *, MaterialPhong);
 void set_transform(Shape *, Mat4);
 Vector normal_at(Shape, Point);
 Color pattern_at_shape(Pattern, Shape, Point);
+
+Shapes shapes_new(size_t);
+void shapes_append(Shapes *, const Shape);
+void shapes_free(Shapes *);
 
 #endif /* SHAPES_H */

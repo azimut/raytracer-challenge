@@ -3,20 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-void world_enter(World *world, Shape s) {
-  if (world->shapes) {
-    world->shapes =
-        reallocarray(world->shapes, world->shapes_count + 1, sizeof(Shape));
-  } else {
-    world->shapes = calloc(1, sizeof(Shape));
-  }
-  if (world->shapes == NULL) {
-    perror("alloc in world_enter()");
-    exit(EXIT_FAILURE);
-  }
-  world->shapes[world->shapes_count] = s;
-  world->shapes_count++;
-}
+void world_enter(World *world, Shape s) { shapes_append(&world->shapes, s); }
 
 void world_enlight(World *world, PointLight light) {
   if (world->lights) {
@@ -53,16 +40,15 @@ World world_default(void) {
 }
 
 void world_free(World *world) {
-  free(world->shapes);
-  world->shapes = NULL;
+  shapes_free(&world->shapes);
   free(world->lights);
   world->lights = NULL;
 }
 
 Intersections world_intersect(World world, Ray ray) {
   Intersections is = intersections_new(15);
-  for (size_t i = 0; i < world.shapes_count; ++i) {
-    Intersections temp_is = intersect(world.shapes[i], ray);
+  for (size_t i = 0; i < world.shapes.count; ++i) {
+    Intersections temp_is = intersect(world.shapes.shapes[i], ray);
     if (temp_is.count == 0) {
       intersections_free(&temp_is);
       continue;

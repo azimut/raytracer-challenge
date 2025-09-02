@@ -322,7 +322,7 @@ void test_world(void) {
   // shade_color()
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   w = world_default();
-  i = intersection(4, w.shapes[0]);
+  i = intersection(4, w.shapes.shapes[0]);
   comp = prepare_computations(i, r, is);
   c = shade_hit(w, comp, 1);
   color_print(c);
@@ -333,7 +333,7 @@ void test_world(void) {
   w.lights[0].position = point(0, 0.25, 0);
   w.lights[0].intensity = WHITE;
   r = ray(point(0, 0, 0), vector(0, 0, 1));
-  i = intersection(0.5, w.shapes[1]);
+  i = intersection(0.5, w.shapes.shapes[1]);
   comp = prepare_computations(i, r, is);
   c = shade_hit(w, comp, 1);
   color_print(c);
@@ -351,11 +351,11 @@ void test_world(void) {
   assert(color_equal(c, color(0.38066, 0.47583, 0.2855))); // hits
   world_free(&w);
   w = world_default();
-  w.shapes[0].material.ambient = 1;
-  w.shapes[1].material.ambient = 1;
+  w.shapes.shapes[0].material.ambient = 1;
+  w.shapes.shapes[1].material.ambient = 1;
   r = ray(point(0, 0, 0.75), vector(0, 0, -1));
   c = color_at(w, r, 1);
-  assert(color_equal(c, w.shapes[1].material.color)); // behind the ray
+  assert(color_equal(c, w.shapes.shapes[1].material.color)); // behind the ray
   world_free(&w);
   // view_transform()
   mat4 = view_transform(point(0, 0, 0), point(0, 0, -1), vector(0, 1, 0));
@@ -562,8 +562,8 @@ void test_reflections(void) {
   // strike a non-reflective surface
   World world = world_default();
   r = ray(point(0, 0, 0), vector(0, 0, 1));
-  world.shapes[1].material.ambient = 1;
-  i = intersection(1, world.shapes[1]);
+  world.shapes.shapes[1].material.ambient = 1;
+  i = intersection(1, world.shapes.shapes[1]);
   comp = prepare_computations(i, r, is);
   assert(color_equal(BLACK, reflected_color(world, comp, 1)));
   world_free(&world);

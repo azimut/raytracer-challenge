@@ -8,8 +8,7 @@
 typedef struct World {
   PointLight *lights;
   size_t lights_count;
-  Shape *shapes;
-  size_t shapes_count;
+  Shapes shapes;
 } World;
 
 Intersections world_intersect(World, Ray);
