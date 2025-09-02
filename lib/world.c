@@ -73,7 +73,8 @@ Color shade_hit(World world, Computations comp, uint8_t life) {
     surface = color_add(surface, new);
   }
   Color reflected = reflected_color(world, comp, life);
-  return color_add(surface, reflected);
+  Color refraction = refracted_color(world, comp, life);
+  return color_add(color_add(surface, reflected), refraction);
 }
 
 Color color_at(World world, Ray ray, uint8_t life) {

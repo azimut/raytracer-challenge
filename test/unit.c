@@ -716,6 +716,7 @@ void test_refraction(void) {
   intersections_free(&xs);
   world_free(&world);
   // refracted_color() - regular
+  // NOTE: doesn't work without pointer
   world = world_default();
   world.shapes.shapes[0].material.ambient = 1;
   world.shapes.shapes[0].material.pattern = pattern_test();
@@ -731,6 +732,26 @@ void test_refraction(void) {
   Color rc = refracted_color(world, comp, 5);
   color_print(rc);
   assert(color_equal(color(0, 0.99888, 0.04725), rc));
+  intersections_free(&xs);
+  world_free(&world);
+  // refracted_color() - regular
+  world = world_default();
+  Shape sfloor = plane();
+  sfloor.transformation = translation(0, -1, 0);
+  sfloor.material.transparency = 0.5;
+  sfloor.material.refractive_index = 1.5;
+  world_enter(&world, sfloor);
+  Shape ball = sphere();
+  ball.material.color = (Color){1, 0, 0};
+  ball.material.ambient = 0.5;
+  ball.transformation = translation(0, -3.5, -0.5);
+  world_enter(&world, ball);
+  r = ray(point(0, 0, -3), vector(0, -M_SQRT2 / 2, M_SQRT2 / 2));
+  xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){M_SQRT2, sfloor});
+  comp = prepare_computations(xs.hits[0], r, xs);
+  rc = shade_hit(world, comp, 5);
+  assert(color_equal(rc, (Color){0.93642, 0.68642, 0.68642}));
   intersections_free(&xs);
   world_free(&world);
 }
