@@ -3,18 +3,24 @@
 #include <math.h>
 
 Vector reflect(Vector v, Vector n) {
+#ifndef BLAZE
   assert(is_vector(v) && is_vector(n));
+#endif
   return tuple_sub(v, tuple_smul(tuple_smul(n, 2.0), tuple_dot_product(v, n)));
 }
 
 PointLight pointlight(Point position, Color intensity) {
+#ifndef BLAZE
   assert(is_point(position));
+#endif
   return (PointLight){position, intensity, 0};
 }
 
 Color lighting(MaterialPhong material, Shape object, Point point,
                PointLight light, Vector eye, Vector normal, bool in_shadow) {
+#ifndef BLAZE
   assert(is_point(point) && is_vector(eye) && is_vector(normal));
+#endif
   Color material_color =
       material.pattern.ptype == PATTERN_TYPE_NONE
           ? material.color
