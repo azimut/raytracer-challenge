@@ -17,6 +17,11 @@
 #define DIMENSION 200
 #endif
 
+#if !defined(SIZEX) || !defined(SIZEY)
+#define SIZEX DIMENSION
+#define SIZEY DIMENSION
+#endif
+
 int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
@@ -110,9 +115,9 @@ int main(int argc, char *argv[]) {
   world_enter(&w, left);
 
   char *filename = basename(argv[0]);
-  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3);
+  Camera cam = camera(SIZEX, SIZEY, M_PI / 2.5);
   cam.transform =
-      view_transform(point(0, 0.5, -5), point(0, 1.25, 0), vector(0, 1, 0));
+      view_transform(point(0, 0.25, -5), point(0, 1.25, 0), vector(0, 1, 0));
 
   /* int frame = 0; */
   /* for (float i = M_PI; i < M_PI * 2; i += .1) { */

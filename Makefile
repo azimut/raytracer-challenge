@@ -1,11 +1,21 @@
 NSAMPLES  ?= 1
-DIMENSION ?= 1024
 CC        ?= gcc
-LDFLAGS   := -lm
 SRC       := $(wildcard lib/*.c)
 HDR       := $(wildcard lib/*.h)
-CFLAGS     = -Wall -Wextra -std=gnu11 -DDIMENSION=$(DIMENSION) -DNSAMPLES=$(NSAMPLES)
+#PKGS      := cglm
+CFLAGS     = -Wall -Wextra -std=gnu11
+CFLAGS    += -DNSAMPLES=$(NSAMPLES)
+CFLAGS    += $(shell pkg-config --cflags $(PKGS))
+LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
 BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
+
+ifdef SIZEX
+	CFLAGS += -DSIZEX=$(SIZEX) -DSIZEY=$(SIZEY)
+else ifdef DIMENSION
+	CFLAGS += -DDIMENSION=$(DIMENSION)
+else
+	CFLAGS += -DDIMENSION=1024
+endif
 
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
@@ -49,4 +59,4 @@ valgrind: DIMENSION = 50
 valgrind: build/$(TARGET) ; valgrind ./build/$(TARGET)
 
 .PHONY: deps
-deps:; sudo apt-get install imagemagick time valgrind
+deps:; sudo apt-get install imagemagick time valgrind libcglm-dev
