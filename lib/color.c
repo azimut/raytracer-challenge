@@ -16,7 +16,7 @@ Color color_smul(const Color a, double by) {
   return color(a.red * by, a.green * by, a.blue * by);
 }
 Color color_sdiv(const Color a, double by) {
-  return color(a.blue / by, a.green / by, a.blue / by);
+  return color(a.red / by, a.green / by, a.blue / by);
 }
 bool color_equal(const Color a, const Color b) {
   return near(a.red, b.red) && near(a.green, b.green) && near(a.blue, b.blue);
