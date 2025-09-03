@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
   Shape roof = plane();
   roof.transformation = translation(0, 30, 0);
-  roof.material.pattern = pattern_rings(WHITE, BLACK);
+  roof.material.pattern = pattern_stripes(WHITE, BLACK);
   roof.material.pattern.transformation =
       m4_mul(translation(0, 0, 0), scaling(3, 1, 3));
   roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
