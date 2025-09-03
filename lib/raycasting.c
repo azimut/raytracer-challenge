@@ -8,7 +8,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-Ray ray(Point origin, Vector direction) {
+Ray ray(const Point origin, const Vector direction) {
 #ifndef BLAZE
   assert(is_point(origin) && is_vector(direction));
 #endif
@@ -62,7 +62,7 @@ Intersection *hit(Intersections is) {
   return (current == DBL_MAX) ? NULL : &is.hits[idx];
 }
 
-Ray transform(Ray ray, Mat4 m4) {
+Ray transform(const Ray ray, const Mat4 m4) {
   return (Ray){
       .origin = m4_tmul(m4, ray.origin),
       .direction = m4_tmul(m4, ray.direction),
