@@ -64,6 +64,7 @@ int main(int argc, char *argv[]) {
       m4_mul(translation(0, 0, 0), scaling(3, 1, 3));
   roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
   roof.material.specular = 0;
+  roof.material.ambient = AMBIENT / 2;
   world_enter(&w, roof);
 
   Shape middle = sphere();
