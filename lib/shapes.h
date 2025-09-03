@@ -7,6 +7,7 @@
 typedef enum {
   SHAPE_TYPE_SPHERE = 0,
   SHAPE_TYPE_PLANE,
+  SHAPE_TYPE_CUBE,
 } ShapeType;
 
 typedef struct Shape {
@@ -19,6 +20,8 @@ typedef struct Shape {
     } sphere;
     struct {
     } plane;
+    struct {
+    } cube;
   } shape_data;
 } Shape;
 
@@ -28,6 +31,7 @@ typedef struct Shapes {
   Shape *shapes;
 } Shapes;
 
+Shape cube(void);
 Shape plane(void);
 Shape sphere(void);
 Shape sphere_glass(void);

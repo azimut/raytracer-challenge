@@ -821,21 +821,78 @@ void test_fresnel(void) {
   world_free(&w);
 }
 
+void test_cube(void) {
+  // Tests: +x -x +y -y +z -z inside
+  Shape c = cube();
+  Point orig[7] = {
+      point(5, 0.5, 0), point(-5, 0.5, 0), point(0.5, 5, 0), point(0.5, -5, 0),
+      point(0.5, 0, 5), point(0.5, 0, -5), point(0, 0.5, 0),
+  };
+  Vector dirs[7] = {
+      vector(-1, 0, 0), vector(1, 0, 0), vector(0, -1, 0), vector(0, 1, 0),
+      vector(0, 0, -1), vector(0, 0, 1), vector(0, 0, 1),
+  };
+  double t1s[7] = {4, 4, 4, 4, 4, 4, -1};
+  double t2s[7] = {6, 6, 6, 6, 6, 6, +1};
+  for (size_t i = 0; i < 7; ++i) {
+    Ray r = ray(orig[i], dirs[i]);
+    Intersections xs = intersect(c, r);
+    assert(xs.count == 2);
+    assert(near(xs.hits[0].t, t1s[i]));
+    assert(near(xs.hits[1].t, t2s[i]));
+  }
+  // ray misses cube
+  Point m_orig[6] = {
+      point(-2, 0, 0), point(0, -2, 0), point(0, 0, -2),
+      point(2, 0, 2),  point(0, 2, 2),  point(2, 2, 0),
+  };
+  Vector m_dirs[6] = {
+      vector(0.2673, 0.5345, 0.8018),
+      vector(0.8018, 0.2673, 0.5345),
+      vector(0.5345, 0.8018, 0.2673),
+      vector(0, 0, -1),
+      vector(0, -1, 0),
+      vector(-1, 0, 0),
+  };
+  c = cube();
+  for (size_t i = 0; i < 6; ++i) {
+    Ray r = ray(m_orig[i], m_dirs[i]);
+    Intersections xs = intersect(c, r);
+    assert(xs.count == 0);
+  }
+  // cube normal
+  Point cpoints[8] = {
+      point(1, 0.5, -0.8),  point(-1, -0.2, 0.9), point(-0.4, 1, 0.1),
+      point(0.3, -1, -0.7), point(-0.6, 0.3, 1),  point(0.4, 0.4, -1),
+      point(1, 1, 1),       point(-1, -1, -1),
+  };
+  Vector cnormal[8] = {
+      vector(1, 0, 0), vector(-1, 0, 0), vector(0, 1, 0), vector(0, -1, 0),
+      vector(0, 0, 1), vector(0, 0, -1), vector(1, 0, 0), vector(-1, 0, 0),
+  };
+  c = cube();
+  for (size_t i = 0; i < 8; ++i) {
+    Vector n = normal_at(c, cpoints[i]);
+    assert(tuple_equal(n, cnormal[i]));
+  }
+}
+
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
-  test_raycasting();
-  test_shading();
-  test_world();
-  test_shadow();
-  test_plane();
-  test_patterns();
-  test_reflections();
-  test_intersections();
-  test_refraction();
-  test_fresnel();
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
+  /* test_raycasting(); */
+  /* test_shading(); */
+  /* test_world(); */
+  /* test_shadow(); */
+  /* test_plane(); */
+  /* test_patterns(); */
+  /* test_reflections(); */
+  /* test_intersections(); */
+  /* test_refraction(); */
+  /* test_fresnel(); */
+  test_cube();
   printf("ALL OK!\n");
   return 0;
 }

@@ -19,6 +19,29 @@ Point position(Ray r, double t) {
   return tuple_add(r.origin, tuple_smul(r.direction, t));
 }
 
+typedef struct PlaneIntersect {
+  double tmin, tmax;
+} PlaneIntersect;
+
+static PlaneIntersect check_axis(double origin, double direction) {
+  const double tmin_numerator = -1 - origin;
+  const double tmax_numerator = +1 - origin;
+  PlaneIntersect result = {0};
+  if (fabs(direction) >= EPSILON) {
+    result.tmin = tmin_numerator / direction;
+    result.tmax = tmax_numerator / direction;
+  } else {
+    result.tmin = tmin_numerator * INFINITY;
+    result.tmax = tmax_numerator * INFINITY;
+  }
+  if (result.tmin > result.tmax) {
+    const double tmp = result.tmax;
+    result.tmax = result.tmin;
+    result.tmin = tmp;
+  }
+  return result;
+}
+
 Intersections intersect(const Shape shape, const Ray ray) {
   const Ray tRay = transform(ray, m4_inverse(shape.transformation));
   Intersections is = intersections_new(5);
@@ -44,6 +67,19 @@ Intersections intersect(const Shape shape, const Ray ray) {
     }
     const double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
     intersections_append(&is, (Intersection){i, shape});
+    break;
+  }
+  case SHAPE_TYPE_CUBE: {
+    const PlaneIntersect xt = check_axis(tRay.origin.x, tRay.direction.x);
+    const PlaneIntersect yt = check_axis(tRay.origin.y, tRay.direction.y);
+    const PlaneIntersect zt = check_axis(tRay.origin.z, tRay.direction.z);
+    const double tmin = fmax(fmax(xt.tmin, yt.tmin), zt.tmin);
+    const double tmax = fmin(fmin(xt.tmax, yt.tmax), zt.tmax);
+    if (tmin > tmax) { // miss
+      break;
+    }
+    intersections_append(&is, (Intersection){tmin, shape});
+    intersections_append(&is, (Intersection){tmax, shape});
     break;
   }
   }

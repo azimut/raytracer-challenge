@@ -56,4 +56,5 @@ $ make -B test DEBUG=1
 - Chapter 8: Shadows
 - Chapter 9: Planes
 - Chapter 10: `patterns.h`
-
+- Chapter 11: Reflections and Refractions
+- Chapter 12: Cubes

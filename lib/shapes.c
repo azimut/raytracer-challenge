@@ -1,8 +1,18 @@
 #include "./shapes.h"
 #include <assert.h>
+#include <math.h>
 #include <stdio.h>
 
 int global_id = 0;
+
+Shape cube(void) {
+  return (Shape){
+      .id = ++global_id,
+      .transformation = M4_IDENTITY,
+      .material = material(),
+      .shape_type = SHAPE_TYPE_CUBE,
+  };
+}
 
 Shape plane(void) {
   return (Shape){
@@ -49,9 +59,21 @@ Vector normal_at(const Shape shape, const Point world_point) {
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
-  case SHAPE_TYPE_PLANE:
+  case SHAPE_TYPE_PLANE: {
     object_normal = vector(0, 1, 0);
     break;
+  }
+  case SHAPE_TYPE_CUBE: {
+    const double maxc = fmax(fmax(fabs(world_point.x), fabs(world_point.y)),
+                             fabs(world_point.z));
+    if (maxc == fabs(world_point.x))
+      object_normal = vector(world_point.x, 0, 0);
+    else if (maxc == fabs(world_point.y))
+      object_normal = vector(0, world_point.y, 0);
+    else
+      object_normal = vector(0, 0, world_point.z);
+    break;
+  }
   }
   Vector world_normal =
       m4_tmul(m4_transpose(m4_inverse(shape.transformation)), object_normal);
