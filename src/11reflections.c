@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   right.material = material();
   right.material.pattern = pattern_stripes(WHITE, BLACK);
   right.material.pattern.transformation =
-      m4_mul(rotation_z(radians(-45)), scaling(.2, 1, 1));
+      m4_mul(rotation_z(radians(-45)), scaling(.15, 1, 1));
   right.material.color = color(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
   right.material.specular = 0.01;
