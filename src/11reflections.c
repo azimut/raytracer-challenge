@@ -84,16 +84,16 @@ int main(int argc, char *argv[]) {
 
   Shape right = sphere();
   right.transformation =
-      m4_mul(translation(1.5, 0.5, -0.5), scaling(0.5, 0.5, 0.5));
+      m4_mul(translation(-0.25, 0.5, -1.25), scaling(0.5, 0.5, 0.5));
   right.material = material();
-  /* right.material.pattern = pattern_gradient(RED, BLUE); */
-  /* right.material.pattern.transformation = */
-  /*     m4_mul(translation(1.1, 0, 0), scaling(2, 1, 1)); */
+  right.material.pattern = pattern_stripes(WHITE, BLACK);
+  right.material.pattern.transformation =
+      m4_mul(rotation_z(radians(-45)), scaling(.2, 1, 1));
   right.material.color = color(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
-  right.material.specular = 0.3;
+  right.material.specular = 0.01;
   right.material.ambient = AMBIENT;
-  right.material.reflective = 0.25;
+  /* right.material.reflective = 0.1; */
   world_enter(&w, right);
 
   Shape left = sphere();
@@ -110,8 +110,8 @@ int main(int argc, char *argv[]) {
   world_enter(&w, left);
 
   char *filename = basename(argv[0]);
-  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 9);
-  cam.transform = view_transform(point(-15.7, 1.5, -7.11), point(0, 1.0, 0),
+  Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3);
+  cam.transform = view_transform(point(-2.7, 1.0, -3.11), point(0, 0.75, 0),
                                  vector(0, 1, 0));
 
   /* int frame = 0; */
