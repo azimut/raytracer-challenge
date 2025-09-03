@@ -69,8 +69,8 @@ Canvas render(const Camera cam, const World world) {
           ray = ray_for_pixel(cam, col + drand48(), row + drand48());
           pixel = color_add(pixel, color_at(world, ray, REFLECTION_HITS));
         }
+        pixel = color_sdiv(pixel, NSAMPLES);
       }
-      pixel = color_sdiv(pixel, NSAMPLES);
       canvas_set(&c, row, col, pixel);
     }
   }
