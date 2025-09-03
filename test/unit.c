@@ -840,6 +840,7 @@ void test_cube(void) {
     assert(xs.count == 2);
     assert(near(xs.hits[0].t, t1s[i]));
     assert(near(xs.hits[1].t, t2s[i]));
+    intersections_free(&xs);
   }
   // ray misses cube
   Point m_orig[6] = {
@@ -859,6 +860,7 @@ void test_cube(void) {
     Ray r = ray(m_orig[i], m_dirs[i]);
     Intersections xs = intersect(c, r);
     assert(xs.count == 0);
+    intersections_free(&xs);
   }
   // cube normal
   Point cpoints[8] = {
@@ -878,20 +880,20 @@ void test_cube(void) {
 }
 
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
-  /* test_raycasting(); */
-  /* test_shading(); */
-  /* test_world(); */
-  /* test_shadow(); */
-  /* test_plane(); */
-  /* test_patterns(); */
-  /* test_reflections(); */
-  /* test_intersections(); */
-  /* test_refraction(); */
-  /* test_fresnel(); */
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
+  test_raycasting();
+  test_shading();
+  test_world();
+  test_shadow();
+  test_plane();
+  test_patterns();
+  test_reflections();
+  test_intersections();
+  test_refraction();
+  test_fresnel();
   test_cube();
   printf("ALL OK!\n");
   return 0;
