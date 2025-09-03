@@ -1,5 +1,6 @@
 gmon.out
 /profile.*
+*.mp4
 *.ppm
 /build/
 /.ccls-cache/
