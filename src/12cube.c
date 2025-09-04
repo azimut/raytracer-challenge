@@ -27,39 +27,21 @@ int main(int argc, char *argv[]) {
   World w = {0};
 
   PointLight p = {0};
-  /* p = pointlight(point(-10, 7, 5), LIGHT_COLORS_FLUORESCENT_STANDARD); */
-  /* p.attenuation_idx = 5; */
-  /* world_enlight(&w, p); */
-  p = pointlight(point(-3, 2, -7), LIGHT_COLORS_SKY_OVERCAST);
-  p.attenuation_idx = 8;
+  p = pointlight(point(15, 7, -15), color(0.1, 0.9, 1.0));
+  p.attenuation_idx = 4;
+  world_enlight(&w, p);
+  p = pointlight(point(3, 12, -7), color(1.0, 0.1, 0.9));
+  p.attenuation_idx = 10;
   world_enlight(&w, p);
 
   Shape floor = plane();
   floor.material.pattern = pattern_checkers(WHITE, BLACK);
-  /* floor.material.pattern.transformation = scaling(0.25, 1, 1); */
+  floor.material.pattern.transformation = scaling(0.5, .5, .5);
   /* floor.material.color = color(.4, 0.9, 0.9); */
   floor.material.specular = 0;
   floor.material.ambient = AMBIENT / 2;
   floor.material.reflective = 0.1;
   world_enter(&w, floor);
-
-  /* double radius = 50; */
-  /* double rot = 0; */
-  /* for (size_t i = 0; i < 6; i += 1) { */
-  /*   Shape hexa = plane(); */
-  /*   hexa.transformation = */
-  /*       m4_mul(translation(radius * cos(M_PI / 6.0 + (i * M_PI) / 3.0), 0, */
-  /*                          radius * sin(M_PI / 6.0 + (i * M_PI) / 3.0)), */
-  /*              m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2))); */
-  /*   rot -= 60; */
-  /*   hexa.material.color = */
-  /*       i % 2 ? (Color){0.25, 0.25, 0.25} : (Color){0.5, 0.5, 0.5}; */
-  /*   hexa.material.pattern.transformation = */
-  /*       m4_mul(scaling(10, 1, 1), M4_IDENTITY); */
-  /*   hexa.material.reflective = i % 2 ? 0.1 : 0; */
-  /*   hexa.material.specular = 0; */
-  /*   world_enter(&w, hexa); */
-  /* } */
 
   Shape roof = plane();
   roof.transformation = translation(0, 30, 0);
@@ -82,29 +64,29 @@ int main(int argc, char *argv[]) {
   middle.material.reflective = 0.4;
   middle.material.transparency = 1;
   middle.material.refractive_index = DEFAULT_REFRACTIVE_GLASS;
-  middle.material.ambient = 0;
-  middle.material.diffuse = 0;
+  middle.material.ambient = AMBIENT / 2;
+  middle.material.diffuse = 0.05;
   middle.material.specular = 1;
   middle.material.shininess = 300;
   world_enter(&w, middle);
 
   Shape right = cube();
   right.transformation =
-      m4_mul(m4_mul(translation(1.25, 0.5, -0.75), rotation_y(radians(35))),
-             scaling(0.5, 0.5, 0.5));
-  /* right.material.pattern = pattern_stripes(WHITE, BLACK); */
+      m4_mul(translation(1.25, 0.5, -0.5),
+             m4_mul(rotation(45, -45, 0), scaling(.49, 10.49, .49)));
+  /* right.material.pattern = pattern_rings(WHITE, BLACK); */
   /* right.material.pattern.transformation = */
-  /*     m4_mul(rotation_z(radians(-45)), scaling(.15, 1, 1)); */
-  right.material.color = color(0.5, .8, 0.1);
+  /*     m4_mul(rotation_z(radians(-45)), scaling(.15, .15, .15)); */
+  right.material.color = color(0.4, 0.4, 0.4);
   right.material.diffuse = 0.7;
-  right.material.specular = 0.01;
-  right.material.ambient = AMBIENT;
-  right.material.reflective = 0.2;
+  right.material.specular = 1;
+  right.material.ambient = AMBIENT / 2;
+  right.material.reflective = 0.1;
   world_enter(&w, right);
 
   Shape left = sphere();
   left.transformation =
-      m4_mul(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
+      m4_mul(translation(-1.5, 0.33, -0.75), scaling(.33, .33, .33));
   left.material.color = color(.15, .25, .15);
   left.material.diffuse = 0.7;
   left.material.ambient = AMBIENT;
@@ -115,12 +97,12 @@ int main(int argc, char *argv[]) {
   world_enter(&w, left);
 
   char *filename = basename(argv[0]);
-  Camera cam = camera(SIZEX, SIZEY, M_PI / 2.5);
+  Camera cam = camera(SIZEX, SIZEY, M_PI / 2.75);
   cam.transform =
-      view_transform(point(0, 0.25, -5), point(0, 1.25, 0), vector(0, 1, 0));
+      view_transform(point(.5, 0.5, -5), point(0.1, 1.5, 0), vector(0, 1, 0));
 
   /* int frame = 0; */
-  /* for (float i = M_PI; i < M_PI * 2; i += .1) { */
+  /* for (float i = 0; i < M_PI * 2; i += .1) { */
   /*   Point from = point(sin(i) * 5, 0.5, cos(i) * 5); */
   /*   cam.transform = view_transform(from, point(0, 1.5, 0), vector(0, 1, 0));
    */
