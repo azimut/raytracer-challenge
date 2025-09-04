@@ -8,12 +8,12 @@
                               :request "launch"
                               :program "build/unit"
                               :stopAtBeginningOfMainSubprogram t)
-                             (gdb-10pattern
+                             (gdb-12cube
                               modes (c-mode)
                               command-cwd dape-command-cwd
                               command "/usr/local/bin/gdb"
                               command-args ("--interpreter=dap")
-                              compile "make -B build/10pattern DEBUG=1 DIMENSION=100"
+                              compile "make -B build/12cube DEBUG=1 DIMENSION=100"
                               :request "launch"
-                              :program "build/10pattern"
+                              :program "build/12cube"
                               :stopAtBeginningOfMainSubprogram t))))))
