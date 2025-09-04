@@ -18,6 +18,11 @@ Mat4 rotation_y(double rad) {
             0, 0, 1);
 }
 
+Mat4 rotation(double radx, double rady, double radz) {
+  return m4_mul(rotation_x(radians(radx)),
+                m4_mul(rotation_y(radians(rady)), rotation_z(radians(radz))));
+}
+
 Mat4 rotation_z(double rad) {
   return m4(cos(rad), -sin(rad), 0, 0, sin(rad), cos(rad), 0, 0, 0, 0, 1, 0, 0,
             0, 0, 1);

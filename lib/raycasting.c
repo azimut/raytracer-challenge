@@ -24,8 +24,8 @@ typedef struct PlaneIntersect {
 } PlaneIntersect;
 
 static PlaneIntersect check_axis(double origin, double direction) {
-  const double tmin_numerator = -1 - origin;
-  const double tmax_numerator = +1 - origin;
+  const double tmin_numerator = -1.0 - origin;
+  const double tmax_numerator = +1.0 - origin;
   PlaneIntersect result = {0};
   if (fabs(direction) >= EPSILON) {
     result.tmin = tmin_numerator / direction;
