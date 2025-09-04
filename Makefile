@@ -51,7 +51,7 @@ profile.dot: profile.txt      ; gprof2dot               $< > $@
 profile.png: profile.dot      ; dot -Tpng             < $< > $@
 
 .PHONY: clean
-clean: ; rm -f ./profile.* ./build/* ./media/*.ppm
+clean: ; rm -vf ./profile.* ./build/* ./media/*.ppm
 
 .PHONY: valgrind # NOTE: needs gcc
 valgrind: CFLAGS   += -ggdb3 -O0
