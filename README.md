@@ -58,3 +58,9 @@ $ make -B test DEBUG=1
 - Chapter 10: `patterns.h`
 - Chapter 11: Reflections and Refractions
 - Chapter 12: Cubes
+
+## Implemented features, not in the book
+
+- [Gamma Correction and HDR](https://learnopengl.com/Advanced-Lighting/HDR)
+- [Antialiasing](https://raytracing.github.io/books/RayTracingInOneWeekend.html#antialiasing)
+- Support for multiple lights.
