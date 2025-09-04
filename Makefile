@@ -9,7 +9,7 @@ CFLAGS    += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
 BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
-ifdef SIZEX
+ifneq ($(and $(SIZEX),$(SIZEY)),)
 	CFLAGS += -DSIZEX=$(SIZEX) -DSIZEY=$(SIZEY)
 else ifdef DIMENSION
 	CFLAGS += -DDIMENSION=$(DIMENSION)
