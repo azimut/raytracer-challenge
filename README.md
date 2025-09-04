@@ -5,9 +5,10 @@ My source code, written in C.
 ## Renders
 
 <p float="left" align="middle">
-  <a href="media/7world.jpg"><img src="media/thumbs/7world.jpg" width="200" /></a>
-  <a href="media/9plane.jpg"><img src="media/thumbs/9plane.jpg" width="200" /></a>
+  <a href="media/7world.jpg">       <img src="media/thumbs/7world.jpg"        width="200" /></a>
+  <a href="media/9plane.jpg">       <img src="media/thumbs/9plane.jpg"        width="200" /></a>
   <a href="media/11reflections.jpg"><img src="media/thumbs/11reflections.jpg" width="200" /></a>
+  <a href="media/12cube.jpg">       <img src="media/thumbs/12cube.jpg"        width="200" /></a>
 </p>
 
 ## Usage
