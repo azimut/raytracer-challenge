@@ -1,4 +1,5 @@
 #include "./shapes.h"
+#include "./util.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -51,11 +52,11 @@ Vector normal_at(const Shape shape, const Point world_point) {
 #ifndef BLAZE
   assert(is_point(world_point));
 #endif
-  Vector object_normal;
+  Vector object_normal = {0};
+  const Point object_point =
+      m4_tmul(m4_inverse(shape.transformation), world_point);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
-    const Point object_point =
-        m4_tmul(m4_inverse(shape.transformation), world_point);
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
@@ -64,14 +65,14 @@ Vector normal_at(const Shape shape, const Point world_point) {
     break;
   }
   case SHAPE_TYPE_CUBE: {
-    const double maxc = fmax(fmax(fabs(world_point.x), fabs(world_point.y)),
-                             fabs(world_point.z));
-    if (maxc == fabs(world_point.x))
-      object_normal = vector(world_point.x, 0, 0);
-    else if (maxc == fabs(world_point.y))
-      object_normal = vector(0, world_point.y, 0);
+    const double maxc = fmax(fmax(fabs(object_point.x), fabs(object_point.y)),
+                             fabs(object_point.z));
+    if (near(maxc, fabs(object_point.x)))
+      object_normal = vector(object_point.x, 0, 0);
+    else if (near(maxc, fabs(object_point.y)))
+      object_normal = vector(0, object_point.y, 0);
     else
-      object_normal = vector(0, 0, world_point.z);
+      object_normal = vector(0, 0, object_point.z);
     break;
   }
   }
