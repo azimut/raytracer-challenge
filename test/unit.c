@@ -879,6 +879,67 @@ void test_cube(void) {
   }
 }
 
+void test_csg(void) {
+  Shape s1 = cube();
+  Shape s2 = sphere();
+  Shape *c = csg(CSG_OP_UNION, &s1, &s2);
+  assert(c->shape_data.csg.operation == CSG_OP_UNION);
+  assert(c->shape_data.csg.left == &s1);
+  assert(c->shape_data.csg.right == &s2);
+  assert(s1.parent == c);
+  assert(s2.parent == c);
+  csg_free(c);
+  // #5 intersections_filter()
+  s1 = sphere();
+  s2 = cube();
+  Intersections xs = intersections_new(10);
+  intersections_append(&xs, (Intersection){1, s1});
+  intersections_append(&xs, (Intersection){2, s2});
+  intersections_append(&xs, (Intersection){3, s1});
+  intersections_append(&xs, (Intersection){4, s2});
+  struct {
+    Csg_Op op;
+    int idx[2];
+  } t[3] = {
+      {CSG_OP_UNION, {0, 3}},
+      {CSG_OP_INTERSECTION, {1, 2}},
+      {CSG_OP_DIFFERENCE, {0, 1}},
+  };
+  for (size_t i = 0; i < 3; ++i) {
+    Shape *c = csg(t[i].op, &s1, &s2);
+    Intersections result = intersections_filter(xs, *c);
+    assert(result.count == 2);
+    assert(intersection_equal(result.hits[0], xs.hits[t[i].idx[0]]));
+    assert(intersection_equal(result.hits[1], xs.hits[t[i].idx[1]]));
+    csg_free(c);
+    intersections_free(&result);
+  }
+  intersections_free(&xs);
+  // #6 - intersect() - miss
+  s1 = sphere();
+  s2 = cube();
+  c = csg(CSG_OP_UNION, &s1, &s2);
+  Ray r = ray(point(0, 2, -5), vector(0, 0, 1));
+  xs = intersect(*c, r);
+  assert(xs.count == 0);
+  csg_free(c);
+  intersections_free(&xs);
+  // #6 - intersect() - hit
+  s1 = sphere();
+  s2 = sphere();
+  s2.transformation = translation(0, 0, 0.5);
+  c = csg(CSG_OP_UNION, &s1, &s2);
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  xs = intersect(*c, r);
+  assert(xs.count == 2);
+  assert(near(xs.hits[0].t, 4));
+  assert(near(xs.hits[1].t, 6.5));
+  assert(shape_equal(xs.hits[0].object, s1));
+  assert(shape_equal(xs.hits[1].object, s2));
+  csg_free(c);
+  intersections_free(&xs);
+}
+
 int main(void) {
   test_tuple();
   test_canvas();
@@ -895,6 +956,7 @@ int main(void) {
   test_refraction();
   test_fresnel();
   test_cube();
+  test_csg();
   printf("ALL OK!\n");
   return 0;
 }

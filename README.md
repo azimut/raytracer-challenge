@@ -59,6 +59,7 @@ $ make -B test DEBUG=1
 - Chapter 10: `patterns.h`
 - Chapter 11: Reflections and Refractions
 - Chapter 12: Cubes
+- Chapter 16: CSG
 
 ## Implemented features, not in the book
 

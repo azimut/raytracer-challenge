@@ -82,6 +82,20 @@ Intersections intersect(const Shape shape, const Ray ray) {
     intersections_append(&is, (Intersection){tmax, shape});
     break;
   }
+  case SHAPE_TYPE_CSG: {
+    Intersections lxs = intersect(*shape.shape_data.csg.left, ray);
+    Intersections rxs = intersect(*shape.shape_data.csg.right, ray);
+    Intersections combined = intersections_combine(lxs, rxs);
+    intersections_free(&lxs);
+    intersections_free(&rxs);
+    Intersections filtered = intersections_filter(combined, shape);
+    intersections_free(&combined);
+    for (size_t i = 0; i < filtered.count; ++i) {
+      intersections_append(&is, filtered.hits[i]);
+    }
+    intersections_free(&filtered);
+    break;
+  }
   }
   return is;
 }

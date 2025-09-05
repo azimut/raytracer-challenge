@@ -119,7 +119,7 @@ void shapes_free(Shapes *shapes) {
   shapes->shapes = NULL, shapes->count = 0, shapes->capacity = 0;
 }
 
-static bool shape_equal(const Shape a, const Shape b) { return (a.id == b.id); }
+bool shape_equal(const Shape a, const Shape b) { return (a.id == b.id); }
 
 static int shapes_index(const Shapes shapes, const Shape s) {
   for (size_t idx = 0; idx < shapes.count; ++idx)
@@ -141,3 +141,51 @@ void shapes_remove(Shapes *shapes, const Shape s) {
   }
   shapes->count--;
 }
+
+Shape *csg(Csg_Op operation, Shape *left, Shape *right) {
+  Shape *shape = malloc(sizeof(struct Shape));
+  shape->id = ++global_id;
+  shape->material = material();
+  shape->transformation = M4_IDENTITY;
+  shape->shape_type = SHAPE_TYPE_CSG;
+  shape->shape_data.csg.operation = operation;
+  shape->shape_data.csg.left = left;
+  shape->shape_data.csg.right = right;
+  left->parent = shape;
+  right->parent = shape;
+  return shape;
+}
+
+void csg_free(Shape *csg) {
+  if (!csg || csg->shape_type != SHAPE_TYPE_CSG)
+    return;
+  free(csg);
+  csg = NULL;
+}
+
+// lhit = true if .left shape was hit
+// inl  = true if hit happened inside .left
+// inr  = true if hit happened inside .right
+bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
+  switch (operation) {
+  case CSG_OP_UNION:
+    return (lhit && !inr) || (!lhit && !inl);
+  case CSG_OP_INTERSECTION:
+    return (lhit && inr) || (!lhit && inl);
+  case CSG_OP_DIFFERENCE:
+    return (lhit && !inr) || (!lhit && inl);
+  }
+};
+
+// TODO: Group
+bool shape_includes(Shape shape, Shape needle) {
+  switch (shape.shape_type) {
+  case SHAPE_TYPE_CSG:
+    return shape_includes(*shape.shape_data.csg.left, needle) ||
+           shape_includes(*shape.shape_data.csg.right, needle);
+  case SHAPE_TYPE_CUBE:
+  case SHAPE_TYPE_PLANE:
+  case SHAPE_TYPE_SPHERE:
+    return shape_equal(shape, needle);
+  }
+};

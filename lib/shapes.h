@@ -8,13 +8,21 @@ typedef enum {
   SHAPE_TYPE_SPHERE = 0,
   SHAPE_TYPE_PLANE,
   SHAPE_TYPE_CUBE,
+  SHAPE_TYPE_CSG,
 } ShapeType;
+
+typedef enum {
+  CSG_OP_UNION = 0,
+  CSG_OP_INTERSECTION,
+  CSG_OP_DIFFERENCE,
+} Csg_Op;
 
 typedef struct Shape {
   int id;
   Mat4 transformation;
   MaterialPhong material;
   ShapeType shape_type;
+  struct Shape *parent;
   union {
     struct {
     } sphere;
@@ -22,6 +30,10 @@ typedef struct Shape {
     } plane;
     struct {
     } cube;
+    struct {
+      Csg_Op operation;
+      struct Shape *left, *right;
+    } csg;
   } shape_data;
 } Shape;
 
@@ -35,6 +47,9 @@ Shape cube(void);
 Shape plane(void);
 Shape sphere(void);
 Shape sphere_glass(void);
+Shape *csg(Csg_Op, Shape *, Shape *);
+void csg_free(Shape *);
+
 void set_material(Shape *, MaterialPhong);
 void set_transform(Shape *, Mat4);
 Vector normal_at(const Shape, const Point);
@@ -45,5 +60,9 @@ void shapes_append(Shapes *, const Shape);
 void shapes_free(Shapes *);
 bool shapes_includes(const Shapes, const Shape);
 void shapes_remove(Shapes *, const Shape);
+
+bool csg_intersection_allowed(Csg_Op, bool, bool, bool);
+bool shape_includes(Shape, Shape);
+bool shape_equal(const Shape, const Shape);
 
 #endif /* SHAPES_H */

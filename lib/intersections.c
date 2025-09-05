@@ -33,7 +33,7 @@ void intersections_sort(Intersections *is) {
 }
 
 Intersections intersections_new(size_t capacity) {
-  assert(capacity < 1000 && capacity > 0); // ensure sanity
+  assert(capacity < 1000); // ensure sanity
   Intersections is = {
       .count = 0,
       .capacity = capacity,
@@ -80,4 +80,35 @@ void intersections_remove(Intersections *is, const Intersection i) {
     is->hits[next_idx - 1] = is->hits[next_idx];
   }
   is->count--;
+}
+
+Intersections intersections_filter(Intersections xs, Shape csg) {
+  Intersections result = intersections_new(xs.count);
+  if (csg.shape_type != SHAPE_TYPE_CSG) {
+    return result;
+  }
+  bool inl = false, inr = false;
+  for (size_t i = 0; i < xs.count; ++i) {
+    const Shape *left = csg.shape_data.csg.left;
+    const Csg_Op operation = csg.shape_data.csg.operation;
+    const bool lhit = shape_includes(*left, xs.hits[i].object);
+    if (csg_intersection_allowed(operation, lhit, inl, inr)) {
+      intersections_append(&result, xs.hits[i]);
+    }
+    if (lhit)
+      inl = !inl;
+    else
+      inr = !inr;
+  }
+  return result;
+}
+
+Intersections intersections_combine(Intersections xs, Intersections ys) {
+  Intersections result = intersections_new(xs.count + ys.count + 1);
+  for (size_t i = 0; i < xs.count; ++i)
+    intersections_append(&result, xs.hits[i]);
+  for (size_t i = 0; i < ys.count; ++i)
+    intersections_append(&result, ys.hits[i]);
+  intersections_sort(&result);
+  return result;
 }

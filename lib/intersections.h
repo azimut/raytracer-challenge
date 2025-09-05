@@ -26,4 +26,6 @@ void intersections_append(Intersections *, const Intersection);
 void intersections_remove(Intersections *, const Intersection);
 bool intersections_includes(const Intersections, const Intersection);
 
+Intersections intersections_filter(Intersections, Shape);
+Intersections intersections_combine(Intersections, Intersections);
 #endif /* INTERSECTIONS_H */
