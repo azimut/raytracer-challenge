@@ -45,16 +45,22 @@ int main(int argc, char *argv[]) {
 
   Shape s1 = sphere();
   Shape s2 = sphere();
+  MaterialPhong m = material();
+  m.ambient = AMBIENT;
+  m.reflective = 0.01;
+  s1.material = m;
+  s2.material = m;
   s1.transformation = translation(0, 1, 0);
   s2.transformation = translation(0, 1, 0.5);
-  Shape *c = csg(CSG_OP_INTERSECTION, &s2, &s1);
-  world_enter(&w, *c);
+  Shape *c = csg(CSG_OP_DIFFERENCE, &s2, &s1);
+  Shape g = group();
+  group_add(&g, c);
+  world_enter(&w, g);
 
   char *filename = basename(argv[0]);
-  Camera cam = camera(SIZEX, SIZEY, M_PI / 4);
-  /* cam.transform = */
-  /*     view_transform(point(-1.5, 0.5, 2), point(0.1, 1.5, 0), vector(0, 1,
-   * 0)); */
+  Camera cam = camera(SIZEX, SIZEY, M_PI / 2);
+  cam.transform =
+      view_transform(point(-1.5, 0.5, 2), point(0.1, 1.5, 0), vector(0, 1, 0));
 
   int frame = 0;
   for (float i = 0; i < M_PI * 2; i += .1) {

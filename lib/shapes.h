@@ -72,7 +72,7 @@ bool shapes_includes(const Shapes, const Shape);
 void shapes_remove(Shapes *, const Shape);
 
 bool csg_intersection_allowed(Csg_Op, bool, bool, bool);
-bool shape_includes(Shape, Shape);
+bool shape_includes(const Shape, const Shape);
 bool shape_equal(const Shape, const Shape);
 
 Point world_to_object(const Shape, Point);

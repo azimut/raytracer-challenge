@@ -178,9 +178,17 @@ bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
   }
 };
 
-// TODO: Group
-bool shape_includes(Shape shape, Shape needle) {
+bool shape_includes(const Shape shape, const Shape needle) {
   switch (shape.shape_type) {
+  case SHAPE_TYPE_GROUP: {
+    bool found = false;
+    for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
+      found = shape_includes(shape.shape_data.group.childs->shapes[i], needle);
+      if (found)
+        break;
+    }
+    return found;
+  }
   case SHAPE_TYPE_CSG:
     return shape_includes(*shape.shape_data.csg.left, needle) ||
            shape_includes(*shape.shape_data.csg.right, needle);
