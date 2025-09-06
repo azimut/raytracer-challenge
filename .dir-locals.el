@@ -1,4 +1,4 @@
-((c-mode . ((compile-command . "cd ..; make -B test")
+((c-mode . ((compile-command . "cd ..; make -B test SANITIZE=1")
             (dape-configs . ((gdb-test-unit
                               modes (c-mode)
                               command-cwd dape-command-cwd
