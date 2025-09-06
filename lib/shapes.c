@@ -53,8 +53,7 @@ Vector normal_at(const Shape shape, const Point world_point) {
   assert(is_point(world_point));
 #endif
   Vector object_normal = {0};
-  const Point object_point =
-      m4_tmul(m4_inverse(shape.transformation), world_point);
+  const Point object_point = world_to_object(shape, world_point);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
     object_normal = tuple_sub(object_point, point(0, 0, 0));
@@ -76,10 +75,7 @@ Vector normal_at(const Shape shape, const Point world_point) {
     break;
   }
   }
-  Vector world_normal =
-      m4_tmul(m4_transpose(m4_inverse(shape.transformation)), object_normal);
-  world_normal.w = 0;
-  return tuple_normalize(world_normal);
+  return normal_to_world(shape, object_normal);
 }
 
 Color pattern_at_shape(const Pattern pattern, const Shape shape,
@@ -224,4 +220,21 @@ void group_add(Shape *g, Shape *child) {
 bool group_includes(const Shape g, const Shape child) {
   assert(g.shape_type == SHAPE_TYPE_GROUP);
   return shapes_includes(*g.shape_data.group.childs, child);
+}
+
+Point world_to_object(const Shape shape, Point p) {
+  if (shape.parent) {
+    p = world_to_object(*shape.parent, p);
+  }
+  return m4_tmul(m4_inverse(shape.transformation), p);
+}
+
+Vector normal_to_world(const Shape shape, Vector normal) {
+  normal = m4_tmul(m4_transpose(m4_inverse(shape.transformation)), normal);
+  normal.w = 0;
+  normal = tuple_normalize(normal);
+  if (shape.parent) {
+    normal = normal_to_world(*shape.parent, normal);
+  }
+  return normal;
 }

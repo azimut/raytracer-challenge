@@ -989,6 +989,33 @@ void test_group(void) {
   assert(xs.count == 2);
   intersections_free(&xs);
   group_free(&g);
+  // normal_at - world_to_object group
+  Shape g1 = group();
+  Shape g2 = group();
+  s = sphere();
+  g1.transformation = rotation_y(M_PI_2);
+  g2.transformation = scaling(2, 2, 2);
+  s.transformation = translation(5, 0, 0);
+  group_add(&g1, &g2);
+  group_add(&g2, &s);
+  Point p = world_to_object(s, point(-2, 0, -10));
+  assert(tuple_equal(p, point(0, 0, -1)));
+  group_free(&g1);
+  group_free(&g2);
+  // normal_at - normal_to_world group
+  // normal_at - group
+  g1 = group();
+  g2 = group();
+  s = sphere();
+  g1.transformation = rotation_y(M_PI_2);
+  g2.transformation = scaling(1, 2, 3);
+  s.transformation = translation(5, 0, 0);
+  group_add(&g1, &g2);
+  group_add(&g2, &s);
+  Vector n = normal_at(s, point(1.7321, 1.1547, -5.5774));
+  assert(tuple_equal(n, vector(0.2857, 0.4286, -0.8571)));
+  group_free(&g1);
+  group_free(&g2);
 }
 
 int main(void) {

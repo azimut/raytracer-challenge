@@ -75,4 +75,7 @@ bool csg_intersection_allowed(Csg_Op, bool, bool, bool);
 bool shape_includes(Shape, Shape);
 bool shape_equal(const Shape, const Shape);
 
+Point world_to_object(const Shape, Point);
+Vector normal_to_world(const Shape, Vector);
+
 #endif /* SHAPES_H */
