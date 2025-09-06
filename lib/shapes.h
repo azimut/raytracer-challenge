@@ -8,6 +8,7 @@ typedef enum {
   SHAPE_TYPE_SPHERE = 0,
   SHAPE_TYPE_PLANE,
   SHAPE_TYPE_CUBE,
+  SHAPE_TYPE_GROUP,
   SHAPE_TYPE_CSG,
 } ShapeType;
 
@@ -16,6 +17,8 @@ typedef enum {
   CSG_OP_INTERSECTION,
   CSG_OP_DIFFERENCE,
 } Csg_Op;
+
+typedef struct Shapes Shapes;
 
 typedef struct Shape {
   int id;
@@ -30,6 +33,9 @@ typedef struct Shape {
     } plane;
     struct {
     } cube;
+    struct Group {
+      Shapes *childs;
+    } group;
     struct {
       Csg_Op operation;
       struct Shape *left, *right;
@@ -47,6 +53,10 @@ Shape cube(void);
 Shape plane(void);
 Shape sphere(void);
 Shape sphere_glass(void);
+Shape group(void);
+void group_add(Shape *, Shape *);
+bool group_includes(const Shape, const Shape);
+void group_free(Shape *);
 Shape *csg(Csg_Op, Shape *, Shape *);
 void csg_free(Shape *);
 

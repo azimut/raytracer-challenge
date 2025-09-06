@@ -186,25 +186,25 @@ void test_raycasting(void) {
   intersections_free(&si);
   // hit()
   Intersections is = intersections_new(4); // all positive
-  intersections_append(&is, (Intersection){1, s});
-  intersections_append(&is, (Intersection){2, s});
+  intersections_insert(&is, (Intersection){1, s});
+  intersections_insert(&is, (Intersection){2, s});
   assert(hit(is) == &is.hits[0]);
   intersections_free(&is);
   is = intersections_new(4); // all positive
-  intersections_append(&is, (Intersection){-1, s});
-  intersections_append(&is, (Intersection){+1, s});
+  intersections_insert(&is, (Intersection){-1, s});
+  intersections_insert(&is, (Intersection){+1, s});
   assert(hit(is) == &is.hits[1]);
   intersections_free(&is);
   is = intersections_new(4); // all are negative
-  intersections_append(&is, (Intersection){-2, s});
-  intersections_append(&is, (Intersection){-1, s});
+  intersections_insert(&is, (Intersection){-2, s});
+  intersections_insert(&is, (Intersection){-1, s});
   assert(hit(is) == NULL);
   intersections_free(&is);
   is = intersections_new(4); // lowest non-negative
-  intersections_append(&is, (Intersection){+5, s});
-  intersections_append(&is, (Intersection){+7, s});
-  intersections_append(&is, (Intersection){-3, s});
-  intersections_append(&is, (Intersection){+2, s});
+  intersections_insert(&is, (Intersection){+5, s});
+  intersections_insert(&is, (Intersection){+7, s});
+  intersections_insert(&is, (Intersection){-3, s});
+  intersections_insert(&is, (Intersection){+2, s});
   assert(hit(is) == &is.hits[3]);
   intersections_free(&is);
   // transform()
@@ -653,12 +653,12 @@ void test_refraction(void) {
   c.material.refractive_index = 2.5;
   Ray r = ray(point(0, 0, -4), vector(0, 0, 1));
   Intersections xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){2, a});
-  intersections_append(&xs, (Intersection){2.75, b});
-  intersections_append(&xs, (Intersection){3.25, c});
-  intersections_append(&xs, (Intersection){4.75, b});
-  intersections_append(&xs, (Intersection){5.25, c});
-  intersections_append(&xs, (Intersection){7, a});
+  intersections_insert(&xs, (Intersection){2, a});
+  intersections_insert(&xs, (Intersection){2.75, b});
+  intersections_insert(&xs, (Intersection){3.25, c});
+  intersections_insert(&xs, (Intersection){4.75, b});
+  intersections_insert(&xs, (Intersection){5.25, c});
+  intersections_insert(&xs, (Intersection){7, a});
   double n1s[6] = {1.0, 1.5, 2.0, 2.5, 2.5, 1.5};
   double n2s[6] = {1.5, 2.0, 2.5, 2.5, 1.5, 1.0};
   for (int i = 0; i < 6; ++i) {
@@ -673,7 +673,7 @@ void test_refraction(void) {
   c.transformation = translation(0, 0, 1);
   xs = intersections_new(5);
   Intersection i = (Intersection){5, c};
-  intersections_append(&xs, i);
+  intersections_insert(&xs, i);
   Computations comp = prepare_computations(i, r, xs);
   assert(near(comp.under_point.z, EPSILON / 2));
   assert(comp.point.z < comp.under_point.z);
@@ -682,8 +682,8 @@ void test_refraction(void) {
   World world = world_default();
   Shape s = world.shapes.shapes[0];
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){4, s});
-  intersections_append(&xs, (Intersection){6, s});
+  intersections_insert(&xs, (Intersection){4, s});
+  intersections_insert(&xs, (Intersection){6, s});
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   comp = prepare_computations(xs.hits[0], r, xs);
   assert(color_equal(BLACK, refracted_color(world, comp, 5)));
@@ -696,8 +696,8 @@ void test_refraction(void) {
   s.material.refractive_index = 1.5;
   r = ray(point(0, 0, -5), vector(0, 0, 1));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){4, s});
-  intersections_append(&xs, (Intersection){6, s});
+  intersections_insert(&xs, (Intersection){4, s});
+  intersections_insert(&xs, (Intersection){6, s});
   comp = prepare_computations(xs.hits[0], r, xs);
   assert(color_equal(BLACK, refracted_color(world, comp, 0)));
   intersections_free(&xs);
@@ -709,8 +709,8 @@ void test_refraction(void) {
   s.material.refractive_index = 1.5;
   r = ray(point(0, 0, sqrt(2) / 2), vector(0, 1, 0));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){-sqrt(2) / 2, s});
-  intersections_append(&xs, (Intersection){+sqrt(2) / 2, s});
+  intersections_insert(&xs, (Intersection){-sqrt(2) / 2, s});
+  intersections_insert(&xs, (Intersection){+sqrt(2) / 2, s});
   comp = prepare_computations(xs.hits[1], r, xs);
   assert(color_equal(BLACK, refracted_color(world, comp, 5)));
   intersections_free(&xs);
@@ -723,10 +723,10 @@ void test_refraction(void) {
   world.shapes.shapes[1].material.transparency = 1;
   world.shapes.shapes[1].material.refractive_index = 1.5;
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){-0.9899, world.shapes.shapes[0]});
-  intersections_append(&xs, (Intersection){-0.4899, world.shapes.shapes[1]});
-  intersections_append(&xs, (Intersection){+0.4899, world.shapes.shapes[1]});
-  intersections_append(&xs, (Intersection){+0.9899, world.shapes.shapes[0]});
+  intersections_insert(&xs, (Intersection){-0.9899, world.shapes.shapes[0]});
+  intersections_insert(&xs, (Intersection){-0.4899, world.shapes.shapes[1]});
+  intersections_insert(&xs, (Intersection){+0.4899, world.shapes.shapes[1]});
+  intersections_insert(&xs, (Intersection){+0.9899, world.shapes.shapes[0]});
   r = ray(point(0, 0, 0.1), vector(0, 1, 0));
   comp = prepare_computations(xs.hits[2], r, xs);
   Color rc = refracted_color(world, comp, 5);
@@ -748,7 +748,7 @@ void test_refraction(void) {
   world_enter(&world, ball);
   r = ray(point(0, 0, -3), vector(0, -M_SQRT2 / 2, M_SQRT2 / 2));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){M_SQRT2, sfloor});
+  intersections_insert(&xs, (Intersection){M_SQRT2, sfloor});
   comp = prepare_computations(xs.hits[0], r, xs);
   rc = shade_hit(world, comp, 5);
   assert(color_equal(rc, (Color){0.93642, 0.68642, 0.68642}));
@@ -760,9 +760,9 @@ void test_intersections(void) {
   Intersections is = intersections_new(10);
   Shape a = sphere();
   Shape b = plane();
-  intersections_append(&is, (Intersection){1, a});
-  intersections_append(&is, (Intersection){2, b});
-  intersections_append(&is, (Intersection){3, a});
+  intersections_insert(&is, (Intersection){1, a});
+  intersections_insert(&is, (Intersection){2, b});
+  intersections_insert(&is, (Intersection){3, a});
   assert(is.count == 3);
   intersections_remove(&is, (Intersection){2, b});
   assert(is.count == 2);
@@ -777,8 +777,8 @@ void test_fresnel(void) {
   Shape shape = sphere_glass();
   Ray r = ray(point(0, 0, M_SQRT2 / 2), vector(0, 1, 0));
   Intersections xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){-M_SQRT2 / 2, shape});
-  intersections_append(&xs, (Intersection){+M_SQRT2 / 2, shape});
+  intersections_insert(&xs, (Intersection){-M_SQRT2 / 2, shape});
+  intersections_insert(&xs, (Intersection){+M_SQRT2 / 2, shape});
   Computations comp = prepare_computations(xs.hits[1], r, xs);
   assert(near(1, schlick(comp)));
   intersections_free(&xs);
@@ -786,8 +786,8 @@ void test_fresnel(void) {
   shape = sphere_glass();
   r = ray(point(0, 0, 0), vector(0, 1, 0));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){-1, shape});
-  intersections_append(&xs, (Intersection){+1, shape});
+  intersections_insert(&xs, (Intersection){-1, shape});
+  intersections_insert(&xs, (Intersection){+1, shape});
   comp = prepare_computations(xs.hits[1], r, xs);
   assert(near(0.04, schlick(comp)));
   intersections_free(&xs);
@@ -795,7 +795,7 @@ void test_fresnel(void) {
   shape = sphere_glass();
   r = ray(point(0, 0.99, -2), vector(0, 0, 1));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){1.8589, shape});
+  intersections_insert(&xs, (Intersection){1.8589, shape});
   comp = prepare_computations(xs.hits[0], r, xs);
   assert(near(0.48874, schlick(comp)));
   intersections_free(&xs);
@@ -814,7 +814,7 @@ void test_fresnel(void) {
   world_enter(&w, ball);
   r = ray(point(0, 0, -3), vector(0, -M_SQRT2 / 2, M_SQRT2 / 2));
   xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){M_SQRT2, floor});
+  intersections_insert(&xs, (Intersection){M_SQRT2, floor});
   comp = prepare_computations(xs.hits[0], r, xs);
   assert(color_equal(shade_hit(w, comp, 5), color(0.93391, 0.69643, 0.69243)));
   intersections_free(&xs);
@@ -893,10 +893,10 @@ void test_csg(void) {
   s1 = sphere();
   s2 = cube();
   Intersections xs = intersections_new(10);
-  intersections_append(&xs, (Intersection){1, s1});
-  intersections_append(&xs, (Intersection){2, s2});
-  intersections_append(&xs, (Intersection){3, s1});
-  intersections_append(&xs, (Intersection){4, s2});
+  intersections_insert(&xs, (Intersection){1, s1});
+  intersections_insert(&xs, (Intersection){2, s2});
+  intersections_insert(&xs, (Intersection){3, s1});
+  intersections_insert(&xs, (Intersection){4, s2});
   struct {
     Csg_Op op;
     int idx[2];
@@ -940,6 +940,46 @@ void test_csg(void) {
   intersections_free(&xs);
 }
 
+void test_group(void) {
+  Shape g = group();
+  assert(m4_equal(g.transformation, M4_IDENTITY));
+  assert(g.shape_data.group.childs == NULL);
+  group_free(&g);
+  Shape s = sphere();
+  assert(s.parent == NULL);
+  g = group();
+  s = sphere();
+  group_add(&g, &s);
+  assert(s.parent == &g);
+  assert(group_includes(g, s));
+  group_free(&g);
+  // intersection - empty
+  g = group();
+  Ray r = ray(point(0, 0, 0), vector(0, 0, 1));
+  Intersections xs = intersect(g, r);
+  assert(xs.count == 0);
+  intersections_free(&xs);
+  group_free(&g);
+  // intersection - 3 spheres, 2 hit, 1 miss
+  g = group();
+  Shape s1 = sphere(), s2 = sphere(), s3 = sphere();
+  s2.transformation = translation(0, 0, -3);
+  s3.transformation = translation(5, 0, 0);
+  group_add(&g, &s1);
+  group_add(&g, &s2);
+  group_add(&g, &s3);
+  r = ray(point(0, 0, -5), vector(0, 0, 1));
+  xs = intersect(g, r);
+  assert(xs.count == 4);
+  assert(m4_equal(xs.hits[1].object.transformation, s2.transformation));
+  assert(shape_equal(xs.hits[0].object, s2));
+  assert(shape_equal(xs.hits[1].object, s2));
+  assert(shape_equal(xs.hits[2].object, s1));
+  assert(shape_equal(xs.hits[3].object, s1));
+  intersections_free(&xs);
+  group_free(&g);
+}
+
 int main(void) {
   test_tuple();
   test_canvas();
@@ -957,6 +997,7 @@ int main(void) {
   test_fresnel();
   test_cube();
   test_csg();
+  test_group();
   printf("ALL OK!\n");
   return 0;
 }

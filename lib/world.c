@@ -55,7 +55,7 @@ Intersections world_intersect(const World world, const Ray ray) {
       continue;
     }
     for (size_t j = 0; j < temp_is.count; ++j) {
-      intersections_append(&is, temp_is.hits[j]);
+      intersections_insert(&is, temp_is.hits[j]);
     }
     intersections_free(&temp_is);
   }

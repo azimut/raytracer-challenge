@@ -189,3 +189,39 @@ bool shape_includes(Shape shape, Shape needle) {
     return shape_equal(shape, needle);
   }
 };
+
+Shape group(void) {
+  return (Shape){
+      .id = ++global_id,
+      .transformation = M4_IDENTITY,
+      .material = material(),
+      .shape_type = SHAPE_TYPE_GROUP,
+      .parent = NULL,
+      .shape_data.group.childs = NULL,
+  };
+}
+
+void group_free(Shape *g) {
+  assert(g->shape_type == SHAPE_TYPE_GROUP);
+  if (g->shape_data.group.childs != NULL) {
+    free(g->shape_data.group.childs->shapes);
+    free(g->shape_data.group.childs);
+    g->shape_data.group.childs = NULL;
+  }
+}
+
+void group_add(Shape *g, Shape *child) {
+  assert(g->shape_type == SHAPE_TYPE_GROUP);
+  if (!(g->shape_data.group.childs)) {
+    g->shape_data.group.childs = malloc(sizeof(Shapes));
+    *g->shape_data.group.childs = shapes_new(10);
+  }
+  child->parent = g;
+  shapes_append(g->shape_data.group.childs, *child);
+}
+
+// NOTE: no recursive
+bool group_includes(const Shape g, const Shape child) {
+  assert(g.shape_type == SHAPE_TYPE_GROUP);
+  return shapes_includes(*g.shape_data.group.childs, child);
+}

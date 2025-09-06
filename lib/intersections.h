@@ -22,10 +22,12 @@ void intersections_sort(Intersections *);
 bool intersection_equal(const Intersection, const Intersection);
 
 Intersections intersections_new(size_t);
-void intersections_append(Intersections *, const Intersection);
+void intersections_insert(Intersections *, const Intersection);
 void intersections_remove(Intersections *, const Intersection);
 bool intersections_includes(const Intersections, const Intersection);
 
-Intersections intersections_filter(Intersections, Shape);
-Intersections intersections_combine(Intersections, Intersections);
+Intersections intersections_filter(const Intersections, const Shape);
+Intersections intersections_combine(const Intersections, const Intersections);
+void intersections_append(Intersections *dst, const Intersections src);
+
 #endif /* INTERSECTIONS_H */

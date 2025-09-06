@@ -46,7 +46,7 @@ Intersections intersections_new(size_t capacity) {
   return is;
 }
 
-void intersections_append(Intersections *is, const Intersection i) {
+void intersections_insert(Intersections *is, const Intersection i) {
   if ((is->count + 2) > is->capacity) {
     fprintf(stderr, "IS-----> cap=%li count=%li\n", is->capacity, is->count);
     is->capacity += RENEWED_CAPACITY;
@@ -82,7 +82,7 @@ void intersections_remove(Intersections *is, const Intersection i) {
   is->count--;
 }
 
-Intersections intersections_filter(Intersections xs, Shape csg) {
+Intersections intersections_filter(const Intersections xs, const Shape csg) {
   Intersections result = intersections_new(xs.count);
   if (csg.shape_type != SHAPE_TYPE_CSG) {
     return result;
@@ -93,7 +93,7 @@ Intersections intersections_filter(Intersections xs, Shape csg) {
     const Csg_Op operation = csg.shape_data.csg.operation;
     const bool lhit = shape_includes(*left, xs.hits[i].object);
     if (csg_intersection_allowed(operation, lhit, inl, inr)) {
-      intersections_append(&result, xs.hits[i]);
+      intersections_insert(&result, xs.hits[i]);
     }
     if (lhit)
       inl = !inl;
@@ -103,12 +103,18 @@ Intersections intersections_filter(Intersections xs, Shape csg) {
   return result;
 }
 
-Intersections intersections_combine(Intersections xs, Intersections ys) {
+Intersections intersections_combine(const Intersections xs,
+                                    const Intersections ys) {
   Intersections result = intersections_new(xs.count + ys.count + 1);
   for (size_t i = 0; i < xs.count; ++i)
-    intersections_append(&result, xs.hits[i]);
+    intersections_insert(&result, xs.hits[i]);
   for (size_t i = 0; i < ys.count; ++i)
-    intersections_append(&result, ys.hits[i]);
-  intersections_sort(&result);
+    intersections_insert(&result, ys.hits[i]);
   return result;
+}
+
+void intersections_append(Intersections *dst, const Intersections src) {
+  for (size_t i = 0; i < src.count; ++i) {
+    intersections_insert(dst, src.hits[i]);
+  }
 }

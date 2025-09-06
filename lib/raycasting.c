@@ -55,8 +55,8 @@ Intersections intersect(const Shape shape, const Ray ray) {
     if (discriminant >= 0) {
       const double i1 = (-b - sqrt(discriminant)) / (2.0 * a);
       const double i2 = (-b + sqrt(discriminant)) / (2.0 * a);
-      intersections_append(&is, (Intersection){i1, shape});
-      intersections_append(&is, (Intersection){i2, shape});
+      intersections_insert(&is, (Intersection){i1, shape});
+      intersections_insert(&is, (Intersection){i2, shape});
       break;
     }
     break;
@@ -66,7 +66,7 @@ Intersections intersect(const Shape shape, const Ray ray) {
       break;
     }
     const double i = -tRay.origin.y / tRay.direction.y; // only for xz planes
-    intersections_append(&is, (Intersection){i, shape});
+    intersections_insert(&is, (Intersection){i, shape});
     break;
   }
   case SHAPE_TYPE_CUBE: {
@@ -78,21 +78,36 @@ Intersections intersect(const Shape shape, const Ray ray) {
     if (tmin > tmax) { // miss
       break;
     }
-    intersections_append(&is, (Intersection){tmin, shape});
-    intersections_append(&is, (Intersection){tmax, shape});
+    intersections_insert(&is, (Intersection){tmin, shape});
+    intersections_insert(&is, (Intersection){tmax, shape});
+    break;
+  }
+  case SHAPE_TYPE_GROUP: {
+    if (!shape.shape_data.group.childs) {
+      break;
+    }
+    Intersections result = intersections_new(5);
+    for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
+      Intersections tmp =
+          intersect(shape.shape_data.group.childs->shapes[i], ray);
+      intersections_append(&result, tmp);
+      intersections_free(&tmp);
+    }
+    intersections_sort(&result);
+    intersections_append(&is, result);
+    intersections_free(&result);
     break;
   }
   case SHAPE_TYPE_CSG: {
     Intersections lxs = intersect(*shape.shape_data.csg.left, ray);
     Intersections rxs = intersect(*shape.shape_data.csg.right, ray);
     Intersections combined = intersections_combine(lxs, rxs);
+    intersections_sort(&combined);
+    Intersections filtered = intersections_filter(combined, shape);
+    intersections_append(&is, filtered);
     intersections_free(&lxs);
     intersections_free(&rxs);
-    Intersections filtered = intersections_filter(combined, shape);
     intersections_free(&combined);
-    for (size_t i = 0; i < filtered.count; ++i) {
-      intersections_append(&is, filtered.hits[i]);
-    }
     intersections_free(&filtered);
     break;
   }
