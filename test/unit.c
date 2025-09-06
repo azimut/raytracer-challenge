@@ -1081,7 +1081,33 @@ void test_obj(void) {
   p = obj_parse_file("./test/objs/3trianglefaces.obj");
   assert(p.n_ignored_lines == 1);
   assert(p.default_group.shape_data.group.childs->count == 2);
+  Shape t1 = p.default_group.shape_data.group.childs->shapes[0];
+  Shape t2 = p.default_group.shape_data.group.childs->shapes[1];
+  assert(tuple_equal(t1.shape_data.triangle.p1, p.vertices[1 - 1]));
+  assert(tuple_equal(t1.shape_data.triangle.p2, p.vertices[2 - 1]));
+  assert(tuple_equal(t1.shape_data.triangle.p3, p.vertices[3 - 1]));
+  assert(tuple_equal(t2.shape_data.triangle.p1, p.vertices[1 - 1]));
+  assert(tuple_equal(t2.shape_data.triangle.p2, p.vertices[3 - 1]));
+  assert(tuple_equal(t2.shape_data.triangle.p3, p.vertices[4 - 1]));
   obj_parser_free(&p);
+  {
+    Parser p = obj_parse_file("./test/objs/4polygon.obj");
+    assert(p.n_ignored_lines == 1);
+    assert(p.default_group.shape_data.group.childs->count == 3);
+    Shape t1 = p.default_group.shape_data.group.childs->shapes[0];
+    Shape t2 = p.default_group.shape_data.group.childs->shapes[1];
+    Shape t3 = p.default_group.shape_data.group.childs->shapes[1];
+    assert(tuple_equal(t1.shape_data.triangle.p1, p.vertices[1 - 1]));
+    assert(tuple_equal(t1.shape_data.triangle.p2, p.vertices[2 - 1]));
+    assert(tuple_equal(t1.shape_data.triangle.p3, p.vertices[3 - 1]));
+    assert(tuple_equal(t2.shape_data.triangle.p1, p.vertices[1 - 1]));
+    assert(tuple_equal(t2.shape_data.triangle.p2, p.vertices[3 - 1]));
+    assert(tuple_equal(t2.shape_data.triangle.p3, p.vertices[4 - 1]));
+    assert(tuple_equal(t3.shape_data.triangle.p1, p.vertices[1 - 1]));
+    assert(tuple_equal(t3.shape_data.triangle.p2, p.vertices[4 - 1]));
+    assert(tuple_equal(t3.shape_data.triangle.p3, p.vertices[5 - 1]));
+    obj_parser_free(&p);
+  }
 }
 
 int main(void) {
