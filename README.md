@@ -5,7 +5,6 @@ My source code, written in C.
 ## Renders
 
 <p float="left" align="middle">
-  <a href="media/7world.jpg">       <img src="media/thumbs/7world.jpg"        width="200" /></a>
   <a href="media/9plane.jpg">       <img src="media/thumbs/9plane.jpg"        width="200" /></a>
   <a href="media/11reflections.jpg"><img src="media/thumbs/11reflections.jpg" width="200" /></a>
   <a href="media/12cube.jpg">       <img src="media/thumbs/12cube.jpg"        width="200" /></a>
@@ -59,6 +58,9 @@ $ make -B test DEBUG=1
 - Chapter 10: `patterns.h`
 - Chapter 11: Reflections and Refractions
 - Chapter 12: Cubes
+- ~~Chapter 13: Cylinders~~ TODO
+- Chapter 14: Groups
+- ~~Chapter 15: ~~Triangles~~ TODO
 - Chapter 16: CSG
 
 ## Implemented features, not in the book
