@@ -978,6 +978,17 @@ void test_group(void) {
   assert(shape_equal(xs.hits[3].object, s1));
   intersections_free(&xs);
   group_free(&g);
+  // intersect - group+child transform
+  g = group();
+  g.transformation = scaling(2, 2, 2);
+  s = sphere();
+  s.transformation = translation(5, 0, 0);
+  group_add(&g, &s);
+  r = ray(point(10, 0, -10), vector(0, 0, 1));
+  xs = intersect(g, r);
+  assert(xs.count == 2);
+  intersections_free(&xs);
+  group_free(&g);
 }
 
 int main(void) {

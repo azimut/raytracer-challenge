@@ -89,7 +89,7 @@ Intersections intersect(const Shape shape, const Ray ray) {
     Intersections result = intersections_new(5);
     for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
       Intersections tmp =
-          intersect(shape.shape_data.group.childs->shapes[i], ray);
+          intersect(shape.shape_data.group.childs->shapes[i], tRay);
       intersections_append(&result, tmp);
       intersections_free(&tmp);
     }
