@@ -60,7 +60,7 @@ $ make -B test DEBUG=1
 - Chapter 12: Cubes
 - ~~Chapter 13: Cylinders~~ TODO
 - Chapter 14: Groups
-- ~~Chapter 15: ~~Triangles~~ TODO
+- ~~Chapter 15: Triangles~~ TODO
 - Chapter 16: CSG
 
 ## Implemented features, not in the book

@@ -111,6 +111,31 @@ Intersections intersect(const Shape shape, const Ray ray) {
     intersections_free(&filtered);
     break;
   }
+  case SHAPE_TYPE_TRIANGLE: {
+    const Vector dir_cross_e2 =
+        tuple_cross_product(tRay.direction, shape.shape_data.triangle.e2);
+    const double determinant =
+        tuple_dot_product(shape.shape_data.triangle.e1, dir_cross_e2);
+    if (fabs(determinant) < EPSILON) {
+      break; // miss p1-p3
+    }
+    const double f = 1 / determinant;
+    Vector p1_to_origin = tuple_sub(tRay.origin, shape.shape_data.triangle.p1);
+    const double u = f * tuple_dot_product(p1_to_origin, dir_cross_e2);
+    if (u < 0 || u > 1) {
+      break; // miss p1-p2
+    }
+    const Vector origin_cross_e1 =
+        tuple_cross_product(p1_to_origin, shape.shape_data.triangle.e1);
+    const double v = f * tuple_dot_product(tRay.direction, origin_cross_e1);
+    if (v < 0 || (u + v) > 1) {
+      break; // miss p2-p3
+    }
+    const double t =
+        f * tuple_dot_product(shape.shape_data.triangle.e2, origin_cross_e1);
+    intersections_insert(&is, (Intersection){t, shape});
+    break;
+  }
   }
   return is;
 }

@@ -10,6 +10,7 @@ typedef enum {
   SHAPE_TYPE_CUBE,
   SHAPE_TYPE_GROUP,
   SHAPE_TYPE_CSG,
+  SHAPE_TYPE_TRIANGLE,
 } ShapeType;
 
 typedef enum {
@@ -40,6 +41,10 @@ typedef struct Shape {
       Csg_Op operation;
       struct Shape *left, *right;
     } csg;
+    struct {
+      Point p1, p2, p3;
+      Vector e1, e2, normal;
+    } triangle;
   } shape_data;
 } Shape;
 
@@ -49,6 +54,7 @@ typedef struct Shapes {
   Shape *shapes;
 } Shapes;
 
+Shape triangle(const Point, const Point, const Point);
 Shape cube(void);
 Shape plane(void);
 Shape sphere(void);

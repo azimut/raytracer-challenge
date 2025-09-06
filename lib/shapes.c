@@ -40,6 +40,22 @@ Shape sphere_glass(void) {
   return s;
 }
 
+Shape triangle(const Point a, const Point b, const Point c) {
+  return (Shape){
+      .id = ++global_id,
+      .material = material(),
+      .transformation = M4_IDENTITY,
+      .shape_type = SHAPE_TYPE_TRIANGLE,
+      .shape_data.triangle.p1 = a,
+      .shape_data.triangle.p2 = b,
+      .shape_data.triangle.p3 = c,
+      .shape_data.triangle.e1 = tuple_sub(b, a),
+      .shape_data.triangle.e2 = tuple_sub(c, a),
+      .shape_data.triangle.normal = tuple_normalize(
+          tuple_cross_product(tuple_sub(c, a), tuple_sub(b, a))),
+  };
+}
+
 void set_material(Shape *shape, MaterialPhong material) {
   shape->material = material;
 }
@@ -79,6 +95,9 @@ Vector normal_at(const Shape shape, const Point world_point) {
       object_normal = vector(0, 0, object_point.z);
     break;
   }
+  case SHAPE_TYPE_TRIANGLE:
+    object_normal = shape.shape_data.triangle.normal;
+    break;
   }
   return normal_to_world(shape, object_normal);
 }

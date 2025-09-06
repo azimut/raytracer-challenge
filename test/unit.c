@@ -1018,6 +1018,58 @@ void test_group(void) {
   group_free(&g2);
 }
 
+void test_triangle(void) {
+  Point p1 = point(0, 1, 0);
+  Point p2 = point(-1, 0, 0);
+  Point p3 = point(1, 0, 0);
+  Shape t = triangle(p1, p2, p3);
+  assert(tuple_equal(t.shape_data.triangle.p1, p1));
+  assert(tuple_equal(t.shape_data.triangle.p2, p2));
+  assert(tuple_equal(t.shape_data.triangle.p3, p3));
+  assert(tuple_equal(t.shape_data.triangle.e1, vector(-1, -1, 0)));
+  assert(tuple_equal(t.shape_data.triangle.e2, vector(1, -1, 0)));
+  assert(tuple_equal(t.shape_data.triangle.normal, vector(0, 0, -1)));
+  // normal is the same
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  Vector n1 = normal_at(t, point(0, 0.5, 0));
+  Vector n2 = normal_at(t, point(-0.5, 0.75, 0));
+  Vector n3 = normal_at(t, point(0.5, 0.25, 0));
+  assert(tuple_equal(n1, t.shape_data.triangle.normal));
+  assert(tuple_equal(n2, t.shape_data.triangle.normal));
+  assert(tuple_equal(n3, t.shape_data.triangle.normal));
+  // intersect - misses
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  Ray r = ray(point(0, -1, -2), vector(0, 1, 0));
+  Intersections xs = intersect(t, r);
+  assert(xs.count == 0);
+  intersections_free(&xs);
+  // intersect - misses p1-p3 edge
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  r = ray(point(1, 1, -2), vector(0, 0, 1));
+  xs = intersect(t, r);
+  assert(xs.count == 0);
+  intersections_free(&xs);
+  // intersect - misses p1-p2 edge
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  r = ray(point(-1, 1, -2), vector(0, 0, 1));
+  xs = intersect(t, r);
+  assert(xs.count == 0);
+  intersections_free(&xs);
+  // intersect - misses p2-p3 edge
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  r = ray(point(0, -1, -2), vector(0, 0, 1));
+  xs = intersect(t, r);
+  assert(xs.count == 0);
+  intersections_free(&xs);
+  // intersect - hits
+  t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0));
+  r = ray(point(0, 0.5, -2), vector(0, 0, 1));
+  xs = intersect(t, r);
+  assert(xs.count == 1);
+  assert(near(xs.hits[0].t, 2));
+  intersections_free(&xs);
+}
+
 int main(void) {
   test_tuple();
   test_canvas();
@@ -1036,6 +1088,7 @@ int main(void) {
   test_cube();
   test_csg();
   test_group();
+  test_triangle();
   printf("ALL OK!\n");
   return 0;
 }
