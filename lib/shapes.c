@@ -102,7 +102,7 @@ Shapes shapes_new(size_t capacity) {
   };
 }
 void shapes_append(Shapes *shapes, const Shape shape) {
-  if ((shapes->count + 2) > shapes->capacity) {
+  if ((shapes->count + 1) > shapes->capacity) {
     if (shapes->capacity > 0)
       fprintf(stderr, "SH-----> cap=%li count=%li\n", shapes->capacity,
               shapes->count);
