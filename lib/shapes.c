@@ -55,6 +55,11 @@ Vector normal_at(const Shape shape, const Point world_point) {
   Vector object_normal = {0};
   const Point object_point = world_to_object(shape, world_point);
   switch (shape.shape_type) {
+  case SHAPE_TYPE_CSG:
+  case SHAPE_TYPE_GROUP: {
+    fprintf(stderr, "normal_at with invalid shape_type\n");
+    exit(EXIT_FAILURE);
+  }
   case SHAPE_TYPE_SPHERE: {
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
