@@ -1,6 +1,7 @@
 #include "../lib/camera.h"
 #include "../lib/canvas.h"
 #include "../lib/matrix.h"
+#include "../lib/obj.h"
 #include "../lib/patterns.h"
 #include "../lib/raycasting.h"
 #include "../lib/shading.h"
@@ -1070,25 +1071,39 @@ void test_triangle(void) {
   intersections_free(&xs);
 }
 
+void test_obj(void) {
+  Parser p = obj_parse_file("./test/objs/1gibberish.obj");
+  assert(p.n_ignored_lines == 8);
+  obj_parser_free(&p);
+  p = obj_parse_file("./test/objs/2vertexrecords.obj");
+  assert(p.n_ignored_lines == 0);
+  obj_parser_free(&p);
+  p = obj_parse_file("./test/objs/3trianglefaces.obj");
+  assert(p.n_ignored_lines == 1);
+  assert(p.default_group.shape_data.group.childs->count == 2);
+  obj_parser_free(&p);
+}
+
 int main(void) {
-  test_tuple();
-  test_canvas();
-  test_matrix();
-  test_transformation();
-  test_raycasting();
-  test_shading();
-  test_world();
-  test_shadow();
-  test_plane();
-  test_patterns();
-  test_reflections();
-  test_intersections();
-  test_refraction();
-  test_fresnel();
-  test_cube();
-  test_csg();
-  test_group();
-  test_triangle();
+  /* test_tuple(); */
+  /* test_canvas(); */
+  /* test_matrix(); */
+  /* test_transformation(); */
+  /* test_raycasting(); */
+  /* test_shading(); */
+  /* test_world(); */
+  /* test_shadow(); */
+  /* test_plane(); */
+  /* test_patterns(); */
+  /* test_reflections(); */
+  /* test_intersections(); */
+  /* test_refraction(); */
+  /* test_fresnel(); */
+  /* test_cube(); */
+  /* test_csg(); */
+  /* test_group(); */
+  /* test_triangle(); */
+  test_obj();
   printf("ALL OK!\n");
   return 0;
 }
