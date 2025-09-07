@@ -11,6 +11,7 @@ typedef enum {
   SHAPE_TYPE_GROUP,
   SHAPE_TYPE_CSG,
   SHAPE_TYPE_TRIANGLE,
+  SHAPE_TYPE_CYLINDER,
 } ShapeType;
 
 typedef enum {
@@ -34,6 +35,8 @@ typedef struct Shape {
     } plane;
     struct {
     } cube;
+    struct {
+    } cylinder;
     struct Group {
       Shapes *childs;
     } group;
@@ -59,6 +62,7 @@ Shape cube(void);
 Shape plane(void);
 Shape sphere(void);
 Shape sphere_glass(void);
+Shape cylinder(void);
 Shape group(void);
 void group_add(Shape *, Shape *);
 bool group_includes(const Shape, const Shape);

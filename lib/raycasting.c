@@ -61,6 +61,24 @@ Intersections intersect(const Shape shape, const Ray ray) {
     }
     break;
   }
+  case SHAPE_TYPE_CYLINDER: {
+    const double a = pow(tRay.direction.x, 2) + pow(tRay.direction.z, 2);
+    if (near(a, 0)) {
+      break; // parallel to y axis
+    }
+    const double b = (2.0 * tRay.origin.x * tRay.direction.x) +
+                     (2.0 * tRay.origin.z * tRay.direction.z);
+    const double c = pow(tRay.origin.x, 2) + pow(tRay.origin.z, 2) - 1.0;
+    const double discriminant = pow(b, 2) - 4.0 * a * c;
+    if (discriminant < 0) {
+      break; // misses
+    }
+    const double t0 = (-b - sqrt(discriminant)) / (2.0 * a);
+    const double t1 = (-b + sqrt(discriminant)) / (2.0 * a);
+    intersections_insert(&is, (Intersection){t0, shape});
+    intersections_insert(&is, (Intersection){t1, shape});
+    break;
+  }
   case SHAPE_TYPE_PLANE: {
     if (fabs(tRay.direction.y) < EPSILON) {
       break;

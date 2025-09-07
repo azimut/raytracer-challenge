@@ -1111,6 +1111,63 @@ void test_obj(void) {
   // TOdO: named obj groups
 }
 
+void test_cylinder(void) {
+  { // misses
+    struct {
+      Point origin[3];
+      Vector direction[3];
+    } t = {
+        .origin = {point(1, 0, 0), point(0, 0, 0), point(0, 0, -5)},
+        .direction = {vector(0, 1, 0), vector(0, 1, 0), vector(1, 1, 1)},
+    };
+    Shape cyl = cylinder();
+    for (int i = 0; i < 3; ++i) {
+      Vector d = tuple_normalize(t.direction[i]);
+      Ray r = ray(t.origin[i], d);
+      Intersections xs = intersect(cyl, r);
+      assert(xs.count == 0);
+      intersections_free(&xs);
+    }
+  }
+  { // hits
+    struct {
+      Point origin;
+      Vector direction;
+      double t0, t1;
+    } t[3] = {
+        {point(1, 0, -5), vector(0, 0, 1), 5, 5},
+        {point(0, 0, -5), vector(0, 0, 1), 4, 6},
+        {point(.5, 0, -5), vector(.1, 1, 1), 6.8079, 7.08872},
+    };
+    Shape cyl = cylinder();
+    for (int i = 0; i < 3; ++i) {
+      Vector direction = tuple_normalize(t[i].direction);
+      Ray r = ray(t[i].origin, direction);
+      Intersections xs = intersect(cyl, r);
+      assert(xs.count == 2);
+      assert(near(xs.hits[0].t, t[i].t0));
+      assert(near(xs.hits[1].t, t[i].t1));
+      intersections_free(&xs);
+    }
+  }
+  { // normal
+    struct {
+      Point point;
+      Vector normal;
+    } t[4] = {
+        {point(1, 0, 0), vector(1, 0, 0)},
+        {point(0, 5, -1), vector(0, 0, -1)},
+        {point(0, -2, 1), vector(0, 0, 1)},
+        {point(-1, 1, 0), vector(-1, 0, 0)},
+    };
+    Shape cyl = cylinder();
+    for (int i = 0; i < 4; ++i) {
+      Vector n = normal_at(cyl, t[i].point);
+      assert(tuple_equal(t[i].normal, n));
+    }
+  }
+}
+
 int main(void) {
   /* test_tuple(); */
   /* test_canvas(); */
@@ -1131,6 +1188,7 @@ int main(void) {
   /* test_group(); */
   /* test_triangle(); */
   test_obj();
+  test_cylinder();
   printf("ALL OK!\n");
   return 0;
 }

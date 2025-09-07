@@ -40,6 +40,15 @@ Shape sphere_glass(void) {
   return s;
 }
 
+Shape cylinder(void) {
+  return (Shape){
+      .id = ++global_id,
+      .transformation = M4_IDENTITY,
+      .material = material(),
+      .shape_type = SHAPE_TYPE_CYLINDER,
+  };
+}
+
 Shape triangle(const Point a, const Point b, const Point c) {
   return (Shape){
       .id = ++global_id,
@@ -80,6 +89,9 @@ Vector normal_at(const Shape shape, const Point world_point) {
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
+  case SHAPE_TYPE_CYLINDER:
+    object_normal = vector(object_point.x, 0, object_point.z);
+    break;
   case SHAPE_TYPE_PLANE: {
     object_normal = vector(0, 1, 0);
     break;
@@ -199,6 +211,9 @@ bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
 
 bool shape_includes(const Shape shape, const Shape needle) {
   switch (shape.shape_type) {
+  case SHAPE_TYPE_TRIANGLE:
+    fprintf(stderr, "ERROR: shape_includes() unimplemented for TRIANGLES.\n");
+    exit(EXIT_FAILURE);
   case SHAPE_TYPE_GROUP: {
     bool found = false;
     for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
@@ -214,6 +229,7 @@ bool shape_includes(const Shape shape, const Shape needle) {
   case SHAPE_TYPE_CUBE:
   case SHAPE_TYPE_PLANE:
   case SHAPE_TYPE_SPHERE:
+  case SHAPE_TYPE_CYLINDER:
     return shape_equal(shape, needle);
   }
 };
