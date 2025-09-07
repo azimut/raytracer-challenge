@@ -1108,6 +1108,7 @@ void test_obj(void) {
     assert(tuple_equal(t3.shape_data.triangle.p3, p.vertices[5 - 1]));
     obj_parser_free(&p);
   }
+  // TOdO: named obj groups
 }
 
 int main(void) {
