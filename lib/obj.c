@@ -1,5 +1,8 @@
 #include "./obj.h"
+#include <assert.h>
+#include <errno.h>
 #include <stdio.h>
+#include <string.h>
 
 static const int buffsize = 200;
 static const int init_capacity = 10;
@@ -23,37 +26,86 @@ static void parser_insert_vertex(Parser *parser, const Point vertex) {
   parser->count++;
 }
 
+typedef struct Indices {
+  long *idxs;
+  size_t count;
+  size_t capacity;
+} Indices;
+
+static Indices indices_new() {
+  return (Indices){
+      .idxs = calloc(5, sizeof(long)),
+      .capacity = 5,
+  };
+}
+
+static void indices_free(Indices *is) {
+  if (is->idxs) {
+    free(is->idxs);
+    is->idxs = NULL, is->count = 0, is->capacity = 0;
+  }
+}
+
+static void indices_insert(Indices *is, long new) {
+  assert(is->capacity < 100);
+  if (is->count + 1 > is->capacity) {
+    is->capacity += 5;
+    is->idxs = reallocarray(is->idxs, is->capacity, sizeof(size_t));
+  }
+  is->idxs[is->count] = new;
+  is->count++;
+}
+
 static Parser obj_parse(FILE *f) {
   char *buf = calloc(buffsize, sizeof(char));
   Parser parser = parser_new();
   while (fgets(buf, buffsize, f)) {
-    char rtype;
-    float x, y, z;
-    int ret;
-    if ((ret = sscanf(buf, "%c %f %f %f", &rtype, &x, &y, &z)), ret == 4) {
-      switch (rtype) {
-      case 'v': {
+    buf[strcspn(buf, "\n")] = '\0';
+    switch (buf[0]) {
+    case 'v': {
+      float x, y, z;
+      int ret;
+      if ((ret = sscanf(buf, "v %f %f %f", &x, &y, &z)), ret == 3) {
         parser_insert_vertex(&parser, point(x, y, z));
-        break;
+      } else {
+        fprintf(stderr, "ERROR: malformed vertex line `%s`", buf);
+        exit(EXIT_FAILURE);
       }
-      case 'f': {
-        const Point a = parser.vertices[(int)x - 1];
-        const Point b = parser.vertices[(int)y - 1];
-        const Point c = parser.vertices[(int)z - 1];
+      break;
+    }
+    case 'f': {
+      Indices indices = indices_new();
+      char *saved;
+      char *token = strtok_r(buf, " ", &saved); // 'f'
+      while ((token = strtok_r(NULL, " ", &saved))) {
+        printf("token=`%s`\n", token);
+        char *endptr;
+        errno = 0;
+        const long a = strtol(token, &endptr, 10);
+        if (errno != 0) {
+          perror("strtol");
+          exit(EXIT_FAILURE);
+        }
+        if (endptr == token) {
+          fprintf(stderr, "no digits found\n");
+          exit(EXIT_FAILURE);
+        }
+        indices_insert(&indices, a);
+      }
+      assert(indices.count == 3);
+      for (size_t i = 0; i < indices.count; i += 3) {
+        const Point a = parser.vertices[indices.idxs[i + 0] - 1];
+        const Point b = parser.vertices[indices.idxs[i + 1] - 1];
+        const Point c = parser.vertices[indices.idxs[i + 2] - 1];
         Shape t = triangle(a, b, c);
         group_add(&parser.default_group, &t);
-        break;
       }
-      default:
-        puts(buf);
-        parser.n_ignored_lines++;
-        break;
-      }
-    } else if (ret == EOF) {
-      puts("EOF");
+      indices_free(&indices);
       break;
-    } else {
+    }
+    default:
       parser.n_ignored_lines++;
+      break;
     }
   }
   printf("Wonky lines: %li\n", parser.n_ignored_lines);
