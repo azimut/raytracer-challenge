@@ -212,39 +212,47 @@ void csg_free(Shape *csg) {
 // inl  = true if hit happened inside .left
 // inr  = true if hit happened inside .right
 bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
+  bool result;
   switch (operation) {
   case CSG_OP_UNION:
-    return (lhit && !inr) || (!lhit && !inl);
+    result = (lhit && !inr) || (!lhit && !inl);
+    break;
   case CSG_OP_INTERSECTION:
-    return (lhit && inr) || (!lhit && inl);
+    result = (lhit && inr) || (!lhit && inl);
+    break;
   case CSG_OP_DIFFERENCE:
-    return (lhit && !inr) || (!lhit && inl);
+    result = (lhit && !inr) || (!lhit && inl);
+    break;
   }
+  return result;
 };
 
 bool shape_includes(const Shape shape, const Shape needle) {
+  bool found = false;
   switch (shape.shape_type) {
   case SHAPE_TYPE_TRIANGLE:
     fprintf(stderr, "ERROR: shape_includes() unimplemented for TRIANGLES.\n");
     exit(EXIT_FAILURE);
   case SHAPE_TYPE_GROUP: {
-    bool found = false;
     for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
       found = shape_includes(shape.shape_data.group.childs->shapes[i], needle);
       if (found)
         break;
     }
-    return found;
+    break;
   }
   case SHAPE_TYPE_CSG:
-    return shape_includes(*shape.shape_data.csg.left, needle) ||
-           shape_includes(*shape.shape_data.csg.right, needle);
+    found = shape_includes(*shape.shape_data.csg.left, needle) ||
+            shape_includes(*shape.shape_data.csg.right, needle);
+    break;
   case SHAPE_TYPE_CUBE:
   case SHAPE_TYPE_PLANE:
   case SHAPE_TYPE_SPHERE:
   case SHAPE_TYPE_CYLINDER:
-    return shape_equal(shape, needle);
+    found = shape_equal(shape, needle);
+    break;
   }
+  return found;
 };
 
 Shape group(void) {
