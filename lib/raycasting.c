@@ -42,6 +42,28 @@ static PlaneIntersect check_axis(double origin, double direction) {
   return result;
 }
 
+static bool check_cap(const Ray ray, const double t) {
+  const double x = ray.origin.x + t * ray.direction.x;
+  const double z = ray.origin.z + t * ray.direction.z;
+  return (pow(x, 2) + pow(z, 2)) <= 1;
+}
+static void intersect_caps(const Shape cyl, const Ray ray, Intersections *xs) {
+  assert(cyl.shape_type == SHAPE_TYPE_CYLINDER);
+  if (!cyl.shape_data.cylinder.closed || near(ray.direction.y, 0)) {
+    return;
+  }
+  const double t0 =
+      (cyl.shape_data.cylinder.minimum - ray.origin.y) / ray.direction.y;
+  if (check_cap(ray, t0)) {
+    intersections_insert(xs, (Intersection){t0, cyl});
+  }
+  const double t1 =
+      (cyl.shape_data.cylinder.maximum - ray.origin.y) / ray.direction.y;
+  if (check_cap(ray, t1)) {
+    intersections_insert(xs, (Intersection){t1, cyl});
+  }
+}
+
 Intersections intersect(const Shape shape, const Ray ray) {
   const Ray tRay = transform(ray, m4_inverse(shape.transformation));
   Intersections is = intersections_new(5);
@@ -64,6 +86,7 @@ Intersections intersect(const Shape shape, const Ray ray) {
   case SHAPE_TYPE_CYLINDER: {
     const double a = pow(tRay.direction.x, 2) + pow(tRay.direction.z, 2);
     if (near(a, 0)) {
+      intersect_caps(shape, tRay, &is);
       break; // parallel to y axis
     }
     const double b = (2.0 * tRay.origin.x * tRay.direction.x) +
@@ -73,10 +96,24 @@ Intersections intersect(const Shape shape, const Ray ray) {
     if (discriminant < 0) {
       break; // misses
     }
-    const double t0 = (-b - sqrt(discriminant)) / (2.0 * a);
-    const double t1 = (-b + sqrt(discriminant)) / (2.0 * a);
-    intersections_insert(&is, (Intersection){t0, shape});
-    intersections_insert(&is, (Intersection){t1, shape});
+    double t0 = (-b - sqrt(discriminant)) / (2.0 * a);
+    double t1 = (-b + sqrt(discriminant)) / (2.0 * a);
+    if (t0 > t1) { // keep ordered
+      const double tmp = t0;
+      t0 = t1;
+      t1 = tmp;
+    }
+    const double y0 = tRay.origin.y + t0 * tRay.direction.y;
+    if ((shape.shape_data.cylinder.minimum < y0) &&
+        (y0 < shape.shape_data.cylinder.maximum)) {
+      intersections_insert(&is, (Intersection){t0, shape});
+    }
+    const double y1 = tRay.origin.y + t1 * tRay.direction.y;
+    if ((shape.shape_data.cylinder.minimum < y1) &&
+        (y1 < shape.shape_data.cylinder.maximum)) {
+      intersections_insert(&is, (Intersection){t1, shape});
+    }
+    intersect_caps(shape, tRay, &is);
     break;
   }
   case SHAPE_TYPE_PLANE: {

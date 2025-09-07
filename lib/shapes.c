@@ -46,6 +46,8 @@ Shape cylinder(void) {
       .transformation = M4_IDENTITY,
       .material = material(),
       .shape_type = SHAPE_TYPE_CYLINDER,
+      .shape_data.cylinder.minimum = -INFINITY,
+      .shape_data.cylinder.maximum = +INFINITY,
   };
 }
 
@@ -89,9 +91,20 @@ Vector normal_at(const Shape shape, const Point world_point) {
     object_normal = tuple_sub(object_point, point(0, 0, 0));
     break;
   }
-  case SHAPE_TYPE_CYLINDER:
-    object_normal = vector(object_point.x, 0, object_point.z);
+  case SHAPE_TYPE_CYLINDER: {
+    // square of the distance from Y axis
+    const double distance = pow(object_point.x, 2) + pow(object_point.z, 2);
+    const double max = shape.shape_data.cylinder.maximum;
+    const double min = shape.shape_data.cylinder.minimum;
+    if (distance < 1 && object_point.y >= max - EPSILON) {
+      object_normal = vector(0, 1, 0);
+    } else if (distance < 1 && object_point.y <= min + EPSILON) {
+      object_normal = vector(0, -1, 0);
+    } else {
+      object_normal = vector(object_point.x, 0, object_point.z);
+    }
     break;
+  }
   case SHAPE_TYPE_PLANE: {
     object_normal = vector(0, 1, 0);
     break;

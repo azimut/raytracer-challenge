@@ -46,8 +46,12 @@ int main(int argc, char *argv[]) {
   Shape s1 = cylinder();
   MaterialPhong m = material();
   m.ambient = AMBIENT;
-  m.reflective = 0.01;
+  m.reflective = 0.1;
   s1.material = m;
+  s1.shape_data.cylinder.maximum = 3;
+  s1.shape_data.cylinder.minimum = 1;
+  s1.shape_data.cylinder.closed = true;
+  s1.transformation = rotation_x(radians(34));
   world_enter(&w, s1);
 
   char *filename = basename(argv[0]);
@@ -57,8 +61,8 @@ int main(int argc, char *argv[]) {
 
   int frame = 0;
   for (float i = 0; i < M_PI * 2; i += .1) {
-    Point from = point(sin(i) * 5, 0.5, cos(i) * 5);
-    cam.transform = view_transform(from, point(0, 1.5, 0), vector(0, 1, 0));
+    Point from = point(sin(i) * 4, 0.5, cos(i) * 4);
+    cam.transform = view_transform(from, point(0, 2.5, 0), vector(0, 1, 0));
     Canvas canvas = render(cam, w);
     canvas_save_frame(canvas, filename, ++frame, from);
     canvas_free(&canvas);

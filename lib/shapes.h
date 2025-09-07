@@ -36,6 +36,8 @@ typedef struct Shape {
     struct {
     } cube;
     struct {
+      bool closed;
+      double minimum, maximum;
     } cylinder;
     struct Group {
       Shapes *childs;

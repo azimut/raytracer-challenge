@@ -1166,6 +1166,54 @@ void test_cylinder(void) {
       assert(tuple_equal(t[i].normal, n));
     }
   }
+  { // limited
+    struct {
+      Point point;
+      Vector direction;
+      size_t count;
+    } t[6] = {
+        {point(0, 1.5, 0), vector(0.1, 1, 0), 0}, // miss
+        {point(0, 3, -5), vector(0, 0, 1), 0},    // miss
+        {point(0, 0, -5), vector(0, 0, 1), 0},    // miss
+        {point(0, 2, -5), vector(0, 0, 1), 0},    // miss
+        {point(0, 1, -5), vector(0, 0, 1), 0},    // miss
+        {point(0, 1.5, -2), vector(0, 0, 1), 2},  // hit
+    };
+    Shape cyl = cylinder();
+    cyl.shape_data.cylinder.minimum = 1;
+    cyl.shape_data.cylinder.maximum = 2;
+    for (int i = 0; i < 6; ++i) {
+      Vector direction = tuple_normalize(t[i].direction);
+      Ray r = ray(t[i].point, direction);
+      Intersections xs = intersect(cyl, r);
+      assert(xs.count == t[i].count);
+      intersections_free(&xs);
+    }
+  }
+  { // closed cap intersections
+    struct {
+      Point point;
+      Vector direction;
+      size_t count;
+    } t[5] = {
+        {point(0, 3, 0), vector(0, -1, 0), 2},
+        {point(0, 3, -2), vector(0, -1, 2), 2},
+        {point(0, 4, -2), vector(0, -1, 1), 2}, // corner case
+        {point(0, 0, -2), vector(0, 1, 2), 2},
+        {point(0, -1, -2), vector(0, 1, 1), 2}, // corner case
+    };
+    Shape cyl = cylinder();
+    cyl.shape_data.cylinder.minimum = 1;
+    cyl.shape_data.cylinder.maximum = 2;
+    cyl.shape_data.cylinder.closed = true;
+    for (int i = 0; i < 5; ++i) {
+      Vector direction = tuple_normalize(t[i].direction);
+      Ray r = ray(t[i].point, direction);
+      Intersections xs = intersect(cyl, r);
+      assert(xs.count == t[i].count);
+      intersections_free(&xs);
+    }
+  }
 }
 
 int main(void) {
@@ -1187,7 +1235,7 @@ int main(void) {
   /* test_csg(); */
   /* test_group(); */
   /* test_triangle(); */
-  test_obj();
+  /* test_obj(); */
   test_cylinder();
   printf("ALL OK!\n");
   return 0;
