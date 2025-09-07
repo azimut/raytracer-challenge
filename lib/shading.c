@@ -45,6 +45,6 @@ Color lighting(const MaterialPhong material, const Shape object,
       specular = color_smul(light.intensity, material.specular * factor);
     }
   }
-  return color_add(color_smul(color_add(specular, diffuse), attenuation),
-                   ambient);
+  return color_smul(color_add(color_add(specular, diffuse), ambient),
+                    attenuation);
 }
