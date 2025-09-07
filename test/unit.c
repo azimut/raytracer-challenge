@@ -1096,7 +1096,7 @@ void test_obj(void) {
     assert(p.default_group.shape_data.group.childs->count == 3);
     Shape t1 = p.default_group.shape_data.group.childs->shapes[0];
     Shape t2 = p.default_group.shape_data.group.childs->shapes[1];
-    Shape t3 = p.default_group.shape_data.group.childs->shapes[1];
+    Shape t3 = p.default_group.shape_data.group.childs->shapes[2];
     assert(tuple_equal(t1.shape_data.triangle.p1, p.vertices[1 - 1]));
     assert(tuple_equal(t1.shape_data.triangle.p2, p.vertices[2 - 1]));
     assert(tuple_equal(t1.shape_data.triangle.p3, p.vertices[3 - 1]));

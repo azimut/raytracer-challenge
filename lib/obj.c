@@ -92,11 +92,11 @@ static Parser obj_parse(FILE *f) {
         }
         indices_insert(&indices, a);
       }
-      assert(indices.count == 3);
-      for (size_t i = 0; i < indices.count; i += 3) {
-        const Point a = parser.vertices[indices.idxs[i + 0] - 1];
-        const Point b = parser.vertices[indices.idxs[i + 1] - 1];
-        const Point c = parser.vertices[indices.idxs[i + 2] - 1];
+      assert(indices.count >= 3);
+      for (size_t i = 1; i < indices.count - 1; i++) {
+        const Point a = parser.vertices[indices.idxs[0 + 0] - 1];
+        const Point b = parser.vertices[indices.idxs[i + 0] - 1];
+        const Point c = parser.vertices[indices.idxs[i + 1] - 1];
         Shape t = triangle(a, b, c);
         group_add(&parser.default_group, &t);
       }
