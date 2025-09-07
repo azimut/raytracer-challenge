@@ -11,11 +11,23 @@ typedef struct Attenuation {
   double linear, quadratic;
 } Attenuation;
 
-typedef struct PointLight {
+typedef enum {
+  LIGHT_TYPE_POINT = 0,
+  /* LIGHT_TYPE_AREA, */
+} Light_Type;
+
+typedef struct Light {
   Point position;
   Color intensity;
   Attenuation attenuation;
-} PointLight;
+  Light_Type ltype;
+  union {
+    struct {
+    } point;
+    /* struct { */
+    /* } area; */
+  } light_data;
+} Light;
 
 // Source: http://planetpixelemporium.com/tutorialpages/light.html
 #define LIGHT_COLORS_CANDLE ((Color){1.0, 0.5764706, 0.16078432})
@@ -56,9 +68,9 @@ typedef struct PointLight {
 
 Vector reflect(const Vector, const Vector);
 
-PointLight pointlight(const Point, const Color);
+Light pointlight(const Point, const Color);
 
-Color lighting(const MaterialPhong, const Shape, const Point, const PointLight,
+Color lighting(const MaterialPhong, const Shape, const Point, const Light,
                const Vector, const Vector, bool);
 
 #endif /* SHADING_H */

@@ -9,15 +9,16 @@ Vector reflect(const Vector v, const Vector n) {
   return tuple_sub(v, tuple_smul(tuple_smul(n, 2.0), tuple_dot_product(v, n)));
 }
 
-PointLight pointlight(const Point position, const Color intensity) {
+Light pointlight(const Point position, const Color intensity) {
 #ifndef BLAZE
   assert(is_point(position));
 #endif
-  return (PointLight){.position = position, .intensity = intensity};
+  return (Light){
+      .position = position, .intensity = intensity, .ltype = LIGHT_TYPE_POINT};
 }
 
 Color lighting(const MaterialPhong material, const Shape object,
-               const Point point, const PointLight light, const Vector eye,
+               const Point point, const Light light, const Vector eye,
                const Vector normal, bool in_shadow) {
 #ifndef BLAZE
   assert(is_point(point) && is_vector(eye) && is_vector(normal));

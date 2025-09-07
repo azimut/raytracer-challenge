@@ -263,7 +263,7 @@ void test_shading(void) {
   Point position = point(0, 0, 0);
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
-  PointLight light = pointlight(point(0, 0, -10), WHITE);
+  Light light = pointlight(point(0, 0, -10), WHITE);
   Color result = lighting(m, s, position, light, eye, normal, false);
   assert(color_equal(result, color(1.9, 1.9, 1.9)));
 
@@ -403,7 +403,7 @@ void test_shadow(void) {
   // lighting/in_shadow
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
-  PointLight light = pointlight(point(0, 0, -10), WHITE);
+  Light light = pointlight(point(0, 0, -10), WHITE);
   bool in_shadow = true;
   MaterialPhong m = material();
   Point position = point(0, 0, 0);
@@ -515,7 +515,7 @@ void test_patterns(void) {
   m.specular = 0;
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
-  PointLight light = pointlight(point(0, 0, -10), WHITE);
+  Light light = pointlight(point(0, 0, -10), WHITE);
   s = sphere();
   Color c1 = lighting(m, s, point(0.9, 0, 0), light, eye, normal, false);
   Color c2 = lighting(m, s, point(1.1, 0, 0), light, eye, normal, false);
@@ -1216,6 +1216,25 @@ void test_cylinder(void) {
   }
 }
 
+void test_area_shadow(void) {
+  { // is_shadowed() - already worked
+    struct {
+      Point point;
+      bool result;
+    } t[4] = {
+        {point(-10, -10, 10), false},
+        {point(10, 10, 10), true},
+        {point(-20, -20, -20), false},
+        {point(-5, -5, -5), false},
+    };
+    World w = world_default();
+    Point lpos = point(-10, -10, -10);
+    for (int i = 0; i < 4; ++i) {
+      assert(is_shadowed(w, t[i].point, lpos) == t[i].result);
+    }
+    world_free(&w);
+  }
+}
 void test_cone(void) {}
 
 int main(void) {
@@ -1240,6 +1259,7 @@ int main(void) {
   test_obj();
   test_cylinder();
   test_cone();
+  test_area_shadow();
   printf("ALL OK!\n");
   return 0;
 }

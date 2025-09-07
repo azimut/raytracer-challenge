@@ -6,14 +6,14 @@
 #include <stdint.h>
 
 typedef struct World {
-  PointLight *lights;
+  Light *lights;
   size_t lights_count;
   Shapes shapes;
 } World;
 
 Intersections world_intersect(const World, const Ray);
 void world_enter(World *, Shape);
-void world_enlight(World *, PointLight);
+void world_enlight(World *, Light);
 World world_default(void);
 void world_free(World *);
 Color shade_hit(const World, const Computations, uint8_t);

@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
 
-  PointLight p = {0};
+  Light p = {0};
   p = pointlight(point(15, 7, -15), color(0.1, 0.9, 1.0));
   p.attenuation = LIGHT_SIZE_200;
   world_enlight(&w, p);

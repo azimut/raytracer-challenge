@@ -6,12 +6,12 @@
 
 void world_enter(World *world, Shape s) { shapes_append(&world->shapes, s); }
 
-void world_enlight(World *world, PointLight light) {
+void world_enlight(World *world, Light light) {
   if (world->lights) {
-    world->lights = reallocarray(world->lights, world->lights_count + 1,
-                                 sizeof(PointLight));
+    world->lights =
+        reallocarray(world->lights, world->lights_count + 1, sizeof(Light));
   } else {
-    world->lights = calloc(1, sizeof(PointLight));
+    world->lights = calloc(1, sizeof(Light));
   }
   if (world->lights == NULL) {
     perror("alloc in world_enlight()");
@@ -24,7 +24,7 @@ void world_enlight(World *world, PointLight light) {
 World world_default(void) {
   World w = {0};
 
-  PointLight pl = pointlight(point(-10, 10, -10), WHITE);
+  Light pl = pointlight(point(-10, 10, -10), WHITE);
   world_enlight(&w, pl);
 
   Shape s1 = sphere();
