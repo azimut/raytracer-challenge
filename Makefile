@@ -29,6 +29,9 @@ endif
 ifdef BLAZE
 	CFLAGS += -march=native -mtune=native -Ofast -ffast-math -DBLAZE=$(BLAZE)
 endif
+ifdef GRADIENT
+	CFLAGS += -DGRADIENT=1
+endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@

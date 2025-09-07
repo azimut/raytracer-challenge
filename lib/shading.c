@@ -40,9 +40,9 @@ Color lighting(const MaterialPhong material, const Shape object,
     attenuation = 1 / (1.0 + linear * distance + quadratic * distance);
     diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
     const Vector reflection = reflect(tuple_neg(dir_light), normal);
-    double reflect_dot_eye = tuple_dot_product(reflection, eye);
+    const double reflect_dot_eye = tuple_dot_product(reflection, eye);
     if (reflect_dot_eye > 0) {
-      double factor = pow(reflect_dot_eye, material.shininess);
+      const double factor = pow(reflect_dot_eye, material.shininess);
       specular = color_smul(light.intensity, material.specular * factor);
     }
   }

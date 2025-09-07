@@ -67,4 +67,6 @@ $ make -B test DEBUG=1
 
 - [Gamma Correction and HDR](https://learnopengl.com/Advanced-Lighting/HDR)
 - [Antialiasing](https://raytracing.github.io/books/RayTracingInOneWeekend.html#antialiasing)
+- [Pointlight distance attenuation](https://learnopengl.com/Lighting/Multiple-lights)
+- [Gradient background](https://raytracing.github.io/books/RayTracingInOneWeekend.html#rays,asimplecamera,andbackground/sendingraysintothescene)
 - Support for multiple lights.

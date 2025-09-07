@@ -90,13 +90,22 @@ Color shade_hit(const World world, const Computations comp, uint8_t life) {
 Color color_at(const World world, const Ray ray, uint8_t life) {
   Intersections is = world_intersect(world, ray);
   Intersection *i = hit(is);
-  Color color = (Color){0, 0, 0};
+  Color pixel = BLACK;
   if (i) {
     const Computations comp = prepare_computations(*i, ray, is);
-    color = shade_hit(world, comp, life);
+    pixel = shade_hit(world, comp, life);
   }
+#ifdef GRADIENT
+  else {
+    const Color a = color(1.0, 0.1, 0.9);
+    const Color b = color(0.1, 0.9, 1.0);
+    const double y = tuple_normalize(ray.direction).y;
+    const double t = 0.5 * (y + 1.0);
+    pixel = color_add(color_smul(a, (1.0 - t)), color_smul(b, t));
+  }
+#endif
   intersections_free(&is);
-  return color;
+  return pixel;
 }
 
 bool is_shadowed(const World world, const Point p, const Point light_pos) {
