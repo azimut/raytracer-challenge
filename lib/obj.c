@@ -78,7 +78,6 @@ static Parser obj_parse(FILE *f) {
       char *saved;
       char *token = strtok_r(buf, " ", &saved); // 'f'
       while ((token = strtok_r(NULL, " ", &saved))) {
-        printf("token=`%s`\n", token);
         char *endptr;
         errno = 0;
         const long a = strtol(token, &endptr, 10);
@@ -108,7 +107,6 @@ static Parser obj_parse(FILE *f) {
       break;
     }
   }
-  printf("Wonky lines: %li\n", parser.n_ignored_lines);
   free(buf);
   return parser;
 }

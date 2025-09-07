@@ -1216,27 +1216,30 @@ void test_cylinder(void) {
   }
 }
 
+void test_cone(void) {}
+
 int main(void) {
-  /* test_tuple(); */
-  /* test_canvas(); */
-  /* test_matrix(); */
-  /* test_transformation(); */
-  /* test_raycasting(); */
-  /* test_shading(); */
-  /* test_world(); */
-  /* test_shadow(); */
-  /* test_plane(); */
-  /* test_patterns(); */
-  /* test_reflections(); */
-  /* test_intersections(); */
-  /* test_refraction(); */
-  /* test_fresnel(); */
-  /* test_cube(); */
-  /* test_csg(); */
-  /* test_group(); */
-  /* test_triangle(); */
-  /* test_obj(); */
+  test_tuple();
+  test_canvas();
+  test_matrix();
+  test_transformation();
+  test_raycasting();
+  test_shading();
+  test_world();
+  test_shadow();
+  test_plane();
+  test_patterns();
+  test_reflections();
+  test_intersections();
+  test_refraction();
+  test_fresnel();
+  test_cube();
+  test_csg();
+  test_group();
+  test_triangle();
+  test_obj();
   test_cylinder();
+  test_cone();
   printf("ALL OK!\n");
   return 0;
 }
