@@ -13,6 +13,13 @@ typedef struct Color {
 #define GREEN ((Color){0, 1, 0})
 #define BLUE ((Color){0, 0, 1})
 
+#define HEX_TO_COLOR(hex)                                                      \
+  ((Color){.red = ((hex >> 16) & 0xFF) / 255.0,                                \
+           .green = ((hex >> 8) & 0xFF) / 255.0,                               \
+           .blue = (hex & 0xFF) / 255.0})
+
+#define HEX2COLOR(hex_string) HEX_TO_COLOR(strtoul(hex_string + 1, NULL, 16))
+
 Color color(double, double, double);
 Color color_add(const Color, const Color);
 Color color_sub(const Color, const Color);
