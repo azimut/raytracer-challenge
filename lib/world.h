@@ -21,5 +21,6 @@ Color color_at(const World, const Ray, uint8_t);
 Color reflected_color(const World, const Computations, uint8_t);
 Color refracted_color(const World, const Computations, uint8_t);
 bool is_shadowed(const World, const Point, const Point);
+double intensity_at(const Light, const Point, const World);
 
 #endif /* WORLD_H */

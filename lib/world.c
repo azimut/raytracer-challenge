@@ -148,3 +148,19 @@ Color refracted_color(const World world, const Computations comp,
   return color_smul(color_at(world, r, life - 1),
                     comp.object.material.transparency);
 }
+
+double intensity_at(const Light light, const Point point, const World world) {
+  double result = 1;
+  switch (light.ltype) {
+  case LIGHT_TYPE_POINT: {
+    result = is_shadowed(world, point, light.position) ? 0 : 1;
+    break;
+  }
+  case LIGHT_TYPE_AREA: {
+    fprintf(stderr, "Not implemented on area lights yet.\n");
+    exit(EXIT_FAILURE);
+    break;
+  }
+  }
+  return result;
+};

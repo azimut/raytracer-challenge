@@ -1114,16 +1114,17 @@ void test_obj(void) {
 void test_cylinder(void) {
   { // misses
     struct {
-      Point origin[3];
-      Vector direction[3];
-    } t = {
-        .origin = {point(1, 0, 0), point(0, 0, 0), point(0, 0, -5)},
-        .direction = {vector(0, 1, 0), vector(0, 1, 0), vector(1, 1, 1)},
+      Point origin;
+      Vector direction;
+    } t[3] = {
+        {point(1, 0, 0), vector(0, 1, 0)},
+        {point(0, 0, 0), vector(0, 1, 0)},
+        {point(0, 0, -5), vector(1, 1, 1)},
     };
     Shape cyl = cylinder();
-    for (int i = 0; i < 3; ++i) {
-      Vector d = tuple_normalize(t.direction[i]);
-      Ray r = ray(t.origin[i], d);
+    for (size_t i = 0; i < 3; ++i) {
+      Vector d = tuple_normalize(t[i].direction);
+      Ray r = ray(t[i].origin, d);
       Intersections xs = intersect(cyl, r);
       assert(xs.count == 0);
       intersections_free(&xs);
@@ -1140,7 +1141,7 @@ void test_cylinder(void) {
         {point(.5, 0, -5), vector(.1, 1, 1), 6.8079, 7.08872},
     };
     Shape cyl = cylinder();
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
       Vector direction = tuple_normalize(t[i].direction);
       Ray r = ray(t[i].origin, direction);
       Intersections xs = intersect(cyl, r);
@@ -1161,7 +1162,7 @@ void test_cylinder(void) {
         {point(-1, 1, 0), vector(-1, 0, 0)},
     };
     Shape cyl = cylinder();
-    for (int i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
       Vector n = normal_at(cyl, t[i].point);
       assert(tuple_equal(t[i].normal, n));
     }
@@ -1182,7 +1183,7 @@ void test_cylinder(void) {
     Shape cyl = cylinder();
     cyl.shape_data.cylinder.minimum = 1;
     cyl.shape_data.cylinder.maximum = 2;
-    for (int i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
       Vector direction = tuple_normalize(t[i].direction);
       Ray r = ray(t[i].point, direction);
       Intersections xs = intersect(cyl, r);
@@ -1206,7 +1207,7 @@ void test_cylinder(void) {
     cyl.shape_data.cylinder.minimum = 1;
     cyl.shape_data.cylinder.maximum = 2;
     cyl.shape_data.cylinder.closed = true;
-    for (int i = 0; i < 5; ++i) {
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
       Vector direction = tuple_normalize(t[i].direction);
       Ray r = ray(t[i].point, direction);
       Intersections xs = intersect(cyl, r);
@@ -1229,8 +1230,26 @@ void test_area_shadow(void) {
     };
     World w = world_default();
     Point lpos = point(-10, -10, -10);
-    for (int i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
       assert(is_shadowed(w, t[i].point, lpos) == t[i].result);
+    }
+    world_free(&w);
+  }
+  { // intensity_at()
+    struct {
+      Point point;
+      double result;
+    } t[7] = {
+        {point(0, 1.0001, 0), 1.0},  {point(-1.0001, 0, 0), 1.0},
+        {point(0, 0, -1.0001), 1.0}, {point(0, 0, 1.0001), 0.0},
+        {point(1.0001, 0, 0), 0.0},  {point(0, -1.0001, 0), 0.0},
+        {point(0, 0, 0), 0.0},
+    };
+    World w = world_default();
+    Light light = w.lights[0];
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
+      Point pt = t[i].point;
+      assert(near(t[i].result, intensity_at(light, pt, w)));
     }
     world_free(&w);
   }

@@ -13,7 +13,7 @@ typedef struct Attenuation {
 
 typedef enum {
   LIGHT_TYPE_POINT = 0,
-  /* LIGHT_TYPE_AREA, */
+  LIGHT_TYPE_AREA,
 } Light_Type;
 
 typedef struct Light {
@@ -24,8 +24,8 @@ typedef struct Light {
   union {
     struct {
     } point;
-    /* struct { */
-    /* } area; */
+    struct {
+    } area;
   } light_data;
 } Light;
 
