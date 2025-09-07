@@ -264,25 +264,25 @@ void test_shading(void) {
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
   Light light = pointlight(point(0, 0, -10), WHITE);
-  Color result = lighting(m, s, position, light, eye, normal, false);
+  Color result = lighting(m, s, position, light, eye, normal, 1);
   assert(color_equal(result, color(1.9, 1.9, 1.9)));
 
   eye = vector(0, sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, s, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, 1);
   assert(color_equal(result, WHITE));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 10, -10), WHITE);
-  result = lighting(m, s, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, 1);
   assert(color_equal(result, color(0.7364, 0.7364, 0.7364)));
 
   eye = vector(0, -sqrtf(2) / 2, -sqrtf(2) / 2);
-  result = lighting(m, s, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, 1);
   assert(color_equal(result, color(1.6364, 1.6364, 1.6364)));
 
   eye = vector(0, 0, -1);
   light = pointlight(point(0, 0, 10), WHITE);
-  result = lighting(m, s, position, light, eye, normal, false);
+  result = lighting(m, s, position, light, eye, normal, 1);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
 }
 
@@ -404,11 +404,10 @@ void test_shadow(void) {
   Vector eye = vector(0, 0, -1);
   Vector normal = vector(0, 0, -1);
   Light light = pointlight(point(0, 0, -10), WHITE);
-  bool in_shadow = true;
   MaterialPhong m = material();
   Point position = point(0, 0, 0);
   Shape s = sphere();
-  Color result = lighting(m, s, position, light, eye, normal, in_shadow);
+  Color result = lighting(m, s, position, light, eye, normal, 0);
   assert(color_equal(result, color(0.1, 0.1, 0.1)));
   // is_shadowed()
   World w = world_default();
@@ -517,8 +516,8 @@ void test_patterns(void) {
   Vector normal = vector(0, 0, -1);
   Light light = pointlight(point(0, 0, -10), WHITE);
   s = sphere();
-  Color c1 = lighting(m, s, point(0.9, 0, 0), light, eye, normal, false);
-  Color c2 = lighting(m, s, point(1.1, 0, 0), light, eye, normal, false);
+  Color c1 = lighting(m, s, point(0.9, 0, 0), light, eye, normal, 1);
+  Color c2 = lighting(m, s, point(1.1, 0, 0), light, eye, normal, 1);
   assert(color_equal(c1, WHITE));
   assert(color_equal(c2, BLACK));
   // stripes + object transform
@@ -1252,6 +1251,61 @@ void test_area_shadow(void) {
       assert(near(t[i].result, intensity_at(light, pt, w)));
     }
     world_free(&w);
+  }
+  { // lighting() using intensity_at()
+    struct {
+      double intensity;
+      Color result;
+    } t[3] = {
+        {1.0, {1, 1, 1}},
+        {0.5, {0.55, 0.55, 0.55}},
+        {0.0, {0.1, 0.1, 0.1}},
+    };
+    World w = world_default();
+    w.lights[0].position = point(0, 0, -10);
+    w.shapes.shapes[0].material.ambient = 0.1;
+    w.shapes.shapes[0].material.diffuse = 0.9;
+    w.shapes.shapes[0].material.specular = 0;
+    w.shapes.shapes[0].material.color = WHITE;
+    Point pt = point(0, 0, 1);
+    Vector eye = vector(0, 0, -1);
+    Vector normal = vector(0, 0, -1);
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
+      Color result = lighting(w.shapes.shapes[0].material, w.shapes.shapes[0],
+                              pt, w.lights[0], eye, normal, t[i].intensity);
+      assert(color_equal(result, t[i].result));
+    }
+    world_free(&w);
+  }
+  { // creating arealight()
+    Point corner = point(0, 0, 0);
+    Vector v1 = vector(2, 0, 0);
+    Vector v2 = vector(0, 0, 1);
+    Light light = arealight(corner, v1, 4, v2, 2, WHITE);
+    assert(tuple_equal(light.light_data.area.corner, corner));
+    assert(tuple_equal(light.light_data.area.uvec, vector(0.5, 0, 0)));
+    assert(tuple_equal(light.light_data.area.vvec, vector(0, 0, 0.5)));
+    assert(light.light_data.area.usteps == 4);
+    assert(light.light_data.area.vsteps == 2);
+    assert(light.light_data.area.samples == 8);
+    assert(tuple_equal(light.position, point(1, 0, 0.5)));
+  }
+  { // point_on_light()
+    struct {
+      uint8_t u, v;
+      Point result;
+    } t[5] = {
+        {0, 0, point(0.25, 0, 0.25)}, {1, 0, point(0.75, 0, 0.25)},
+        {0, 1, point(0.25, 0, 0.75)}, {2, 0, point(1.25, 0, 0.25)},
+        {3, 1, point(1.75, 0, 0.75)},
+    };
+    Point corner = point(0, 0, 0);
+    Vector v1 = vector(2, 0, 0);
+    Vector v2 = vector(0, 0, 1);
+    Light light = arealight(corner, v1, 4, v2, 2, WHITE);
+    for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
+      assert(tuple_equal(t[i].result, point_on_light(light, t[i].u, t[i].v)));
+    }
   }
 }
 void test_cone(void) {}

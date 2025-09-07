@@ -17,9 +17,26 @@ Light pointlight(const Point position, const Color intensity) {
       .position = position, .intensity = intensity, .ltype = LIGHT_TYPE_POINT};
 }
 
+Light arealight(const Point corner, const Vector v1, const uint8_t usteps,
+                const Vector v2, const uint8_t vsteps, const Color intensity) {
+  const Point position =
+      tuple_add(corner, tuple_add(tuple_sdiv(v1, 2), tuple_sdiv(v2, 2)));
+  return (Light){
+      .ltype = LIGHT_TYPE_AREA,
+      .position = position,
+      .intensity = intensity,
+      .light_data.area.corner = corner,
+      .light_data.area.usteps = usteps,
+      .light_data.area.vsteps = vsteps,
+      .light_data.area.samples = usteps * vsteps,
+      .light_data.area.uvec = tuple_sdiv(v1, usteps),
+      .light_data.area.vvec = tuple_sdiv(v2, vsteps),
+  };
+}
+
 Color lighting(const MaterialPhong material, const Shape object,
                const Point point, const Light light, const Vector eye,
-               const Vector normal, bool in_shadow) {
+               const Vector normal, double intensity) {
 #ifndef BLAZE
   assert(is_point(point) && is_vector(eye) && is_vector(normal));
 #endif
@@ -33,17 +50,19 @@ Color lighting(const MaterialPhong material, const Shape object,
   const double light_dot_normal = tuple_dot_product(dir_light, normal);
   Color diffuse = BLACK, specular = BLACK;
   double attenuation = 1;
-  if (!in_shadow && light_dot_normal >= 0) {
+  if (light_dot_normal >= 0) {
     const double distance = tuple_length(tuple_sub(light.position, point));
     const double linear = light.attenuation.linear;
     const double quadratic = light.attenuation.quadratic;
     attenuation = 1 / (1.0 + linear * distance + quadratic * distance);
-    diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
+    diffuse = color_smul(effective_color,
+                         material.diffuse * light_dot_normal * intensity);
     const Vector reflection = reflect(tuple_neg(dir_light), normal);
     const double reflect_dot_eye = tuple_dot_product(reflection, eye);
     if (reflect_dot_eye > 0) {
       const double factor = pow(reflect_dot_eye, material.shininess);
-      specular = color_smul(light.intensity, material.specular * factor);
+      specular =
+          color_smul(light.intensity, material.specular * factor * intensity);
     }
   }
   return color_smul(color_add(color_add(specular, diffuse), ambient),

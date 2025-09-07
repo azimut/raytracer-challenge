@@ -66,11 +66,11 @@ Intersections world_intersect(const World world, const Ray ray) {
 Color shade_hit(const World world, const Computations comp, uint8_t life) {
   Color surface = {0};
   for (size_t i = 0; i < world.lights_count; ++i) {
-    const Vector light_pos = world.lights[i].position;
-    const bool shadowed = is_shadowed(world, comp.over_point, light_pos);
+    const double intensity =
+        intensity_at(world.lights[i], comp.over_point, world);
     const Color new =
         lighting(comp.object.material, comp.object, comp.over_point,
-                 world.lights[i], comp.eye, comp.normal, shadowed);
+                 world.lights[i], comp.eye, comp.normal, intensity);
     surface = color_add(surface, new);
   }
   const Color reflected = reflected_color(world, comp, life);
@@ -150,7 +150,7 @@ Color refracted_color(const World world, const Computations comp,
 }
 
 double intensity_at(const Light light, const Point point, const World world) {
-  double result = 1;
+  double result;
   switch (light.ltype) {
   case LIGHT_TYPE_POINT: {
     result = is_shadowed(world, point, light.position) ? 0 : 1;
@@ -164,3 +164,10 @@ double intensity_at(const Light light, const Point point, const World world) {
   }
   return result;
 };
+
+Point point_on_light(const Light light, const uint8_t u, const uint8_t v) {
+  return tuple_add(
+      light.light_data.area.corner,
+      tuple_add(tuple_smul(light.light_data.area.uvec, (double)u + 0.5),
+                tuple_smul(light.light_data.area.vvec, (double)v + 0.5)));
+}

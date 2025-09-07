@@ -25,6 +25,10 @@ typedef struct Light {
     struct {
     } point;
     struct {
+      Point corner;
+      Vector uvec, vvec;
+      uint8_t usteps, vsteps;
+      uint8_t samples;
     } area;
   } light_data;
 } Light;
@@ -69,8 +73,10 @@ typedef struct Light {
 Vector reflect(const Vector, const Vector);
 
 Light pointlight(const Point, const Color);
+Light arealight(const Point corner, const Vector v1, const uint8_t usteps,
+                const Vector v2, const uint8_t vsteps, const Color);
 
 Color lighting(const MaterialPhong, const Shape, const Point, const Light,
-               const Vector, const Vector, bool);
+               const Vector, const Vector, double);
 
 #endif /* SHADING_H */
