@@ -13,7 +13,7 @@ PointLight pointlight(const Point position, const Color intensity) {
 #ifndef BLAZE
   assert(is_point(position));
 #endif
-  return (PointLight){position, intensity, 0};
+  return (PointLight){.position = position, .intensity = intensity};
 }
 
 Color lighting(const MaterialPhong material, const Shape object,
@@ -30,13 +30,12 @@ Color lighting(const MaterialPhong material, const Shape object,
   const Color ambient = color_smul(effective_color, material.ambient);
   const Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
   const double light_dot_normal = tuple_dot_product(dir_light, normal);
-  Color diffuse = {0, 0, 0}, specular = {0, 0, 0};
+  Color diffuse = BLACK, specular = BLACK;
   double attenuation = 1;
   if (!in_shadow && light_dot_normal >= 0) {
     const double distance = tuple_length(tuple_sub(light.position, point));
-    const double linear = default_attenuations[light.attenuation_idx].linear;
-    const double quadratic =
-        default_attenuations[light.attenuation_idx].quadratic;
+    const double linear = light.attenuation.linear;
+    const double quadratic = light.attenuation.quadratic;
     attenuation = 1 / (1.0 + linear * distance + quadratic * distance);
     diffuse = color_smul(effective_color, material.diffuse * light_dot_normal);
     const Vector reflection = reflect(tuple_neg(dir_light), normal);

@@ -7,6 +7,16 @@
 #include "./tuple.h"
 #include <stdint.h>
 
+typedef struct Attenuation {
+  double linear, quadratic;
+} Attenuation;
+
+typedef struct PointLight {
+  Point position;
+  Color intensity;
+  Attenuation attenuation;
+} PointLight;
+
 // Source: http://planetpixelemporium.com/tutorialpages/light.html
 #define LIGHT_COLORS_CANDLE ((Color){1.0, 0.5764706, 0.16078432})
 #define LIGHT_COLORS_TUNGSTEN_40 ((Color){1.0, 0.7725491, 0.56078434})
@@ -30,23 +40,19 @@
 #define LIGHT_COLORS_METAL_HALIDE ((Color){0.9490197, 0.98823535, 1.0})
 #define LIGHT_COLORS_HIGH_PRESSURE_SODIUM ((Color){1.0, 0.7176471, 0.29803923})
 
-typedef struct Attenuations {
-  double linear, quadratic;
-} Attenuations;
-
-typedef struct PointLight {
-  Point position;
-  Color intensity;
-  uint8_t attenuation_idx;
-} PointLight;
-
-// from ∞ to smaller
-static const Attenuations default_attenuations[13] = {
-    {0, 0},          {0.0014, 0.000007}, {0.007, 0.0002}, {0.014, 0.0007},
-    {0.022, 0.0019}, {0.027, 0.0028},    {0.045, 0.0075}, {0.07, 0.017},
-    {0.09, 0.032},   {0.14, 0.07},       {0.22, 0.20},    {0.35, 0.44},
-    {0.7, 1.8},
-};
+#define LIGHT_SIZE_INFINITE ((Attenuation){0, 0})
+#define LIGHT_SIZE_3250 ((Attenuation){0.0014, 0.000007})
+#define LIGHT_SIZE_600 ((Attenuation){0.007, 0.0002})
+#define LIGHT_SIZE_325 ((Attenuation){0.014, 0.0007})
+#define LIGHT_SIZE_200 ((Attenuation){0.022, 0.0019})
+#define LIGHT_SIZE_160 ((Attenuation){0.027, 0.0028})
+#define LIGHT_SIZE_100 ((Attenuation){0.045, 0.0075})
+#define LIGHT_SIZE_65 ((Attenuation){0.07, 0.017})
+#define LIGHT_SIZE_50 ((Attenuation){0.09, 0.032})
+#define LIGHT_SIZE_32 ((Attenuation){0.14, 0.07})
+#define LIGHT_SIZE_20 ((Attenuation){0.22, 0.20})
+#define LIGHT_SIZE_13 ((Attenuation){0.35, 0.44})
+#define LIGHT_SIZE_7 ((Attenuation){0.7, 1.8})
 
 Vector reflect(const Vector, const Vector);
 

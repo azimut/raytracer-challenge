@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
 
   PointLight p = {0};
   p = pointlight(point(15, 7, -15), color(0.1, 0.9, 1.0));
-  p.attenuation_idx = 4;
+  p.attenuation = LIGHT_SIZE_32;
   world_enlight(&w, p);
   p = pointlight(point(3, 12, -7), color(1.0, 0.1, 0.9));
-  p.attenuation_idx = 10;
+  p.attenuation = LIGHT_SIZE_160;
   world_enlight(&w, p);
 
   Shape floor = plane();
