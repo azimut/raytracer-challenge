@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
   Camera cam = camera(DIMENSION, DIMENSION, M_PI / 3);
   cam.transform =
-      view_transform(point(3, 0.5, 3), point(-1, 1.5, -1.5), vector(0, 1, 0));
+      view_transform(POINT(3, 0.5, 3), POINT(-1, 1.5, -1.5), VECTOR(0, 1, 0));
 
   Shape floor = plane();
   floor.material = material();

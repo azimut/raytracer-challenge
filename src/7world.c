@@ -18,7 +18,7 @@ int main(void) {
 
   Camera cam = camera(1024, 1024, M_PI / 3);
   cam.transform =
-      view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
+      view_transform(POINT(0, 1.5, -5), POINT(0, 1, 0), VECTOR(0, 1, 0));
 
   Shape floor = sphere();
   floor.transformation = scaling(10, 0.01, 10);

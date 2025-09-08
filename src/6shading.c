@@ -12,7 +12,7 @@
 
 int main(void) {
   PointLight light = pointlight(point(-10, 10, -10), color(1, 1, 1));
-  Point ray_origin = point(0, 0, -5);
+  Point ray_origin = POINT(0, 0, -5);
   float wall_z = 10;
   float wall_size = 7;
   Canvas c = canvas(DIMENSION, DIMENSION);
@@ -31,7 +31,7 @@ int main(void) {
     float world_y = half - pixel_size * row;
     for (size_t col = 0; col < c.height; col++) {
       float world_x = half - pixel_size * col;
-      Point pos = point(world_x, world_y, wall_z);
+      Point pos = POINT(world_x, world_y, wall_z);
       // update ray direction
       Ray rr = ray(ray_origin, tuple_normalize(tuple_sub(pos, ray_origin)));
       // intersect with sphere

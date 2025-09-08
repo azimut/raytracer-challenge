@@ -10,8 +10,9 @@ typedef Tuple Point;
 typedef Tuple Vector;
 
 Tuple tuple(double, double, double, double);
-Tuple point(double, double, double);
-Tuple vector(double, double, double);
+
+#define POINT(x, y, z) ((Point){x, y, z, 1})
+#define VECTOR(x, y, z) ((Vector){x, y, z, 0})
 
 bool is_point(const Tuple);
 bool is_vector(const Tuple);

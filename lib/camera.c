@@ -49,8 +49,8 @@ Ray ray_for_pixel(const Camera cam, double px, double py) {
   const double world_y = cam.half_height - yoffset;
   // transform canvas_point, and origin
   const Point pixel =
-      m4_tmul(m4_inverse(cam.transform), point(world_x, world_y, -1));
-  const Point origin = m4_tmul(m4_inverse(cam.transform), point(0, 0, 0));
+      m4_tmul(m4_inverse(cam.transform), POINT(world_x, world_y, -1));
+  const Point origin = m4_tmul(m4_inverse(cam.transform), POINT(0, 0, 0));
   const Vector direction = tuple_normalize(tuple_sub(pixel, origin));
   return (Ray){
       .origin = origin,

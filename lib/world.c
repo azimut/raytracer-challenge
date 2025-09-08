@@ -24,7 +24,7 @@ void world_enlight(World *world, Light light) {
 World world_default(void) {
   World w = {0};
 
-  Light pl = pointlight(point(-10, 10, -10), WHITE);
+  Light pl = pointlight(POINT(-10, 10, -10), WHITE);
   world_enlight(&w, pl);
 
   Shape s1 = sphere();

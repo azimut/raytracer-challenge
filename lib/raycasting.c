@@ -69,7 +69,7 @@ Intersections intersect(const Shape shape, const Ray ray) {
   Intersections is = intersections_new(5);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
-    const Point sphere_to_ray = tuple_sub(tRay.origin, point(0, 0, 0));
+    const Point sphere_to_ray = tuple_sub(tRay.origin, POINT(0, 0, 0));
     const double a = tuple_dot_product(tRay.direction, tRay.direction);
     const double b = 2.0 * tuple_dot_product(tRay.direction, sphere_to_ray);
     const double c = tuple_dot_product(sphere_to_ray, sphere_to_ray) - 1.0;

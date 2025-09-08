@@ -66,7 +66,7 @@ static Parser obj_parse(FILE *f) {
       float x, y, z;
       int ret;
       if ((ret = sscanf(buf, "v %f %f %f", &x, &y, &z)), ret == 3) {
-        parser_insert_vertex(&parser, point(x, y, z));
+        parser_insert_vertex(&parser, POINT(x, y, z));
       } else {
         fprintf(stderr, "ERROR: malformed vertex line `%s`", buf);
         exit(EXIT_FAILURE);

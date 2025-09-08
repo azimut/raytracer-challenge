@@ -88,7 +88,7 @@ Vector normal_at(const Shape shape, const Point world_point) {
     exit(EXIT_FAILURE);
   }
   case SHAPE_TYPE_SPHERE: {
-    object_normal = tuple_sub(object_point, point(0, 0, 0));
+    object_normal = tuple_sub(object_point, POINT(0, 0, 0));
     break;
   }
   case SHAPE_TYPE_CYLINDER: {
@@ -97,27 +97,27 @@ Vector normal_at(const Shape shape, const Point world_point) {
     const double max = shape.shape_data.cylinder.maximum;
     const double min = shape.shape_data.cylinder.minimum;
     if (distance < 1 && object_point.y >= max - EPSILON) {
-      object_normal = vector(0, 1, 0);
+      object_normal = VECTOR(0, 1, 0);
     } else if (distance < 1 && object_point.y <= min + EPSILON) {
-      object_normal = vector(0, -1, 0);
+      object_normal = VECTOR(0, -1, 0);
     } else {
-      object_normal = vector(object_point.x, 0, object_point.z);
+      object_normal = VECTOR(object_point.x, 0, object_point.z);
     }
     break;
   }
   case SHAPE_TYPE_PLANE: {
-    object_normal = vector(0, 1, 0);
+    object_normal = VECTOR(0, 1, 0);
     break;
   }
   case SHAPE_TYPE_CUBE: {
     const double maxc = fmax(fmax(fabs(object_point.x), fabs(object_point.y)),
                              fabs(object_point.z));
     if (near(maxc, fabs(object_point.x)))
-      object_normal = vector(object_point.x, 0, 0);
+      object_normal = VECTOR(object_point.x, 0, 0);
     else if (near(maxc, fabs(object_point.y)))
-      object_normal = vector(0, object_point.y, 0);
+      object_normal = VECTOR(0, object_point.y, 0);
     else
-      object_normal = vector(0, 0, object_point.z);
+      object_normal = VECTOR(0, 0, object_point.z);
     break;
   }
   case SHAPE_TYPE_TRIANGLE:

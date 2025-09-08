@@ -21,8 +21,8 @@ typedef struct Mat2 {
 
 Mat4 m4(double, double, double, double, double, double, double, double, double,
         double, double, double, double, double, double, double);
-bool m4_equal(const Mat4, Mat4);
-Mat4 m4_mul(const Mat4, Mat4);
+bool m4_equal(const Mat4, const Mat4);
+Mat4 m4_mul(const Mat4, const Mat4);
 Tuple m4_tmul(const Mat4, const Tuple);
 Mat4 m4_transpose(const Mat4);
 Mat4 m4_inverse(const Mat4);
@@ -31,11 +31,11 @@ void m4_print(const Mat4);
 Mat3 m3(double, double, double, double, double, double, double, double, double);
 void m3_print(const Mat3);
 bool m3_equal(const Mat3, const Mat3);
-Mat3 m4_submatrix(const Mat4, size_t, size_t);
+Mat3 m4_submatrix(const Mat4, const size_t, const size_t);
 
 Mat2 m2(double, double, double, double);
 void m2_print(const Mat2);
 bool m2_equal(const Mat2, const Mat2);
-Mat2 m3_submatrix(const Mat3, size_t, size_t);
+Mat2 m3_submatrix(const Mat3, const size_t, const size_t);
 
 #endif /* MATRIX_H */

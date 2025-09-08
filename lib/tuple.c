@@ -5,8 +5,6 @@
 Tuple tuple(double x, double y, double z, double w) {
   return (Tuple){x, y, z, w};
 }
-Tuple point(double x, double y, double z) { return (Tuple){x, y, z, 1}; }
-Tuple vector(double x, double y, double z) { return (Tuple){x, y, z, 0}; }
 
 bool is_point(const Tuple t) { return t.w == 1; }
 bool is_vector(const Tuple t) { return t.w == 0; }
@@ -25,10 +23,10 @@ Tuple tuple_sub(const Tuple a, const Tuple b) {
 Tuple tuple_neg(const Tuple a) { return (Tuple){-a.x, -a.y, -a.z, a.w}; }
 
 Tuple tuple_smul(const Tuple a, double by) {
-  return vector(a.x * by, a.y * by, a.z * by);
+  return VECTOR(a.x * by, a.y * by, a.z * by);
 }
 Tuple tuple_sdiv(const Tuple a, double by) {
-  return vector(a.x / by, a.y / by, a.z / by);
+  return VECTOR(a.x / by, a.y / by, a.z / by);
 }
 
 double tuple_length(const Tuple a) {
@@ -37,7 +35,7 @@ double tuple_length(const Tuple a) {
 
 Tuple tuple_normalize(const Tuple a) {
   double length = tuple_length(a);
-  return vector(a.x / length, a.y / length, a.z / length);
+  return VECTOR(a.x / length, a.y / length, a.z / length);
 }
 
 double tuple_dot_product(const Tuple a, const Tuple b) {
@@ -45,6 +43,6 @@ double tuple_dot_product(const Tuple a, const Tuple b) {
 }
 
 Tuple tuple_cross_product(const Tuple a, const Tuple b) {
-  return vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
+  return VECTOR(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
                 a.x * b.y - a.y * b.x);
 }

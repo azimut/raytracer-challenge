@@ -4,7 +4,7 @@
 #include "../lib/tuple.h"
 
 int main(void) {
-  Point ray_origin = point(0, 0, -5);
+  Point ray_origin = POINT(0, 0, -5);
   float wall_z = 10;
   float wall_size = 7;
   size_t canvas_pixels = 300;
@@ -20,7 +20,7 @@ int main(void) {
     float world_y = half - pixel_size * row;
     for (size_t col = 0; col < c.height; col++) {
       float world_x = half - pixel_size * col;
-      Point position = point(world_x, world_y, wall_z);
+      Point position = POINT(world_x, world_y, wall_z);
       // update ray direction
       Ray rr =
           ray(ray_origin, tuple_normalize(tuple_sub(position, ray_origin)));

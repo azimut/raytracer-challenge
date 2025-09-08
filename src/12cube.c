@@ -27,10 +27,10 @@ int main(int argc, char *argv[]) {
   World w = {0};
 
   Light p = {0};
-  p = pointlight(point(15, 7, -15), color(0.1, 0.9, 1.0));
+  p = pointlight(POINT(15, 7, -15), color(0.1, 0.9, 1.0));
   p.attenuation = LIGHT_SIZE_200;
   world_enlight(&w, p);
-  p = pointlight(point(3, 12, -7), color(1.0, 0.1, 0.9));
+  p = pointlight(POINT(3, 12, -7), color(1.0, 0.1, 0.9));
   p.attenuation = LIGHT_SIZE_32;
   world_enlight(&w, p);
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
   char *filename = basename(argv[0]);
   Camera cam = camera(SIZEX, SIZEY, M_PI / 2.75);
   cam.transform =
-      view_transform(point(.5, 0.5, -5), point(0.1, 1.5, 0), vector(0, 1, 0));
+      view_transform(POINT(.5, 0.5, -5), POINT(0.1, 1.5, 0), VECTOR(0, 1, 0));
 
   /* int frame = 0; */
   /* for (float i = 0; i < M_PI * 2; i += .1) { */

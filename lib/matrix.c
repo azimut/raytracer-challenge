@@ -58,7 +58,7 @@ Tuple m4_tmul(const Mat4 m, const Tuple t) {
   };
 }
 
-static Mat4 m4_sdiv(const Mat4 m, double by) {
+static Mat4 m4_sdiv(const Mat4 m, const double by) {
   Mat4 result;
   for (size_t row = 0; row < 4; row++) {
     for (size_t col = 0; col < 4; col++) {
@@ -81,7 +81,7 @@ static double m2_determinant(const Mat2 m2) {
   return (m2.m[0][0] * m2.m[1][1]) - (m2.m[0][1] * m2.m[1][0]);
 }
 
-Mat2 m3_submatrix(const Mat3 m3, size_t skip_row, size_t skip_col) {
+Mat2 m3_submatrix(const Mat3 m3, const size_t skip_row, const size_t skip_col) {
   Mat2 result = M2_IDENTITY;
   size_t trow = 0;
   for (size_t row = 0; row < 3; row++) {
@@ -99,7 +99,7 @@ Mat2 m3_submatrix(const Mat3 m3, size_t skip_row, size_t skip_col) {
   return result;
 }
 
-Mat3 m4_submatrix(const Mat4 m4, size_t skip_row, size_t skip_col) {
+Mat3 m4_submatrix(const Mat4 m4, const size_t skip_row, const size_t skip_col) {
   Mat3 result = {0};
   size_t trow = 0;
   for (size_t row = 0; row < 4; row++) {
@@ -117,10 +117,12 @@ Mat3 m4_submatrix(const Mat4 m4, size_t skip_row, size_t skip_col) {
   return result;
 }
 
-static inline double m3_minor(const Mat3 m, size_t row, size_t col) {
+static inline double m3_minor(const Mat3 m, const size_t row,
+                              const size_t col) {
   return m2_determinant(m3_submatrix(m, row, col));
 }
-static inline double m3_cofactor(const Mat3 m3, size_t row, size_t col) {
+static inline double m3_cofactor(const Mat3 m3, const size_t row,
+                                 const size_t col) {
   const double minor = m3_minor(m3, row, col);
   return ((row + col) % 2) ? -minor : minor;
 }
@@ -132,10 +134,12 @@ static double m3_determinant(const Mat3 m3) {
   return result;
 }
 
-static inline double m4_minor(const Mat4 m4, size_t row, size_t col) {
+static inline double m4_minor(const Mat4 m4, const size_t row,
+                              const size_t col) {
   return m3_determinant(m4_submatrix(m4, row, col));
 }
-static inline double m4_cofactor(const Mat4 m4, size_t row, size_t col) {
+static inline double m4_cofactor(const Mat4 m4, const size_t row,
+                                 const size_t col) {
   const double minor = m4_minor(m4, row, col);
   return ((row + col) % 2) ? -minor : minor;
 }
