@@ -27,10 +27,10 @@ int main(int argc, char *argv[]) {
   World w = {0};
 
   Light p = {0};
-  p = pointlight(POINT(15, 7, -15), color(0.1, 0.9, 1.0));
+  p = pointlight(POINT(15, 7, -15), COLOR(0.1, 0.9, 1.0));
   p.attenuation = LIGHT_SIZE_100;
   world_enlight(&w, p);
-  p = pointlight(POINT(3, 12, -7), color(1.0, 0.1, 0.9));
+  p = pointlight(POINT(3, 12, -7), COLOR(1.0, 0.1, 0.9));
   p.attenuation = LIGHT_SIZE_32;
   world_enlight(&w, p);
 

@@ -20,7 +20,7 @@ int main(void) {
   float half = wall_size / 2;               // 3.5
   Shape s = sphere();
   MaterialPhong m = material();
-  m.color = color(1, 0.2, 1);
+  m.color = COLOR(1, 0.2, 1);
   set_material(&s, m);
   /* set_transform(&s, scaling(1, 0.5, 1)); */
   /* set_transform(&s, m4_mul(s.transformation, shearing(1, 2, 1, 1, -2, 1)));

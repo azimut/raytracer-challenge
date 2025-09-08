@@ -23,7 +23,7 @@ int main(void) {
   Shape floor = sphere();
   floor.transformation = scaling(10, 0.01, 10);
   floor.material = material();
-  floor.material.color = color(1, 0.9, 0.9);
+  floor.material.color = COLOR(1, 0.9, 0.9);
   floor.material.specular = 0;
   world_enter(&w, floor);
 
@@ -46,7 +46,7 @@ int main(void) {
   Shape middle = sphere();
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
-  middle.material.color = color(0.1, 1, 0.5);
+  middle.material.color = COLOR(0.1, 1, 0.5);
   middle.material.diffuse = 0.7;
   middle.material.specular = 0.3;
   world_enter(&w, middle);
@@ -55,7 +55,7 @@ int main(void) {
   right.transformation =
       m4_mul(translation(1.5, 0.5, -0.5), scaling(0.5, 0.5, 0.5));
   right.material = material();
-  right.material.color = color(0.5, 1, 0.1);
+  right.material.color = COLOR(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
   right.material.specular = 0.3;
   world_enter(&w, right);
@@ -64,7 +64,7 @@ int main(void) {
   left.transformation =
       m4_mul(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
   left.material = material();
-  left.material.color = color(1, 0.8, 0.1);
+  left.material.color = COLOR(1, 0.8, 0.1);
   left.material.diffuse = 0.7;
   left.material.specular = 0.3;
   world_enter(&w, left);

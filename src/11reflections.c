@@ -22,10 +22,10 @@ int main(int argc, char *argv[]) {
   World w = {0};
 
   Light p = {0};
-  p = pointlight(POINT(-10, 7, 5), color(.63, 0.39450981, 0.887843144));
+  p = pointlight(POINT(-10, 7, 5), COLOR(.63, 0.39450981, 0.887843144));
   p.attenuation = LIGHT_SIZE_20;
   world_enlight(&w, p);
-  p = pointlight(POINT(-3, 1, -3), color(0.2191, 0.19450981, 0.027843144));
+  p = pointlight(POINT(-3, 1, -3), COLOR(0.2191, 0.19450981, 0.027843144));
   p.attenuation = LIGHT_SIZE_160;
   world_enlight(&w, p);
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
   roof.material.pattern = pattern_stripes(WHITE, BLACK);
   roof.material.pattern.transformation =
       m4_mul(translation(0, 0, 0), scaling(3, 1, 3));
-  roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
+  roof.material.color = COLOR(136.0 / 255, 198.0 / 255, 252.0 / 255);
   roof.material.specular = 0;
   roof.material.ambient = AMBIENT / 2;
   world_enter(&w, roof);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
   Shape middle = sphere();
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
-  middle.material.color = color(0.1, 1, 0.5);
+  middle.material.color = COLOR(0.1, 1, 0.5);
   /* middle.material.pattern = pattern_stripes(RED, BLUE); */
   /* middle.material.pattern.transformation = */
   /*     m4_mul(rotation_z(M_PI / 3), scaling(0.11, 1, 1)); */
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
   right.material.pattern = pattern_stripes(WHITE, BLACK);
   right.material.pattern.transformation =
       m4_mul(rotation_z(radians(-45)), scaling(.15, 1, 1));
-  right.material.color = color(0.5, 1, 0.1);
+  right.material.color = COLOR(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
   right.material.specular = 0.01;
   right.material.ambient = AMBIENT;
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
   left.transformation =
       m4_mul(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
   left.material = material();
-  left.material.color = color(.15, .25, .15);
+  left.material.color = COLOR(.15, .25, .15);
   left.material.diffuse = 0.7;
   left.material.ambient = AMBIENT;
   left.material.specular = .3;

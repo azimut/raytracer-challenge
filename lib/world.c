@@ -28,7 +28,7 @@ World world_default(void) {
   world_enlight(&w, pl);
 
   Shape s1 = sphere();
-  s1.material.color = color(0.8, 1.0, 0.6);
+  s1.material.color = COLOR(0.8, 1.0, 0.6);
   s1.material.diffuse = 0.7;
   s1.material.specular = 0.2;
   world_enter(&w, s1);

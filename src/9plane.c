@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
   Shape floor = plane();
   floor.material = material();
-  floor.material.color = color(.4, 0.9, 0.9);
+  floor.material.color = COLOR(.4, 0.9, 0.9);
   floor.material.specular = 0;
   world_enter(&w, floor);
 
@@ -41,19 +41,19 @@ int main(int argc, char *argv[]) {
                            radius * sin(M_PI / 6.0 + (i * M_PI) / 3.0)),
                m4_mul(rotation_y(radians(rot)), rotation_x(M_PI / 2)));
     rot -= 60;
-    hexa.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
+    hexa.material.color = COLOR(136.0 / 255, 198.0 / 255, 252.0 / 255);
     world_enter(&w, hexa);
   }
 
   Shape roof = plane();
   roof.transformation = translation(0, 20, 0);
-  roof.material.color = color(136.0 / 255, 198.0 / 255, 252.0 / 255);
+  roof.material.color = COLOR(136.0 / 255, 198.0 / 255, 252.0 / 255);
   world_enter(&w, roof);
 
   Shape middle = sphere();
   middle.transformation = translation(-0.5, 1, 0.5);
   middle.material = material();
-  middle.material.color = color(0.1, 1, 0.5);
+  middle.material.color = COLOR(0.1, 1, 0.5);
   middle.material.diffuse = 0.7;
   middle.material.specular = 0.3;
   world_enter(&w, middle);
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
   right.transformation =
       m4_mul(translation(1.5, 0.5, -0.5), scaling(0.5, 0.5, 0.5));
   right.material = material();
-  right.material.color = color(0.5, 1, 0.1);
+  right.material.color = COLOR(0.5, 1, 0.1);
   right.material.diffuse = 0.7;
   right.material.specular = 0.3;
   world_enter(&w, right);

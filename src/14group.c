@@ -27,10 +27,10 @@ int main(int argc, char *argv[]) {
   World w = {0};
 
   Light p = {0};
-  p = pointlight(POINT(15, 7, -15), color(0.1, 0.9, 1.0));
+  p = pointlight(POINT(15, 7, -15), COLOR(0.1, 0.9, 1.0));
   p.attenuation = LIGHT_SIZE_100;
   world_enlight(&w, p);
-  p = pointlight(POINT(3, 12, -7), color(1.0, 0.1, 0.9));
+  p = pointlight(POINT(3, 12, -7), COLOR(1.0, 0.1, 0.9));
   p.attenuation = LIGHT_SIZE_32;
   world_enlight(&w, p);
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
   Shape middle = sphere();
   middle.transformation = translation(-0.5, 1, -0.5);
-  middle.material.color = color(0.1, 1, 0.5);
+  middle.material.color = COLOR(0.1, 1, 0.5);
   middle.material.color = BLACK;
 
   /* middle.material.pattern = pattern_stripes(RED, BLUE); */
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   /* right.material.pattern = pattern_rings(WHITE, BLACK); */
   /* right.material.pattern.transformation = */
   /*     m4_mul(rotation_z(radians(-45)), scaling(.15, .15, .15)); */
-  right.material.color = color(0.4, 0.4, 0.4);
+  right.material.color = COLOR(0.4, 0.4, 0.4);
   right.material.diffuse = 0.7;
   right.material.specular = 1;
   right.material.ambient = AMBIENT / 2;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
   Shape left = sphere();
   left.transformation =
       m4_mul(translation(-1.5, 0.33, -0.75), scaling(.33, .33, .33));
-  left.material.color = color(.15, .25, .15);
+  left.material.color = COLOR(.15, .25, .15);
   left.material.diffuse = 0.7;
   left.material.ambient = AMBIENT;
   left.material.specular = .3;
