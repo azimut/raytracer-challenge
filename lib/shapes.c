@@ -212,7 +212,7 @@ void csg_free(Shape *csg) {
 // inl  = true if hit happened inside .left
 // inr  = true if hit happened inside .right
 bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
-  bool result;
+  bool result = false;
   switch (operation) {
   case CSG_OP_UNION:
     result = (lhit && !inr) || (!lhit && !inl);
