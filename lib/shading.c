@@ -53,6 +53,22 @@ Color lighting(const MaterialPhong material, const Shape object,
   const double quadratic = light.attenuation.quadratic;
   double attenuation = 1 / (1.0 + linear * distance + quadratic * distance);
   switch (light.ltype) {
+  case LIGHT_TYPE_POINT: {
+    const Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
+    const double light_dot_normal = tuple_dot_product(dir_light, normal);
+    if (light_dot_normal >= 0) {
+      diffuse = color_smul(effective_color,
+                           material.diffuse * light_dot_normal * intensity);
+      const Vector reflection = reflect(tuple_neg(dir_light), normal);
+      const double reflect_dot_eye = tuple_dot_product(reflection, eye);
+      if (reflect_dot_eye > 0) {
+        const double factor = pow(reflect_dot_eye, material.shininess);
+        specular =
+            color_smul(light.intensity, material.specular * factor * intensity);
+      }
+    }
+    break;
+  }
   case LIGHT_TYPE_AREA: {
     for (size_t u = 0; u < light.light_data.area.usteps; ++u) {
       for (size_t v = 0; v < light.light_data.area.vsteps; ++v) {
@@ -77,22 +93,6 @@ Color lighting(const MaterialPhong material, const Shape object,
     }
     diffuse = color_sdiv(diffuse, light.light_data.area.samples);
     specular = color_sdiv(specular, light.light_data.area.samples);
-    break;
-  }
-  case LIGHT_TYPE_POINT: {
-    const Vector dir_light = tuple_normalize(tuple_sub(light.position, point));
-    const double light_dot_normal = tuple_dot_product(dir_light, normal);
-    if (light_dot_normal >= 0) {
-      diffuse = color_smul(effective_color,
-                           material.diffuse * light_dot_normal * intensity);
-      const Vector reflection = reflect(tuple_neg(dir_light), normal);
-      const double reflect_dot_eye = tuple_dot_product(reflection, eye);
-      if (reflect_dot_eye > 0) {
-        const double factor = pow(reflect_dot_eye, material.shininess);
-        specular =
-            color_smul(light.intensity, material.specular * factor * intensity);
-      }
-    }
     break;
   }
   }
