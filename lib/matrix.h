@@ -14,13 +14,13 @@ typedef struct Mat2 {
   double m[2][2];
 } Mat2;
 
+#define M4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)                     \
+  ((Mat4){{{a, b, c, d}, {e, f, g, h}, {i, j, k, l}, {m, n, o, p}}})
 #define M4_IDENTITY                                                            \
   ((Mat4){{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}})
 #define M3_IDENTITY ((Mat3){{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}})
 #define M2_IDENTITY ((Mat2){{{1, 0}, {0, 1}}})
 
-Mat4 m4(double, double, double, double, double, double, double, double, double,
-        double, double, double, double, double, double, double);
 bool m4_equal(const Mat4, const Mat4);
 Mat4 m4_mul(const Mat4, const Mat4);
 Tuple m4_tmul(const Mat4, const Tuple);

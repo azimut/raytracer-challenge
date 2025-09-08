@@ -6,4 +6,4 @@ double clamp(double value, double min, double max) {
   return fmin(fmax(value, min), max);
 }
 
-bool near(double x, double y) { return fabs(x - y) < EPSILON; }
+bool near(const double x, const double y) { return fabs(x - y) < EPSILON; }

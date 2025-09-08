@@ -22,10 +22,10 @@ Tuple tuple_sub(const Tuple a, const Tuple b) {
 
 Tuple tuple_neg(const Tuple a) { return (Tuple){-a.x, -a.y, -a.z, a.w}; }
 
-Tuple tuple_smul(const Tuple a, double by) {
+Tuple tuple_smul(const Tuple a, const double by) {
   return VECTOR(a.x * by, a.y * by, a.z * by);
 }
-Tuple tuple_sdiv(const Tuple a, double by) {
+Tuple tuple_sdiv(const Tuple a, const double by) {
   return VECTOR(a.x / by, a.y / by, a.z / by);
 }
 

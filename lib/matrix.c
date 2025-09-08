@@ -10,11 +10,6 @@ Mat3 m3(double a, double b, double c, double d, double e, double f, double g,
         double h, double i) {
   return (Mat3){{{a, b, c}, {d, e, f}, {g, h, i}}};
 }
-Mat4 m4(double a, double b, double c, double d, double e, double f, double g,
-        double h, double i, double j, double k, double l, double m, double n,
-        double o, double p) {
-  return (Mat4){{{a, b, c, d}, {e, f, g, h}, {i, j, k, l}, {m, n, o, p}}};
-}
 
 bool m2_equal(const Mat2 a, const Mat2 b) {
   return near(a.m[0][0], b.m[0][0]) && near(a.m[0][1], b.m[0][1]) &&

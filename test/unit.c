@@ -56,22 +56,22 @@ void test_matrix(void) {
   assert(m3_equal(m4_submatrix(M4_IDENTITY, 0, 0), M3_IDENTITY));
   assert(m3_equal(m4_submatrix(M4_IDENTITY, 3, 3), M3_IDENTITY));
   assert(m2_equal(M2_IDENTITY, m3_submatrix(M3_IDENTITY, 0, 0)));
-  Mat4 am4 = m4(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2);
+  Mat4 am4 = M4(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2);
   assert(m4_equal(
-      m4_mul(am4, m4(-2, 1, 2, 3, 3, 2, 1, -1, 4, 3, 6, 5, 1, 2, 7, 8)),
-      m4(20, 22, 50, 48, 44, 54, 114, 108, 40, 58, 110, 102, 16, 26, 46, 42)));
+      m4_mul(am4, M4(-2, 1, 2, 3, 3, 2, 1, -1, 4, 3, 6, 5, 1, 2, 7, 8)),
+      M4(20, 22, 50, 48, 44, 54, 114, 108, 40, 58, 110, 102, 16, 26, 46, 42)));
   assert(m4_equal(m4_mul(am4, M4_IDENTITY), am4));
-  assert(tuple_equal(m4_tmul(m4(1, 2, 3, 4, 2, 4, 4, 2, 8, 6, 4, 1, 0, 0, 0, 1),
+  assert(tuple_equal(m4_tmul(M4(1, 2, 3, 4, 2, 4, 4, 2, 8, 6, 4, 1, 0, 0, 0, 1),
                              tuple(1, 2, 3, 1)),
                      tuple(18, 24, 33, 1)));
   assert(
-      m4_equal(m4_transpose(m4(0, 9, 3, 0, 9, 8, 0, 8, 1, 8, 5, 3, 0, 0, 5, 8)),
-               m4(0, 9, 1, 0, 9, 8, 8, 0, 3, 0, 5, 5, 0, 8, 3, 8)));
+      m4_equal(m4_transpose(M4(0, 9, 3, 0, 9, 8, 0, 8, 1, 8, 5, 3, 0, 0, 5, 8)),
+               M4(0, 9, 1, 0, 9, 8, 8, 0, 3, 0, 5, 5, 0, 8, 3, 8)));
   /* assert(17 == m2_determinant(m2(1, 5, -3, 2))); */
   assert(m2_equal(m3_submatrix(m3(1, 5, 0, -3, 2, 7, 0, 6, -3), 0, 2),
                   m2(-3, 2, 0, 6)));
   assert(m3_equal(
-      m4_submatrix(m4(-6, 1, 1, 6, -8, 5, 8, 6, -1, 0, 8, 2, -7, 1, -1, 1), 2,
+      m4_submatrix(M4(-6, 1, 1, 6, -8, 5, 8, 6, -1, 0, 8, 2, -7, 1, -1, 1), 2,
                    1),
       m3(-6, 1, 6, -8, 8, 6, -7, -1, 1)));
   /* Mat3 am3 = m3(3, 5, 0, 2, -1, -7, 6, -1, 5); */
@@ -101,8 +101,8 @@ void test_matrix(void) {
   /* assert(0 == m4_determinant(m4ni)); */
   /* assert(!m4_is_invertible(m4ni)); */
 
-  Mat4 a4 = m4(-5, 2, 6, -8, 1, -5, 1, 8, 7, 7, -6, -7, 1, -3, 7, 4);
-  Mat4 a4i = m4(0.21805, 0.45113, 0.24060, -0.04511, -0.80827, -1.45677,
+  Mat4 a4 = M4(-5, 2, 6, -8, 1, -5, 1, 8, 7, 7, -6, -7, 1, -3, 7, 4);
+  Mat4 a4i = M4(0.21805, 0.45113, 0.24060, -0.04511, -0.80827, -1.45677,
                 -0.44361, 0.52068, -0.07895, -0.22368, -0.05263, 0.19737,
                 -0.52256, -0.81391, -0.30075, 0.30639);
   /* assert(532 == m4_determinant(a4)); */
@@ -364,7 +364,7 @@ void test_world(void) {
   mat4 = view_transform(POINT(0, 0, 8), POINT(0, 0, 0), VECTOR(0, 1, 0));
   assert(m4_equal(mat4, translation(0, 0, -8))); // proff: the world moves
   mat4 = view_transform(POINT(1, 3, 2), POINT(4, -2, 8), VECTOR(1, 1, 0));
-  assert(m4_equal(mat4, m4(-0.50709, 0.50709, 0.67612, -2.36643, 0.76772,
+  assert(m4_equal(mat4, M4(-0.50709, 0.50709, 0.67612, -2.36643, 0.76772,
                            0.60609, 0.12122, -2.82843, -0.35857, 0.59761,
                            -0.71714, 0, 0, 0, 0, 1)));
   // camera()

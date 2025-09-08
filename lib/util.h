@@ -7,6 +7,6 @@
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
 
 double clamp(double, double, double);
-bool near(double, double);
+bool near(const double, const double);
 
 #endif /* UTIL_H */
