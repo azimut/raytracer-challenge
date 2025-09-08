@@ -11,7 +11,7 @@
 #include <math.h>
 #include <string.h>
 
-#define AMBIENT 0.005
+#define AMBIENT 0.00005
 
 #ifndef DIMENSION
 #define DIMENSION 200
@@ -26,12 +26,18 @@ int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
 
-  PointLight p = {0};
-  p = pointlight(point(15, 7, -15), color(0.1, 0.9, 1.0));
-  p.attenuation = LIGHT_SIZE_100;
-  world_enlight(&w, p);
-  p = pointlight(point(3, 12, -7), color(1.0, 0.1, 0.9));
-  p.attenuation = LIGHT_SIZE_32;
+  Light p = {0};
+  /* p = pointlight(point(15, 7, -15), HEX2COLOR("#d601ff")); */
+  /* p.attenuation = LIGHT_SIZE_32; */
+  /* world_enlight(&w, p); */
+  /* p = pointlight(point(3, 12, -7), HEX2COLOR("#01ff9f")); */
+  /* p.attenuation = LIGHT_SIZE_100; */
+  /* world_enlight(&w, p); */
+
+  p = arealight(point(3, 12, -7), vector(0, 0, 2), 3, vector(0, 2, 0), 3,
+                LIGHT_COLORS_FLUORESCENT_STANDARD);
+  /* p = pointlight(point(3, 12, -7), LIGHT_COLORS_FLUORESCENT_STANDARD); */
+  p.attenuation = LIGHT_SIZE_65;
   world_enlight(&w, p);
 
   Shape floor = plane();
@@ -39,37 +45,38 @@ int main(int argc, char *argv[]) {
   floor.material.pattern.transformation = scaling(0.5, .5, .5);
   /* floor.material.color = color(.4, 0.9, 0.9); */
   floor.material.specular = 0;
-  floor.material.ambient = AMBIENT / 2;
-  floor.material.reflective = 0.1;
+  floor.material.ambient = AMBIENT;
+  /* floor.material.reflective = 0.1; */
   world_enter(&w, floor);
 
   Shape s1 = sphere();
-  Shape s2 = sphere();
+  Shape s2 = cube();
   MaterialPhong m = material();
   m.ambient = AMBIENT;
-  m.reflective = 0.01;
+  /* m.reflective = 0.01; */
   s1.material = m;
   s2.material = m;
-  s1.transformation = translation(0, 1, 0);
-  s2.transformation = translation(0, 1, 0.5);
+  s1.transformation = scaling(1.3, 1.3, 1.3);
   Shape *c = csg(CSG_OP_DIFFERENCE, &s2, &s1);
   Shape g = group();
+  g.transformation = m4_mul(translation(0, 1.5, 0), rotation_z(radians(34)));
   group_add(&g, c);
   world_enter(&w, g);
 
   char *filename = basename(argv[0]);
-  Camera cam = camera(SIZEX, SIZEY, M_PI / 2);
+  Camera cam = camera(SIZEX, SIZEY, M_PI / 3);
   cam.transform =
-      view_transform(point(-1.5, 0.5, 2), point(0.1, 1.5, 0), vector(0, 1, 0));
+      view_transform(point(-1.5, 2.5, -2), point(0.1, 1.5, 0), vector(0, 1, 0));
 
-  int frame = 0;
-  for (float i = 0; i < M_PI * 2; i += .1) {
-    Point from = point(sin(i) * 5, 0.5, cos(i) * 5);
-    cam.transform = view_transform(from, point(0, 1.5, 0), vector(0, 1, 0));
-    Canvas canvas = render(cam, w);
-    canvas_save_frame(canvas, filename, ++frame, from);
-    canvas_free(&canvas);
-  }
+  /* int frame = 0; */
+  /* for (float i = 0; i < M_PI * 2; i += .1) { */
+  /*   Point from = point(sin(i) * 3, 1.5, cos(i) * 3); */
+  /*   cam.transform = view_transform(from, point(0, 1.5, 0), vector(0, 1, 0));
+   */
+  /*   Canvas canvas = render(cam, w); */
+  /*   canvas_save_frame(canvas, filename, ++frame, from); */
+  /*   canvas_free(&canvas); */
+  /* } */
 
   char *buff = calloc(100, sizeof(char));
   strcat(strcat(strcat(buff, "media/"), filename), ".ppm");

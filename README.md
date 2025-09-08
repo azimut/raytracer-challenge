@@ -62,6 +62,7 @@ $ make -B test DEBUG=1
 - Chapter 14: Groups
 - ~~Chapter 15: Triangles~~ TODO
 - Chapter 16: CSG
+- Bonus: [Soft Shadows & Area Lights](http://www.raytracerchallenge.com/bonus/area-light.html)
 
 ## Implemented features, not in the book
 

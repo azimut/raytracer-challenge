@@ -1290,22 +1290,45 @@ void test_area_shadow(void) {
     assert(light.light_data.area.samples == 8);
     assert(tuple_equal(light.position, point(1, 0, 0.5)));
   }
-  { // point_on_light()
+  // disable due random
+  /* { // point_on_light() */
+  /*   struct { */
+  /*     uint8_t u, v; */
+  /*     Point result; */
+  /*   } t[5] = { */
+  /*       {0, 0, point(0.25, 0, 0.25)}, {1, 0, point(0.75, 0, 0.25)}, */
+  /*       {0, 1, point(0.25, 0, 0.75)}, {2, 0, point(1.25, 0, 0.25)}, */
+  /*       {3, 1, point(1.75, 0, 0.75)}, */
+  /*   }; */
+  /*   Point corner = point(0, 0, 0); */
+  /*   Vector v1 = vector(2, 0, 0); */
+  /*   Vector v2 = vector(0, 0, 1); */
+  /*   Light light = arealight(corner, v1, 4, v2, 2, WHITE); */
+  /*   for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) { */
+  /*     assert(tuple_equal(t[i].result, point_on_light(light, t[i].u,
+   * t[i].v))); */
+  /*   } */
+  /* } */
+  { // intensity_at() - for area lights
     struct {
-      uint8_t u, v;
-      Point result;
+      Point point;
+      double result;
     } t[5] = {
-        {0, 0, point(0.25, 0, 0.25)}, {1, 0, point(0.75, 0, 0.25)},
-        {0, 1, point(0.25, 0, 0.75)}, {2, 0, point(1.25, 0, 0.25)},
-        {3, 1, point(1.75, 0, 0.75)},
+        {point(0, 0, 2), 0.0},   {point(1, -1, 2), 0.25},
+        {point(1.5, 0, 2), 0.5}, {point(1.25, 1.25, 3), 0.75},
+        {point(0, 0, -2), 1.0},
     };
-    Point corner = point(0, 0, 0);
-    Vector v1 = vector(2, 0, 0);
-    Vector v2 = vector(0, 0, 1);
-    Light light = arealight(corner, v1, 4, v2, 2, WHITE);
+    World w = world_default();
+    Point corner = point(-0.5, -0.5, -5);
+    Vector v1 = vector(1, 0, 0);
+    Vector v2 = vector(0, 1, 0);
+    Light light = arealight(corner, v1, 2, v2, 2, WHITE);
     for (size_t i = 0; i < ARRAY_LENGTH(t); ++i) {
-      assert(tuple_equal(t[i].result, point_on_light(light, t[i].u, t[i].v)));
+      Point pt = t[i].point;
+      double intensity = intensity_at(light, pt, w);
+      assert(near(intensity, t[i].result));
     }
+    world_free(&w);
   }
 }
 void test_cone(void) {}

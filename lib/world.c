@@ -150,24 +150,32 @@ Color refracted_color(const World world, const Computations comp,
 }
 
 double intensity_at(const Light light, const Point point, const World world) {
-  double result;
+  double result = 0;
   switch (light.ltype) {
   case LIGHT_TYPE_POINT: {
     result = is_shadowed(world, point, light.position) ? 0 : 1;
     break;
   }
   case LIGHT_TYPE_AREA: {
-    fprintf(stderr, "Not implemented on area lights yet.\n");
-    exit(EXIT_FAILURE);
+    for (size_t v = 0; v < light.light_data.area.vsteps; ++v) {
+      for (size_t u = 0; u < light.light_data.area.usteps; ++u) {
+        Point light_position = point_on_light(light, u, v);
+        if (!is_shadowed(world, point, light_position)) {
+          result++;
+        }
+      }
+    }
+    result /= light.light_data.area.samples;
     break;
   }
   }
   return result;
 };
 
+// TODO: inject of non random numbers for testing
 Point point_on_light(const Light light, const uint8_t u, const uint8_t v) {
   return tuple_add(
       light.light_data.area.corner,
-      tuple_add(tuple_smul(light.light_data.area.uvec, (double)u + 0.5),
-                tuple_smul(light.light_data.area.vvec, (double)v + 0.5)));
+      tuple_add(tuple_smul(light.light_data.area.uvec, (double)u + drand48()),
+                tuple_smul(light.light_data.area.vvec, (double)v + drand48())));
 }
