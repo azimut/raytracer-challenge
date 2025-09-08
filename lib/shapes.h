@@ -27,14 +27,9 @@ typedef struct Shape {
   Mat4 transformation;
   MaterialPhong material;
   ShapeType shape_type;
+  bool shadowless;
   struct Shape *parent;
   union {
-    struct {
-    } sphere;
-    struct {
-    } plane;
-    struct {
-    } cube;
     struct {
       bool closed;
       double minimum, maximum;

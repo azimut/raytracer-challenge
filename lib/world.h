@@ -11,7 +11,8 @@ typedef struct World {
   Shapes shapes;
 } World;
 
-Intersections world_intersect(const World, const Ray);
+Intersections world_intersect(const World, const Ray,
+                              const bool skip_shadowless);
 void world_enter(World *, Shape);
 void world_enlight(World *, Light);
 World world_default(void);

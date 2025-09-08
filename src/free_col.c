@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
   s.shape_data.cylinder.minimum = -2;
   s.shape_data.cylinder.maximum = +2;
   s.shape_data.cylinder.closed = true;
+  s.shadowless = true;
   /* s.material.reflective = 0.3; */
   /* s.material.transparency = 1; */
   /* s.material.refractive_index = DEFAULT_REFRACTIVE_GLASS; */

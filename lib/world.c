@@ -46,9 +46,13 @@ void world_free(World *world) {
   world->lights = NULL;
 }
 
-Intersections world_intersect(const World world, const Ray ray) {
+Intersections world_intersect(const World world, const Ray ray,
+                              const bool skip_shadowless) {
   Intersections is = intersections_new(15);
   for (size_t i = 0; i < world.shapes.count; ++i) {
+    if (skip_shadowless && world.shapes.shapes[i].shadowless) {
+      continue;
+    }
     Intersections temp_is = intersect(world.shapes.shapes[i], ray);
     if (temp_is.count == 0) {
       intersections_free(&temp_is);
@@ -88,7 +92,7 @@ Color shade_hit(const World world, const Computations comp, uint8_t life) {
 }
 
 Color color_at(const World world, const Ray ray, uint8_t life) {
-  Intersections is = world_intersect(world, ray);
+  Intersections is = world_intersect(world, ray, false);
   Intersection *i = hit(is);
   Color pixel = BLACK;
   if (i) {
@@ -114,7 +118,7 @@ bool is_shadowed(const World world, const Point p, const Point light_pos) {
 #endif
   const Vector shadow_vector = tuple_sub(light_pos, p);
   const Ray shadow_ray = ray(p, tuple_normalize(shadow_vector));
-  Intersections is = world_intersect(world, shadow_ray);
+  Intersections is = world_intersect(world, shadow_ray, true);
   Intersection *h = hit(is);
   const double distance = tuple_length(shadow_vector);
   bool shadowed = false;

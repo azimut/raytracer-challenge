@@ -294,7 +294,7 @@ void test_world(void) {
   Color c = {0};
   w = world_default();
   r = ray(POINT(0, 0, -5), VECTOR(0, 0, 1));
-  is = world_intersect(w, r);
+  is = world_intersect(w, r, false);
   assert(is.count == 4);
   assert(is.hits[0].t == 4.0);
   assert(is.hits[1].t == 4.5);
