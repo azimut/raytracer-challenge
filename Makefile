@@ -8,13 +8,12 @@ CFLAGS    += -DNSAMPLES=$(NSAMPLES)
 CFLAGS    += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
 BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
+DIMENSION ?= 300
 
 ifneq ($(and $(SIZEX),$(SIZEY)),)
 	CFLAGS += -DSIZEX=$(SIZEX) -DSIZEY=$(SIZEY)
-else ifdef DIMENSION
-	CFLAGS += -DDIMENSION=$(DIMENSION)
 else
-	CFLAGS += -DDIMENSION=1024
+	CFLAGS += -DDIMENSION=$(DIMENSION)
 endif
 
 ifdef DEBUG
