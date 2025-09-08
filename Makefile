@@ -31,6 +31,9 @@ endif
 ifdef GRADIENT
 	CFLAGS += -DGRADIENT=1
 endif
+ifdef AREA_SAMPLES
+	CFLAGS += -DAREA_SAMPLES=$(AREA_SAMPLES)
+endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@
 media/%.jpg:        media/%.ppm ; convert $< $@

@@ -22,26 +22,30 @@
 #define SIZEY DIMENSION
 #endif
 
+#ifndef AREA_SAMPLES
+#define AREA_SAMPLES 4
+#endif
+
 int main(int argc, char *argv[]) {
   (void)argc;
   World w = {0};
 
   Light p = {0};
-  p = pointlight(POINT(15, 7, -15), HEX2COLOR("#d601ff"));
-  p.attenuation = LIGHT_SIZE_32;
-  world_enlight(&w, p);
-  p = pointlight(POINT(3, 12, -7), HEX2COLOR("#01ff9f"));
-  p.attenuation = LIGHT_SIZE_100;
-  world_enlight(&w, p);
-
-  /* p = arealight(point(15, 7, -15), vector(0, 0, 4), 1, vector(3, 4, 0), 1, */
-  /*               LIGHT_COLORS_FLUORESCENT_STANDARD); */
+  /* p = pointlight(POINT(15, 7, -15), HEX2COLOR("#d601ff")); */
   /* p.attenuation = LIGHT_SIZE_32; */
   /* world_enlight(&w, p); */
-  /* p = arealight(point(3, 12, -7), vector(2, 0, 0), 4, vector(0, 2, 0), 4, */
-  /*               HEX2COLOR("#01ff9f")); */
+  /* p = pointlight(POINT(3, 12, -7), HEX2COLOR("#01ff9f")); */
   /* p.attenuation = LIGHT_SIZE_100; */
   /* world_enlight(&w, p); */
+
+  p = arealight(POINT(15, 7, -15), VECTOR(0, 0, 4), AREA_SAMPLES,
+                VECTOR(3, 4, 0), AREA_SAMPLES, HEX2COLOR("#d601ff"));
+  p.attenuation = LIGHT_SIZE_32;
+  world_enlight(&w, p);
+  p = arealight(POINT(3, 12, -7), VECTOR(2, 0, 0), AREA_SAMPLES,
+                VECTOR(0, 2, 0), AREA_SAMPLES, HEX2COLOR("#01ff9f"));
+  p.attenuation = LIGHT_SIZE_200;
+  world_enlight(&w, p);
 
   Shape floor = plane();
   floor.material.pattern = pattern_checkers(WHITE, BLACK);
@@ -52,17 +56,20 @@ int main(int argc, char *argv[]) {
   /* floor.material.reflective = 0.01; */
   world_enter(&w, floor);
 
-  Shape s1 = sphere();
-  Shape s2 = cube();
+  Shape s1 = cylinder();
+  s1.shape_data.cylinder.closed = true;
+  s1.shape_data.cylinder.minimum = .5;
+  s1.shape_data.cylinder.maximum = 1;
+  Shape s2 = sphere();
   MaterialPhong m = material();
   m.ambient = AMBIENT;
   /* m.reflective = 0.01; */
   s1.material = m;
   s2.material = m;
-  s1.transformation = scaling(1.3, 1.3, 1.3);
-  Shape *c = csg(CSG_OP_INTERSECTION, &s2, &s1);
+  /* s1.transformation = scaling(1.3, 1.3, 1.3); */
+  Shape *c = csg(CSG_OP_DIFFERENCE, &s1, &s2);
   Shape g = group();
-  g.transformation = m4_mul(translation(0, 1, 0), rotation_z(radians(0)));
+  g.transformation = m4_mul(translation(0, 1, 0), rotation_z(radians(180)));
   group_add(&g, c);
   world_enter(&w, g);
 

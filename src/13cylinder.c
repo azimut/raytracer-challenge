@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   m.ambient = AMBIENT;
   m.reflective = 0.1;
   s1.material = m;
-  s1.shape_data.cylinder.maximum = 3;
+  s1.shape_data.cylinder.maximum = 2;
   s1.shape_data.cylinder.minimum = 1;
   s1.shape_data.cylinder.closed = true;
   s1.transformation = rotation_x(radians(34));
@@ -59,14 +59,15 @@ int main(int argc, char *argv[]) {
   cam.transform =
       view_transform(POINT(-1.5, 0.5, 2), POINT(0.1, 1.5, 0), VECTOR(0, 1, 0));
 
-  int frame = 0;
-  for (float i = 0; i < M_PI * 2; i += .1) {
-    Point from = POINT(sin(i) * 4, 0.5, cos(i) * 4);
-    cam.transform = view_transform(from, POINT(0, 2.5, 0), VECTOR(0, 1, 0));
-    Canvas canvas = render(cam, w);
-    canvas_save_frame(canvas, filename, ++frame, from);
-    canvas_free(&canvas);
-  }
+  /* int frame = 0; */
+  /* for (float i = 0; i < M_PI * 2; i += .1) { */
+  /*   Point from = POINT(sin(i) * 4, 0.5, cos(i) * 4); */
+  /*   cam.transform = view_transform(from, POINT(0, 2.5, 0), VECTOR(0, 1, 0));
+   */
+  /*   Canvas canvas = render(cam, w); */
+  /*   canvas_save_frame(canvas, filename, ++frame, from); */
+  /*   canvas_free(&canvas); */
+  /* } */
 
   char *buff = calloc(100, sizeof(char));
   strcat(strcat(strcat(buff, "media/"), filename), ".ppm");
