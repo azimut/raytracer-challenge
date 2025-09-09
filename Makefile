@@ -1,16 +1,16 @@
-DIMENSION    ?= 300
-AREA_SAMPLES ?= 1
-NSAMPLES     ?= 1
-GRADIENT     ?= 0
-CC           ?= gcc
-SRC          := $(wildcard lib/*.c)
-HDR          := $(wildcard lib/*.h)
-#PKGS         := cglm
-CFLAGS        = -Wall -Wextra -std=gnu11
-CFLAGS       += -DNSAMPLES=$(NSAMPLES) -DAREA_SAMPLES=$(AREA_SAMPLES) -DGRADIENT=$(GRADIENT)
-CFLAGS       += $(shell pkg-config --cflags $(PKGS))
-LDFLAGS      := $(shell pkg-config --libs $(PKGS)) -lm
-BUILDS       := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
+DIMENSION ?= 300
+LSAMPLES  ?= 1
+NSAMPLES  ?= 1
+GRADIENT  ?= 0
+CC        ?= gcc
+SRC       := $(wildcard lib/*.c)
+HDR       := $(wildcard lib/*.h)
+#PKGS      := cglm
+CFLAGS     = -Wall -Wextra -std=gnu11
+CFLAGS    += -DNSAMPLES=$(NSAMPLES) -DLSAMPLES=$(LSAMPLES) -DGRADIENT=$(GRADIENT)
+CFLAGS    += $(shell pkg-config --cflags $(PKGS))
+LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
+BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
 ifneq ($(and $(SIZEX),$(SIZEY)),)
 	CFLAGS += -DSIZEX=$(SIZEX) -DSIZEY=$(SIZEY)

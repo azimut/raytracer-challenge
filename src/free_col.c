@@ -22,8 +22,8 @@
 #define SIZEY DIMENSION
 #endif
 
-#ifndef AREA_SAMPLES
-#define AREA_SAMPLES 4
+#ifndef LSAMPLES
+#define LSAMPLES 4
 #endif
 
 int main(int argc, char *argv[]) {
@@ -38,18 +38,18 @@ int main(int argc, char *argv[]) {
   /* p.attenuation = LIGHT_SIZE_100; */
   /* world_enlight(&w, p); */
 
-  /* p = arealight(POINT(0, 7, 0), VECTOR(0, 0, 2), AREA_SAMPLES, VECTOR(2, 0,
+  /* p = arealight(POINT(0, 7, 0), VECTOR(0, 0, 2), LSAMPLES, VECTOR(2, 0,
    * 0), */
-  /*               AREA_SAMPLES, HEX2COLOR("#d601ff")); */
+  /*               LSAMPLES, HEX2COLOR("#d601ff")); */
   /* p.attenuation = LIGHT_SIZE_INFINITE; */
   /* world_enlight(&w, p); */
-  /* p = arealight(POINT(3, 12, -7), VECTOR(2, 0, 0), AREA_SAMPLES, */
-  /*               VECTOR(0, 2, 0), AREA_SAMPLES, HEX2COLOR("#01ff9f")); */
+  /* p = arealight(POINT(3, 12, -7), VECTOR(2, 0, 0), LSAMPLES, */
+  /*               VECTOR(0, 2, 0), LSAMPLES, HEX2COLOR("#01ff9f")); */
   /* p.attenuation = LIGHT_SIZE_200; */
   /* world_enlight(&w, p); */
 
-  p = arealight(POINT(-3, 2, -7), VECTOR(0, 0, 2), AREA_SAMPLES,
-                VECTOR(0, 2, 0), AREA_SAMPLES, HEX2COLOR("#01ff9f"));
+  p = arealight(POINT(-3, 2, -7), VECTOR(0, 0, 2), LSAMPLES, VECTOR(0, 2, 0),
+                LSAMPLES, LIGHT_COLORS_SKY_CLEAR_BLUE);
   p.attenuation = LIGHT_SIZE_200;
   world_enlight(&w, p);
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     Shape p = plane();
     p.material.pattern = pattern_stripes(BLACK, WHITE);
     p.material.pattern.transformation =
-        m4_mul(scaling(1, 1, 11), rotation_y(radians(90)));
+        m4_mul(scaling(1, 1, 20), rotation_y(radians(90)));
     p.transformation =
         m4_mul(rotation_x(radians(angle)), translation(0, -150, 0));
     world_enter(&w, p);
