@@ -1,14 +1,16 @@
-NSAMPLES  ?= 1
-CC        ?= gcc
-SRC       := $(wildcard lib/*.c)
-HDR       := $(wildcard lib/*.h)
-#PKGS      := cglm
-CFLAGS     = -Wall -Wextra -std=gnu11
-CFLAGS    += -DNSAMPLES=$(NSAMPLES)
-CFLAGS    += $(shell pkg-config --cflags $(PKGS))
-LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
-BUILDS    := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
-DIMENSION ?= 300
+DIMENSION    ?= 300
+AREA_SAMPLES ?= 1
+NSAMPLES     ?= 1
+GRADIENT     ?= 0
+CC           ?= gcc
+SRC          := $(wildcard lib/*.c)
+HDR          := $(wildcard lib/*.h)
+#PKGS         := cglm
+CFLAGS        = -Wall -Wextra -std=gnu11
+CFLAGS       += -DNSAMPLES=$(NSAMPLES) -DAREA_SAMPLES=$(AREA_SAMPLES) -DGRADIENT=$(GRADIENT)
+CFLAGS       += $(shell pkg-config --cflags $(PKGS))
+LDFLAGS      := $(shell pkg-config --libs $(PKGS)) -lm
+BUILDS       := $(addprefix build/,$(basename $(notdir $(wildcard src/*.c))))
 
 ifneq ($(and $(SIZEX),$(SIZEY)),)
 	CFLAGS += -DSIZEX=$(SIZEX) -DSIZEY=$(SIZEY)
@@ -27,12 +29,6 @@ ifdef FAST
 endif
 ifdef BLAZE
 	CFLAGS += -march=native -mtune=native -Ofast -ffast-math -DBLAZE=$(BLAZE)
-endif
-ifdef GRADIENT
-	CFLAGS += -DGRADIENT=1
-endif
-ifdef AREA_SAMPLES
-	CFLAGS += -DAREA_SAMPLES=$(AREA_SAMPLES)
 endif
 
 media/thumbs/%.jpg: media/%.jpg ; convert $< -resize '240x' $@

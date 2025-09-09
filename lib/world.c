@@ -99,10 +99,10 @@ Color color_at(const World world, const Ray ray, uint8_t life) {
     const Computations comp = prepare_computations(*i, ray, is);
     pixel = shade_hit(world, comp, life);
   }
-#ifdef GRADIENT
+#if GRADIENT == 1
   else {
-    const Color a = color(1.0, 0.1, 0.9);
-    const Color b = color(0.1, 0.9, 1.0);
+    const Color a = COLOR(1.0, 0.1, 0.9);
+    const Color b = COLOR(0.1, 0.9, 1.0);
     const double y = tuple_normalize(ray.direction).y;
     const double t = 0.5 * (y + 1.0);
     pixel = color_add(color_smul(a, (1.0 - t)), color_smul(b, t));
