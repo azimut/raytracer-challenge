@@ -60,13 +60,14 @@ Ray ray_for_pixel(const Camera cam, double px, double py) {
 
 Canvas render(const Camera cam, const World world) {
   Canvas c = canvas(cam.hsize, cam.vsize);
-  for (double row = 0; row < cam.vsize; ++row) {
-    for (double col = 0; col < cam.hsize; ++col) {
+#pragma omp parallel for
+  for (size_t row = 0; row < cam.vsize; ++row) {
+    for (size_t col = 0; col < cam.hsize; ++col) {
       Ray ray = ray_for_pixel(cam, col, row);
       Color pixel = color_at(world, ray, REFLECTION_HITS);
       if (NSAMPLES > 1) { // ANTIALIASING
         for (size_t i = 1; i < NSAMPLES; ++i) {
-          ray = ray_for_pixel(cam, col + drand48(), row + drand48());
+          ray = ray_for_pixel(cam, col + drand48(), (double)row + drand48());
           pixel = color_add(pixel, color_at(world, ray, REFLECTION_HITS));
         }
         pixel = color_sdiv(pixel, NSAMPLES);
