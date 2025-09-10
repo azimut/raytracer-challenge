@@ -6,7 +6,7 @@ CC        ?= gcc
 SRC       := $(wildcard lib/*.c)
 HDR       := $(wildcard lib/*.h)
 #PKGS      := cglm
-CFLAGS     = -Wall -Wextra -std=gnu11
+CFLAGS     = -Wall -Wextra -pedantic -std=gnu11
 CFLAGS    += -DNSAMPLES=$(NSAMPLES) -DLSAMPLES=$(LSAMPLES) -DGRADIENT=$(GRADIENT)
 CFLAGS    += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS   := $(shell pkg-config --libs $(PKGS)) -lm
