@@ -71,3 +71,5 @@ $ make -B test DEBUG=1
 - [Pointlight distance attenuation](https://learnopengl.com/Lighting/Multiple-lights)
 - [Gradient background](https://raytracing.github.io/books/RayTracingInOneWeekend.html#rays,asimplecamera,andbackground/sendingraysintothescene)
 - Support for multiple lights.
+- Support for shapes that do not cast shadow.
+- Added [OpenMP](https://www.openmp.org/) support for parallel run. [1](https://github.com/azimut/raytracer-challenge/commit/0fea306eb62d2f1824f5c4388eb2232975649139)
