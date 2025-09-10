@@ -174,7 +174,7 @@ double intensity_at(const Light light, const Point point, const World world) {
   }
   }
   return result;
-};
+}
 
 // TODO: inject of non random numbers for testing
 Point point_on_light(const Light light, const uint8_t u, const uint8_t v) {

@@ -23,8 +23,6 @@ typedef struct Light {
   Light_Type ltype;
   union {
     struct {
-    } point;
-    struct {
       Point corner;
       Vector uvec, vvec;
       uint8_t usteps, vsteps;

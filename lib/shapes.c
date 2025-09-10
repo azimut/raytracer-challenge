@@ -225,7 +225,7 @@ bool csg_intersection_allowed(Csg_Op operation, bool lhit, bool inl, bool inr) {
     break;
   }
   return result;
-};
+}
 
 bool shape_includes(const Shape shape, const Shape needle) {
   bool found = false;
@@ -253,7 +253,7 @@ bool shape_includes(const Shape shape, const Shape needle) {
     break;
   }
   return found;
-};
+}
 
 Shape group(void) {
   return (Shape){
