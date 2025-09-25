@@ -1,6 +1,6 @@
 # The Ray Tracer Challenge
 
-My source code, written in C.
+My [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) version of the pseudo-code provided by the book.
 
 ## Renders
 
