@@ -9,7 +9,7 @@ typedef struct Parser {
   size_t n_ignored_lines;
   size_t capacity;
   size_t count;
-  Shape default_group;
+  Shape *default_group;
   Point *vertices;
 } Parser;
 

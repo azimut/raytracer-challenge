@@ -9,8 +9,11 @@ static const int init_capacity = 10;
 static const int renew_capacity = 10;
 
 static Parser parser_new(void) {
+  Shape *newgroup = calloc(1, sizeof(Shape));
+  Shape blank = group();
+  memcpy(newgroup, &blank, sizeof(Shape));
   return (Parser){
-      .default_group = group(),
+      .default_group = newgroup,
       .capacity = init_capacity,
       .vertices = calloc(init_capacity, sizeof(Point)),
   };
@@ -32,7 +35,7 @@ typedef struct Indices {
   size_t capacity;
 } Indices;
 
-static Indices indices_new() {
+static Indices indices_new(void) {
   return (Indices){
       .idxs = calloc(5, sizeof(long)),
       .capacity = 5,
@@ -60,6 +63,7 @@ static Parser obj_parse(FILE *f) {
   char *buf = calloc(buffsize, sizeof(char));
   Parser parser = parser_new();
   while (fgets(buf, buffsize, f)) {
+    Shape *parent = parser.default_group;
     buf[strcspn(buf, "\n")] = '\0';
     switch (buf[0]) {
     case 'v': {
@@ -71,6 +75,14 @@ static Parser obj_parse(FILE *f) {
         fprintf(stderr, "ERROR: malformed vertex line `%s`", buf);
         exit(EXIT_FAILURE);
       }
+      break;
+    }
+    case 'g': {
+      // TODO: parse and add a group name
+      Shape new_group = group();
+      group_add(parser.default_group, &new_group);
+      size_t gid = parser.default_group->shape_data.group.childs->count - 1;
+      parent = &parser.default_group->shape_data.group.childs->shapes[gid];
       break;
     }
     case 'f': {
@@ -97,7 +109,7 @@ static Parser obj_parse(FILE *f) {
         const Point b = parser.vertices[indices.idxs[i + 0] - 1];
         const Point c = parser.vertices[indices.idxs[i + 1] - 1];
         Shape t = triangle(a, b, c);
-        group_add(&parser.default_group, &t);
+        group_add(parent, &t);
       }
       indices_free(&indices);
       break;
@@ -127,5 +139,5 @@ void obj_parser_free(Parser *parser) {
     free(parser->vertices);
     parser->vertices = NULL, parser->capacity = 0, parser->count = 0;
   }
-  group_free(&parser->default_group);
+  group_free(parser->default_group);
 }
