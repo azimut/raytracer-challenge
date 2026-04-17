@@ -66,7 +66,7 @@ static void intersect_caps(const Shape cyl, const Ray ray, Intersections *xs) {
 
 Intersections intersect(const Shape shape, const Ray ray) {
   const Ray tRay = transform(ray, m4_inverse(shape.transformation));
-  Intersections is = intersections_new(5);
+  Intersections is = intersections_new(10);
   switch (shape.shape_type) {
   case SHAPE_TYPE_SPHERE: {
     const Point sphere_to_ray = tuple_sub(tRay.origin, POINT(0, 0, 0));
@@ -141,7 +141,7 @@ Intersections intersect(const Shape shape, const Ray ray) {
     if (!shape.shape_data.group.childs) {
       break;
     }
-    Intersections result = intersections_new(5);
+    Intersections result = intersections_new(10);
     for (size_t i = 0; i < shape.shape_data.group.childs->count; ++i) {
       Intersections tmp =
           intersect(shape.shape_data.group.childs->shapes[i], tRay);
