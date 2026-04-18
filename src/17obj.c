@@ -51,17 +51,17 @@ int main(int argc, char *argv[]) {
 
   Shape floor = plane();
   floor.material.pattern = pattern_checkers(WHITE, BLACK);
-  floor.material.pattern.transformation = scaling(0.5, .5, .5);
+  floor.material.pattern.transformation = scaling(0.25, .25, .25);
   /* floor.material.color = color(.4, 0.9, 0.9); */
   floor.material.specular = 0;
   floor.material.ambient = AMBIENT;
   /* floor.material.reflective = 0.01; */
   world_enter(&w, floor);
 
-  /* Parser figure = */
-  /*     obj_parse_file("/home/sendai/Downloads/Nicolas-Llavero-SVG.obj"); */
-  Parser figure = obj_parse_file("/home/sendai/Downloads/gamedev/models/"
-                                 "collection1/objs/dodecahedron.obj");
+  Parser figure =
+      obj_parse_file("/home/sendai/Downloads/Nicolas-Llavero-SVG.obj");
+  /* Parser figure = obj_parse_file("/home/sendai/Downloads/gamedev/models/" */
+  /*                                "collection1/objs/dodecahedron.obj"); */
   figure.default_group->material.specular = 1;
   figure.default_group->material.shininess = 200;
   figure.default_group->material.ambient = AMBIENT;
@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
   figure.default_group->material.transparency = 1;
   figure.default_group->material.diffuse = 0.1;
   figure.default_group->transformation =
-      m4_mul(translation(0, 1.25, 0),
-             m4_mul(rotation(360 - 90, 0, 90 + 45), scaling(1, 1, 1)));
+      m4_mul(translation(0, 1, 0),
+             m4_mul(rotation(0, 45, 0), scaling(0.05, 0.05, 0.05)));
   world_enter(&w, *figure.default_group);
 
   char *filename = basename(argv[0]);

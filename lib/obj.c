@@ -140,4 +140,5 @@ void obj_parser_free(Parser *parser) {
     parser->vertices = NULL, parser->capacity = 0, parser->count = 0;
   }
   group_free(parser->default_group);
+  free(parser->default_group);
 }
